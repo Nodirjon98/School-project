@@ -3,280 +3,90 @@ import {
   TeacherActivityMetric, PlatformAuditAction, PaymentReceipt, PaymentStatus, PaymentMethod 
 } from '../types';
 import { getStorageItem, setStorageItem } from '../lib/storage';
+import { PREMIER_OFFICIAL_STUDENTS } from './premierStudentsData';
 
-export const SEED_STUDENT_PAYMENTS: StudentPaymentPlan[] = [
-  {
-    id: 'pay-plan-1',
-    student_id: 'student-1',
-    student_name: 'Alisher Usmonov',
-    student_phone: '+998 90 123 45 67',
-    student_email: 'alisher@premier.uz',
-    group_id: 'group-1',
-    group_name: 'IELTS Intensive 7.5+ (Oybek)',
-    course_title: 'IELTS Master Course (3 Months)',
-    plan_type: 'monthly',
-    base_monthly_fee: 1400000,
-    total_course_fee: 4200000,
-    discount_percent: 15,
-    discount_reason: 'IELTS 7.5+ Scholarship Grant',
-    final_total_fee: 3570000,
-    paid_amount: 2380000,
-    remaining_amount: 1190000,
-    overall_status: 'partial',
+// Dynamically generate payment plans for all 36 real Premier students
+export const SEED_STUDENT_PAYMENTS: StudentPaymentPlan[] = PREMIER_OFFICIAL_STUDENTS.map((st) => {
+  const isFree = st.payment_type === 'free';
+  const isCustom = st.payment_type === 'custom';
+  const monthlyFee = isFree ? 0 : (st.custom_fee || (isCustom ? 400000 : 500000));
+  const totalFee = monthlyFee * 3;
+  const isPaid = isFree;
+  const discountPercent = isFree ? 100 : (st.custom_fee && st.custom_fee < 500000 ? Math.round((1 - st.custom_fee / 500000) * 100) : 0);
+  const discountReason = isFree 
+    ? "100% Grant / Bepul ta'lim" 
+    : (discountPercent > 0 ? "Maxsus kelishilgan to'lov stavkasi" : undefined);
+
+  return {
+    id: `pay-plan-${st.id}`,
+    student_id: st.id,
+    student_name: st.full_name,
+    student_phone: st.phone || '',
+    student_email: st.email,
+    group_id: st.group_id || 'unassigned',
+    group_name: st.group_name || "Guruhga biriktirilmagan",
+    course_title: "General English & IELTS Accelerator",
+    plan_type: isFree ? 'custom' : (isCustom ? 'custom' : 'monthly'),
+    base_monthly_fee: monthlyFee,
+    total_course_fee: totalFee,
+    discount_percent: discountPercent,
+    discount_reason: discountReason,
+    final_total_fee: totalFee,
+    paid_amount: isPaid ? totalFee : 0,
+    remaining_amount: isPaid ? 0 : totalFee,
+    overall_status: isPaid ? 'paid' : 'pending',
     next_due_date: '2026-09-25',
-    created_at: '2026-07-01',
+    created_at: st.created_at || '2026-02-01',
     schedules: [
       {
-        id: 'sch-1-1',
+        id: `sch-${st.id}-1`,
         installment_number: 1,
-        title: "1-oy: Iyul to'lovi",
-        amount: 1190000,
-        due_date: '2026-07-05',
-        paid_date: '2026-07-04',
-        status: 'paid',
-        payment_method: 'click',
-        transaction_id: 'CLK-98421045',
-        receipt_no: 'RCP-2026-0704',
-        notes: "O'z vaqtida to'landi"
-      },
-      {
-        id: 'sch-1-2',
-        installment_number: 2,
-        title: "2-oy: Avgust to'lovi",
-        amount: 1190000,
-        due_date: '2026-08-05',
-        paid_date: '2026-08-05',
-        status: 'paid',
-        payment_method: 'payme',
-        transaction_id: 'PAY-44120934',
-        receipt_no: 'RCP-2026-0805',
-        notes: "Payme orqali qabul qilindi"
-      },
-      {
-        id: 'sch-1-3',
-        installment_number: 3,
-        title: "3-oy: Sentyabr to'lovi",
-        amount: 1190000,
+        title: "1-oy: Sentyabr to'lovi",
+        amount: monthlyFee,
         due_date: '2026-09-25',
-        status: 'pending',
-        notes: "Imtihon oldi yakuniy to'lov"
-      }
-    ]
-  },
-  {
-    id: 'pay-plan-2',
-    student_id: 'student-2',
-    student_name: 'Malika Toirova',
-    student_phone: '+998 93 987 65 43',
-    student_email: 'malika@premier.uz',
-    group_id: 'group-1',
-    group_name: 'IELTS Intensive 7.5+ (Oybek)',
-    course_title: 'IELTS Master Course (3 Months)',
-    plan_type: 'full_course',
-    base_monthly_fee: 1400000,
-    total_course_fee: 4200000,
-    discount_percent: 20,
-    discount_reason: "To'liq oldindan to'lov chegirmasi",
-    final_total_fee: 3360000,
-    paid_amount: 3360000,
-    remaining_amount: 0,
-    overall_status: 'paid',
-    next_due_date: '2026-10-01',
-    created_at: '2026-07-01',
-    schedules: [
-      {
-        id: 'sch-2-1',
-        installment_number: 1,
-        title: "To'liq kurs (3 oy) to'lovi",
-        amount: 3360000,
-        due_date: '2026-07-05',
-        paid_date: '2026-07-03',
-        status: 'paid',
-        payment_method: 'bank_transfer',
-        transaction_id: 'BNK-7721890',
-        receipt_no: 'RCP-2026-0703',
-        notes: "Hisob raqamiga to'liq o'tkazilgan"
-      }
-    ]
-  },
-  {
-    id: 'pay-plan-3',
-    student_id: 'student-3',
-    student_name: 'Jasur Bekmurodov',
-    student_phone: '+998 97 555 11 22',
-    student_email: 'jasur@premier.uz',
-    group_id: 'group-2',
-    group_name: 'General English B2 (Chorsu)',
-    course_title: 'General English Upper-Intermediate',
-    plan_type: 'monthly',
-    base_monthly_fee: 1100000,
-    total_course_fee: 3300000,
-    discount_percent: 0,
-    final_total_fee: 3300000,
-    paid_amount: 1100000,
-    remaining_amount: 2200000,
-    overall_status: 'overdue',
-    next_due_date: '2026-09-02',
-    created_at: '2026-08-01',
-    schedules: [
-      {
-        id: 'sch-3-1',
-        installment_number: 1,
-        title: "1-oy: Avgust to'lovi",
-        amount: 1100000,
-        due_date: '2026-08-05',
-        paid_date: '2026-08-05',
-        status: 'paid',
-        payment_method: 'cash',
-        receipt_no: 'RCP-2026-0805B',
-        notes: "Kassaga naqd topshirildi"
+        paid_date: isPaid ? '2026-09-01' : undefined,
+        status: isPaid ? 'paid' : 'pending',
+        notes: isFree ? "Grant asosida ta'lim" : "Kassaga naqd yoki Click/Payme orqali"
       },
       {
-        id: 'sch-3-2',
+        id: `sch-${st.id}-2`,
         installment_number: 2,
-        title: "2-oy: Sentyabr to'lovi",
-        amount: 1100000,
-        due_date: '2026-09-02',
-        status: 'overdue',
-        notes: "Muddati 4 kun o'tgan, eslatma yuborildi"
+        title: "2-oy: Oktyabr to'lovi",
+        amount: monthlyFee,
+        due_date: '2026-10-25',
+        paid_date: isPaid ? '2026-10-01' : undefined,
+        status: isPaid ? 'paid' : 'pending',
+        notes: isFree ? "Grant asosida ta'lim" : "Navbatdagi to'lov"
       },
       {
-        id: 'sch-3-3',
+        id: `sch-${st.id}-3`,
         installment_number: 3,
-        title: "3-oy: Oktyabr to'lovi",
-        amount: 1100000,
-        due_date: '2026-10-02',
-        status: 'pending',
-        notes: "Kelasi oy rejasi"
+        title: "3-oy: Noyabr to'lovi",
+        amount: monthlyFee,
+        due_date: '2026-11-25',
+        paid_date: isPaid ? '2026-11-01' : undefined,
+        status: isPaid ? 'paid' : 'pending',
+        notes: isFree ? "Grant asosida ta'lim" : "3-oy to'lovi"
       }
     ]
-  },
-  {
-    id: 'pay-plan-4',
-    student_id: 'student-4',
-    student_name: 'Dilnoza Karimova',
-    student_phone: '+998 94 444 88 99',
-    student_email: 'dilnoza@premier.uz',
-    group_id: 'group-2',
-    group_name: 'General English B2 (Chorsu)',
-    course_title: 'General English Upper-Intermediate',
-    plan_type: 'monthly',
-    base_monthly_fee: 1100000,
-    total_course_fee: 3300000,
-    discount_percent: 10,
-    discount_reason: "Oila a'zosi chegirmasi",
-    final_total_fee: 2970000,
-    paid_amount: 1980000,
-    remaining_amount: 990000,
-    overall_status: 'partial',
-    next_due_date: '2026-09-20',
-    created_at: '2026-07-15',
-    schedules: [
-      {
-        id: 'sch-4-1',
-        installment_number: 1,
-        title: "1-oy to'lovi",
-        amount: 990000,
-        due_date: '2026-07-20',
-        paid_date: '2026-07-19',
-        status: 'paid',
-        payment_method: 'uzum',
-        transaction_id: 'UZM-332901',
-        receipt_no: 'RCP-2026-0719',
-        notes: "Uzum Bank orqali to'landi"
-      },
-      {
-        id: 'sch-4-2',
-        installment_number: 2,
-        title: "2-oy to'lovi",
-        amount: 990000,
-        due_date: '2026-08-20',
-        paid_date: '2026-08-20',
-        status: 'paid',
-        payment_method: 'click',
-        transaction_id: 'CLK-118934',
-        receipt_no: 'RCP-2026-0820',
-        notes: "Click orqali to'landi"
-      },
-      {
-        id: 'sch-4-3',
-        installment_number: 3,
-        title: "3-oy to'lovi",
-        amount: 990000,
-        due_date: '2026-09-20',
-        status: 'pending',
-        notes: "Navbatdagi to'lov"
-      }
-    ]
-  },
-  {
-    id: 'pay-plan-5',
-    student_id: 'student-5',
-    student_name: 'Shaxzod Rahimov',
-    student_phone: '+998 91 333 77 11',
-    student_email: 'shaxzod@premier.uz',
-    group_id: 'group-3',
-    group_name: 'TOEFL iBT Mastery (Online)',
-    course_title: 'TOEFL iBT 100+ Score Accelerator',
-    plan_type: 'monthly',
-    base_monthly_fee: 1500000,
-    total_course_fee: 4500000,
-    discount_percent: 0,
-    final_total_fee: 4500000,
-    paid_amount: 3000000,
-    remaining_amount: 1500000,
-    overall_status: 'partial',
-    next_due_date: '2026-09-18',
-    created_at: '2026-07-10',
-    schedules: [
-      {
-        id: 'sch-5-1',
-        installment_number: 1,
-        title: "1-oy to'lovi",
-        amount: 1500000,
-        due_date: '2026-07-18',
-        paid_date: '2026-07-17',
-        status: 'paid',
-        payment_method: 'payme',
-        receipt_no: 'RCP-2026-0717',
-      },
-      {
-        id: 'sch-5-2',
-        installment_number: 2,
-        title: "2-oy to'lovi",
-        amount: 1500000,
-        due_date: '2026-08-18',
-        paid_date: '2026-08-18',
-        status: 'paid',
-        payment_method: 'payme',
-        receipt_no: 'RCP-2026-0818',
-      },
-      {
-        id: 'sch-5-3',
-        installment_number: 3,
-        title: "3-oy to'lovi",
-        amount: 1500000,
-        due_date: '2026-09-18',
-        status: 'pending',
-      }
-    ]
-  }
-];
+  };
+});
+
 
 export const SEED_STUDENT_ACTIVITIES: StudentActivityMetric[] = [
   {
     id: 'act-1',
-    student_id: 'student-1',
-    student_name: 'Alisher Usmonov',
-    student_avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop',
-    group_name: 'IELTS Intensive 7.5+ (Oybek)',
-    level: 'Advanced C1',
+    student_id: 'student-official-1',
+    student_name: 'Shahzoda Ilhomova',
+    student_avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop',
+    group_name: "Premier O'quvchisi",
+    level: 'Intermediate B1',
     status: 'online',
     device: 'desktop',
     last_active: 'Ayni paytda faol',
-    total_time_minutes: 2480, // 41h 20m
-    today_time_minutes: 145,  // 2h 25m
-    weekly_time_minutes: 680, // 11h 20m
+    total_time_minutes: 2480,
+    today_time_minutes: 145,
+    weekly_time_minutes: 680,
     module_breakdown: {
       speaking_minutes: 740,
       listening_tactics_minutes: 680,
@@ -300,15 +110,15 @@ export const SEED_STUDENT_ACTIVITIES: StudentActivityMetric[] = [
   },
   {
     id: 'act-2',
-    student_id: 'student-2',
-    student_name: 'Malika Toirova',
+    student_id: 'student-official-2',
+    student_name: 'Shahnoza Kodirova',
     student_avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop',
-    group_name: 'IELTS Intensive 7.5+ (Oybek)',
-    level: 'Advanced C1',
+    group_name: "Premier O'quvchisi",
+    level: 'Intermediate B1',
     status: 'online',
     device: 'mobile',
     last_active: '5 daqiqa oldin',
-    total_time_minutes: 2120, // 35h 20m
+    total_time_minutes: 2120,
     today_time_minutes: 110,
     weekly_time_minutes: 540,
     module_breakdown: {
@@ -334,11 +144,11 @@ export const SEED_STUDENT_ACTIVITIES: StudentActivityMetric[] = [
   },
   {
     id: 'act-3',
-    student_id: 'student-3',
-    student_name: 'Jasur Bekmurodov',
+    student_id: 'student-official-3',
+    student_name: "O'lmas Rasulov",
     student_avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=120&auto=format&fit=crop',
-    group_name: 'General English B2 (Chorsu)',
-    level: 'Upper-Intermediate B2',
+    group_name: "Premier O'quvchisi",
+    level: 'Intermediate B1',
     status: 'idle',
     device: 'desktop',
     last_active: '42 daqiqa oldin',
@@ -368,11 +178,11 @@ export const SEED_STUDENT_ACTIVITIES: StudentActivityMetric[] = [
   },
   {
     id: 'act-4',
-    student_id: 'student-4',
-    student_name: 'Dilnoza Karimova',
+    student_id: 'student-official-6',
+    student_name: 'Dilnoza Rajabova',
     student_avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&auto=format&fit=crop',
-    group_name: 'General English B2 (Chorsu)',
-    level: 'Upper-Intermediate B2',
+    group_name: "Premier O'quvchisi",
+    level: 'Intermediate B1',
     status: 'offline',
     device: 'tablet',
     last_active: 'Bugun, 11:20 da',
@@ -402,11 +212,11 @@ export const SEED_STUDENT_ACTIVITIES: StudentActivityMetric[] = [
   },
   {
     id: 'act-5',
-    student_id: 'student-5',
-    student_name: 'Shaxzod Rahimov',
-    student_avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop',
-    group_name: 'TOEFL iBT Mastery (Online)',
-    level: 'Advanced C1',
+    student_id: 'student-official-8',
+    student_name: 'Manzura Sayfullayeva',
+    student_avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop',
+    group_name: "Premier O'quvchisi",
+    level: 'Intermediate B1',
     status: 'offline',
     device: 'desktop',
     last_active: 'Kecha, 21:40 da',
@@ -439,12 +249,12 @@ export const SEED_STUDENT_ACTIVITIES: StudentActivityMetric[] = [
 export const SEED_TEACHER_ACTIVITIES: TeacherActivityMetric[] = [
   {
     id: 'teach-1',
-    teacher_id: 'teacher-1',
+    teacher_id: 'user-admin-1',
     teacher_name: 'Nodirjon Safoyev',
-    teacher_title: 'Bosh IELTS Mentor & Akustika Eksperti',
+    teacher_title: 'Premier School Asoschisi & Bosh Mentor',
     avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop',
-    active_groups_count: 4,
-    total_students_count: 48,
+    active_groups_count: 3,
+    total_students_count: 36,
     total_teaching_hours: 312,
     today_hours: 6.5,
     homeworks_assigned: 42,
@@ -457,9 +267,9 @@ export const SEED_TEACHER_ACTIVITIES: TeacherActivityMetric[] = [
   },
   {
     id: 'teach-2',
-    teacher_id: 'teacher-2',
-    teacher_name: 'Aziza Karimova',
-    teacher_title: 'Senior General English Teacher',
+    teacher_id: 'user-teacher-1',
+    teacher_name: 'Malika Karimova',
+    teacher_title: 'Senior English Teacher (CELTA)',
     avatar_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop',
     active_groups_count: 3,
     total_students_count: 36,
@@ -478,50 +288,50 @@ export const SEED_TEACHER_ACTIVITIES: TeacherActivityMetric[] = [
 export const SEED_PLATFORM_AUDIT: PlatformAuditAction[] = [
   {
     id: 'aud-1',
-    timestamp: '2026-09-06 21:42:10',
-    actor_name: 'Alisher Usmonov',
+    timestamp: '2026-09-14 17:30:10',
+    actor_name: 'Shahzoda Ilhomova',
     actor_role: 'student',
     module: 'listening',
-    action_description: 'Tactics for Listening: Unit 1 "Introductions and Names" 2-trekni muvaffaqiyatli tinglab topshirdi (Ball: 95%)',
+    action_description: 'Tactics for Listening: Unit 1 bo\'yicha topshiriqni bajardi (Ball: 95%)',
     duration_minutes: 18,
-    device: 'Desktop (Chrome Mac)'
+    device: 'Desktop Chrome'
   },
   {
     id: 'aud-2',
-    timestamp: '2026-09-06 21:30:05',
-    actor_name: 'Malika Toirova',
+    timestamp: '2026-09-14 17:15:05',
+    actor_name: 'Manzura Sayfullayeva',
     actor_role: 'student',
     module: 'speaking',
-    action_description: 'Mr. Safoyev AI Voice bilan "Environmental Policy" mavzusida IELTS Part 2 suhbati o\'tkazdi (Fluency: 8.0)',
+    action_description: 'Mr. Safoyev AI Voice bilan Speaking Part 2 mashqi o\'tkazdi (Fluency: 7.5)',
     duration_minutes: 22,
-    device: 'iPhone 15 (Safari Mobile)'
+    device: 'Mobile Safari'
   },
   {
     id: 'aud-3',
-    timestamp: '2026-09-06 21:05:40',
+    timestamp: '2026-09-14 16:50:40',
     actor_name: 'Nodirjon Safoyev',
     actor_role: 'teacher',
     module: 'homework',
-    action_description: 'IELTS Intensive guruhining 6 ta insho topshirig\'ini tahlil qildi va batafsil audio-feedback qoldirdi',
-    duration_minutes: 45,
+    action_description: "General English guruhining uy vazifalarini ko'rib chiqdi",
+    duration_minutes: 35,
     device: 'MacBook Pro'
   },
   {
     id: 'aud-4',
-    timestamp: '2026-09-06 20:45:15',
+    timestamp: '2026-09-14 16:30:15',
     actor_name: 'Administrator',
     actor_role: 'admin',
     module: 'payment',
-    action_description: "Malika Toirova to'liq kurs to'lovi kvitansiyasini tasdiqladi (3,360,000 UZS)",
+    action_description: "Manzura Sayfullayeva maxsus oylik to'lov kvitansiyasini tasdiqladi (400,000 UZS)",
     device: 'Admin Portal'
   },
   {
     id: 'aud-5',
-    timestamp: '2026-09-06 20:10:00',
-    actor_name: 'Jasur Bekmurodov',
+    timestamp: '2026-09-14 16:10:00',
+    actor_name: "O'lmas Rasulov",
     actor_role: 'student',
     module: 'vocabulary',
-    action_description: '4000 Essential English Words: Book 2, Unit 4 testida 25 ta yangi so\'zni o\'zlashtirdi',
+    action_description: '4000 Essential English Words: Book 1, Unit 1 testida 20 ta yangi so\'zni o\'zlashtirdi',
     duration_minutes: 25,
     device: 'Desktop Windows'
   }
@@ -529,7 +339,41 @@ export const SEED_PLATFORM_AUDIT: PlatformAuditAction[] = [
 
 // LocalStorage helpers for persistence
 export function getStoredStudentPayments(): StudentPaymentPlan[] {
-  return getStorageItem('premier_student_payments', SEED_STUDENT_PAYMENTS);
+  const stored = getStorageItem<StudentPaymentPlan[]>('premier_student_payments', []);
+  // Purge any legacy dummy plans referencing old template demo names
+  const validStored = stored.filter(p => 
+    !p.student_id.startsWith('student-1') && 
+    !p.student_id.startsWith('student-2') && 
+    !p.student_id.startsWith('student-3') && 
+    !p.student_id.startsWith('student-4') && 
+    !p.student_id.startsWith('student-5') &&
+    p.student_name !== 'Alisher Usmonov' &&
+    p.student_name !== 'Malika Toirova' &&
+    p.student_name !== 'Jasur Bekmurodov' &&
+    p.student_name !== 'Dilnoza Karimova' &&
+    p.student_name !== 'Shaxzod Rahimov'
+  );
+
+  if (validStored.length === 0) {
+    setStorageItem('premier_student_payments', SEED_STUDENT_PAYMENTS);
+    return SEED_STUDENT_PAYMENTS;
+  }
+
+  // Ensure all 36 real students exist in the stored payments
+  const storedMap = new Map(validStored.map(p => [p.student_id, p]));
+  let hasNew = false;
+  SEED_STUDENT_PAYMENTS.forEach(seedPlan => {
+    if (!storedMap.has(seedPlan.student_id)) {
+      validStored.push(seedPlan);
+      hasNew = true;
+    }
+  });
+
+  if (hasNew) {
+    setStorageItem('premier_student_payments', validStored);
+  }
+
+  return validStored;
 }
 
 export function saveStoredStudentPayments(plans: StudentPaymentPlan[]) {
@@ -537,7 +381,17 @@ export function saveStoredStudentPayments(plans: StudentPaymentPlan[]) {
 }
 
 export function getStoredStudentActivities(): StudentActivityMetric[] {
-  return getStorageItem('premier_student_activities', SEED_STUDENT_ACTIVITIES);
+  const stored = getStorageItem<StudentActivityMetric[]>('premier_student_activities', []);
+  const valid = stored.filter(a => 
+    a.student_name !== 'Alisher Usmonov' && 
+    a.student_name !== 'Malika Toirova' &&
+    a.student_name !== 'Jasur Bekmurodov'
+  );
+  if (valid.length === 0) {
+    setStorageItem('premier_student_activities', SEED_STUDENT_ACTIVITIES);
+    return SEED_STUDENT_ACTIVITIES;
+  }
+  return valid;
 }
 
 export function saveStoredStudentActivities(acts: StudentActivityMetric[]) {

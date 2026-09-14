@@ -20,8 +20,8 @@ export interface ContestOpponent {
 export const CONTEST_OPPONENTS: ContestOpponent[] = [
   // Group 1: IELTS Intensive Target 7.5+ (B2)
   {
-    id: 'user-student-2',
-    name: 'Nodira Karimova',
+    id: 'student-official-1',
+    name: 'Shahzoda Ilhomova',
     role: 'student',
     groupId: 'group-1',
     groupName: 'IELTS Intensive Target 7.5+',
@@ -35,8 +35,8 @@ export const CONTEST_OPPONENTS: ContestOpponent[] = [
     bio: 'Aiming for 8.0 in Reading and Speaking. Daily flashcard champion!'
   },
   {
-    id: 'user-student-1',
-    name: 'Jasur Rustamov',
+    id: 'student-official-3',
+    name: "O'lmas Rasulov",
     role: 'student',
     groupId: 'group-1',
     groupName: 'IELTS Intensive Target 7.5+',
@@ -50,8 +50,8 @@ export const CONTEST_OPPONENTS: ContestOpponent[] = [
     bio: 'Preparing for Westminster University admission. Loves phrasal verbs.'
   },
   {
-    id: 'user-student-3',
-    name: 'Bekzod Toshmatov',
+    id: 'student-official-8',
+    name: 'Manzura Sayfullayeva',
     role: 'student',
     groupId: 'group-1',
     groupName: 'IELTS Intensive Target 7.5+',
@@ -82,8 +82,8 @@ export const CONTEST_OPPONENTS: ContestOpponent[] = [
 
   // Group 2: General English Intermediate B1
   {
-    id: 'user-other-4',
-    name: 'Dilnoza Murodova',
+    id: 'student-official-6',
+    name: 'Dilnoza Rajabova',
     role: 'student',
     groupId: 'group-2',
     groupName: 'General English Intermediate B1',
@@ -97,8 +97,8 @@ export const CONTEST_OPPONENTS: ContestOpponent[] = [
     bio: 'Consistent reader of Book 2 and Book 3 stories.'
   },
   {
-    id: 'user-other-5',
-    name: 'Shoxrux Sobirov',
+    id: 'student-official-9',
+    name: 'Akbar Ashurov',
     role: 'student',
     groupId: 'group-2',
     groupName: 'General English Intermediate B1',
@@ -129,8 +129,8 @@ export const CONTEST_OPPONENTS: ContestOpponent[] = [
 
   // Group 3: Elementary English Starters A2
   {
-    id: 'user-other-6',
-    name: 'Madina Yusupova',
+    id: 'student-official-10',
+    name: 'Shalola Hasanova',
     role: 'student',
     groupId: 'group-3',
     groupName: 'Elementary English Starters A2',
@@ -144,8 +144,8 @@ export const CONTEST_OPPONENTS: ContestOpponent[] = [
     bio: 'Book 1 explorer. Practice makes perfect!'
   },
   {
-    id: 'user-other-7',
-    name: 'Farrux Alimov',
+    id: 'student-official-13',
+    name: "Otabek To'rayev",
     role: 'student',
     groupId: 'group-3',
     groupName: 'Elementary English Starters A2',
@@ -583,8 +583,8 @@ export function getContestQuestions(
 export function getContestLeaderboard(): VocabLeaderboardEntry[] {
   return [
     {
-      studentId: 'user-student-2',
-      studentName: 'Nodira Karimova',
+      studentId: 'student-official-1',
+      studentName: 'Shahzoda Ilhomova',
       groupId: 'group-1',
       groupName: 'IELTS Intensive Target 7.5+',
       level: 'B2',
@@ -615,8 +615,8 @@ export function getContestLeaderboard(): VocabLeaderboardEntry[] {
       badge: 'CELTA Spartan'
     },
     {
-      studentId: 'user-student-1',
-      studentName: 'Jasur Rustamov',
+      studentId: 'student-official-3',
+      studentName: "O'lmas Rasulov",
       groupId: 'group-1',
       groupName: 'IELTS Intensive Target 7.5+',
       level: 'B2',
@@ -631,8 +631,8 @@ export function getContestLeaderboard(): VocabLeaderboardEntry[] {
       badge: 'Collocation Master'
     },
     {
-      studentId: 'user-student-3',
-      studentName: 'Bekzod Toshmatov',
+      studentId: 'student-official-8',
+      studentName: 'Manzura Sayfullayeva',
       groupId: 'group-1',
       groupName: 'IELTS Intensive Target 7.5+',
       level: 'B1',
@@ -647,8 +647,8 @@ export function getContestLeaderboard(): VocabLeaderboardEntry[] {
       badge: 'Idiom Hunter'
     },
     {
-      studentId: 'user-other-4',
-      studentName: 'Dilnoza Murodova',
+      studentId: 'student-official-6',
+      studentName: 'Dilnoza Rajabova',
       groupId: 'group-2',
       groupName: 'General English Intermediate B1',
       level: 'B1',
@@ -679,8 +679,8 @@ export function getContestLeaderboard(): VocabLeaderboardEntry[] {
       badge: 'Lexis Guardian'
     },
     {
-      studentId: 'user-other-5',
-      studentName: 'Shoxrux Sobirov',
+      studentId: 'student-official-9',
+      studentName: 'Akbar Ashurov',
       groupId: 'group-2',
       groupName: 'General English Intermediate B1',
       level: 'A2',
@@ -695,8 +695,8 @@ export function getContestLeaderboard(): VocabLeaderboardEntry[] {
       badge: 'Story Explorer'
     },
     {
-      studentId: 'user-other-6',
-      studentName: 'Madina Yusupova',
+      studentId: 'student-official-10',
+      studentName: 'Shalola Hasanova',
       groupId: 'group-3',
       groupName: 'Elementary English Starters A2',
       level: 'A2',
@@ -711,8 +711,8 @@ export function getContestLeaderboard(): VocabLeaderboardEntry[] {
       badge: 'Speed Novice'
     },
     {
-      studentId: 'user-other-7',
-      studentName: 'Farrux Alimov',
+      studentId: 'student-official-13',
+      studentName: "Otabek To'rayev",
       groupId: 'group-3',
       groupName: 'Elementary English Starters A2',
       level: 'A2',

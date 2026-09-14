@@ -83,31 +83,28 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const deletedIds = new Set(getStorageItem<string[]>('premier_deleted_student_ids', []));
     const map = new Map<string, Profile>();
 
-    // 1. Seed official premier students from real records
+    // 1. Seed official premier students from real records (36 real students)
     PREMIER_OFFICIAL_STUDENTS.forEach((st) => {
       if (!deletedIds.has(st.id)) {
         map.set(st.id, st);
       }
     });
 
-    // 2. Add original seed students if not duplicated
-    SEED_PROFILES.filter(p => p.role === 'student').forEach((s, idx) => {
-      if (deletedIds.has(s.id)) return;
-      const defaultGroupId = idx === 0 ? 'group-1' : idx === 1 ? 'group-2' : 'group-3';
-      const defaultGroupName = idx === 0 ? 'IELTS Intensive Target 7.5+' : idx === 1 ? 'General English Intermediate B1' : 'Elementary English Starters A2';
-      if (!map.has(s.id)) {
-        map.set(s.id, {
-          ...s,
-          group_id: s.group_id || defaultGroupId,
-          group_name: s.group_name || defaultGroupName,
-          payment_status: s.payment_status || 'paid',
-        });
-      }
-    });
-
-    // 3. Apply any user updates from localStorage
+    // 2. Apply any updates from localStorage (filtering out legacy dummy mock student IDs)
     stored.forEach(r => {
-      if (r.role === 'student' && !deletedIds.has(r.id)) {
+      const isLegacyDummy = 
+        r.id.startsWith('user-student-') || 
+        r.id.startsWith('user-other-') || 
+        r.id.startsWith('student-1') || 
+        r.id.startsWith('student-2') || 
+        r.id.startsWith('student-3') ||
+        r.full_name === 'Jasur Rustamov' ||
+        r.full_name === 'Nodira Karimova' ||
+        r.full_name === 'Bekzod Toshmatov' ||
+        r.full_name === 'Alisher Usmonov' ||
+        r.full_name === 'Malika Toirova';
+
+      if (r.role === 'student' && !deletedIds.has(r.id) && !isLegacyDummy) {
         const existing = map.get(r.id);
         map.set(r.id, { ...existing, ...r });
       }
@@ -116,6 +113,22 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return Array.from(map.values());
   });
   const [loading, setLoading] = useState(false);
+
+  // Automatically keep groups' students_count dynamically in sync with actual assigned students
+  useEffect(() => {
+    setGroups(prevGroups => {
+      let changed = false;
+      const updated = prevGroups.map(g => {
+        const count = students.filter(s => s.group_id === g.id && s.status !== 'left').length;
+        if (g.students_count !== count) {
+          changed = true;
+          return { ...g, students_count: count };
+        }
+        return g;
+      });
+      return changed ? updated : prevGroups;
+    });
+  }, [students]);
 
   // Persistence side-effects
   useEffect(() => { setStorageItem('premier_groups', groups); }, [groups]);
@@ -641,13 +654,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return s;
     }));
 
-    setGroups(prevGroups => prevGroups.map(g => {
-      if (g.id === groupId) {
-        return { ...g, students_count: (g.students_count || 0) + 1 };
-      }
-      return g;
-    }));
-
     if (isSupabaseConfigured && supabase) {
       try {
         await supabase.from('profiles').update({
@@ -669,9 +675,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const removeStudentFromGroup = async (studentId: string): Promise<void> => {
-    const st = students.find(s => s.id === studentId);
-    const oldGroupId = st?.group_id;
-
     setStudents(prev => prev.map(s => {
       if (s.id === studentId) {
         return {
@@ -683,15 +686,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
       return s;
     }));
-
-    if (oldGroupId) {
-      setGroups(prevGroups => prevGroups.map(g => {
-        if (g.id === oldGroupId) {
-          return { ...g, students_count: Math.max(0, (g.students_count || 1) - 1) };
-        }
-        return g;
-      }));
-    }
 
     if (isSupabaseConfigured && supabase) {
       try {
@@ -749,10 +743,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     setStudents(prev => [newStudent, ...prev]);
 
-    if (targetGroup) {
-      setGroups(prev => prev.map(g => g.id === targetGroup.id ? { ...g, students_count: (g.students_count || 0) + 1 } : g));
-    }
-
     const reg = getStorageItem<Profile[]>('premier_registered_users', []);
     setStorageItem('premier_registered_users', [...reg, newStudent]);
 
@@ -770,18 +760,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const deleteStudent = async (studentId: string): Promise<void> => {
     const target = students.find(s => s.id === studentId);
-    const targetGroupId = target?.group_id;
 
     setStudents(prev => prev.filter(s => s.id !== studentId));
-
-    if (targetGroupId) {
-      setGroups(prevGroups => prevGroups.map(g => {
-        if (g.id === targetGroupId) {
-          return { ...g, students_count: Math.max(0, (g.students_count || 1) - 1) };
-        }
-        return g;
-      }));
-    }
 
     const registered = getStorageItem<Profile[]>('premier_registered_users', []);
     setStorageItem('premier_registered_users', registered.filter(r => r.id !== studentId && r.email !== target?.email));

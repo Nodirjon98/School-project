@@ -366,7 +366,7 @@ export const PlacementTestPage: React.FC = () => {
             <div className="py-4 space-y-2 relative border-y border-slate-200/80 max-w-lg mx-auto">
               <span className="text-xs text-slate-500 italic block">This is officially presented to:</span>
               <h4 className="text-2xl font-bold text-slate-900 font-serif">
-                {profile?.full_name || 'Jasur Rustamov'}
+                {profile?.full_name || "O'quvchi"}
               </h4>
               <p className="text-xs text-slate-600 leading-relaxed max-w-md mx-auto">
                 Having successfully completed the formal Premier School diagnostic examination, achieving evaluated competence at:

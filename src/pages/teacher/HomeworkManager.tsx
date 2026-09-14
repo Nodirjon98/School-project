@@ -163,7 +163,7 @@ export const HomeworkManager: React.FC = () => {
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-bold text-slate-900">
-                          {sub.student_name || 'Jasur Rustamov'}
+                          {sub.student_name || "O'quvchi"}
                         </span>
                         <span className="text-xs text-slate-400">•</span>
                         <span className="text-xs font-semibold text-slate-600">

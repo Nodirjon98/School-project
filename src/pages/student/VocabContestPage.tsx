@@ -96,7 +96,7 @@ export const VocabContestPage: React.FC = () => {
         {
           id: 'm-init-1',
           date: 'Yesterday, 18:40',
-          opponentName: 'Bekzod Toshmatov',
+          opponentName: 'Manzura Sayfullayeva',
           playerScore: 420,
           opponentScore: 310,
           isWin: true,
@@ -127,7 +127,7 @@ export const VocabContestPage: React.FC = () => {
   const filteredOpponents = useMemo(() => {
     return CONTEST_OPPONENTS.filter(opp => {
       // Don't show current user as opponent
-      if (opp.id === 'user-student-1') return false;
+      if (opp.id === profile?.id || opp.name === profile?.full_name) return false;
 
       // Group filter
       if (selectedGroupFilter === 'my_group') {
@@ -981,7 +981,7 @@ export const VocabContestPage: React.FC = () => {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {leaderboardList.map((entry, idx) => {
-                      const isCurrentUser = entry.studentId === 'user-student-1';
+                      const isCurrentUser = entry.studentId === profile?.id || entry.studentName === profile?.full_name;
                       const oppMatch = CONTEST_OPPONENTS.find(o => o.id === entry.studentId);
 
                       return (

@@ -62,50 +62,6 @@ export const SEED_PROFILES: Profile[] = [
     xp: 2890,
     streak: 19,
     created_at: '2025-01-12T10:00:00Z',
-  },
-  {
-    id: 'user-student-1',
-    email: 'student@premierschool.uz',
-    full_name: 'Jasur Rustamov',
-    role: 'student',
-    phone: '+998 93 555 11 22',
-    age: 19,
-    goal: 'Score IELTS 7.5 for Westminster University in Tashkent',
-    level_estimate: 'B1',
-    level: 'B2',
-    schedule_preference: 'Mon / Wed / Fri 18:30 - 20:00',
-    onboarding_completed: true,
-    xp: 1420,
-    streak: 12,
-    created_at: '2025-02-01T14:00:00Z',
-  },
-  {
-    id: 'user-student-2',
-    email: 'nodira.k@gmail.com',
-    full_name: 'Nodira Karimova',
-    role: 'student',
-    phone: '+998 99 888 77 66',
-    age: 21,
-    goal: 'Master conversational fluency for IT outsourcing',
-    level: 'B2',
-    onboarding_completed: true,
-    xp: 1890,
-    streak: 16,
-    created_at: '2025-02-05T12:00:00Z',
-  },
-  {
-    id: 'user-student-3',
-    email: 'bekzod.t@gmail.com',
-    full_name: 'Bekzod Toshmatov',
-    role: 'student',
-    phone: '+998 94 333 44 55',
-    age: 18,
-    goal: 'Grammar and academic writing for WIUT',
-    level: 'B1',
-    onboarding_completed: true,
-    xp: 1210,
-    streak: 8,
-    created_at: '2025-02-10T12:00:00Z',
   }
 ];
 
@@ -119,7 +75,7 @@ export const SEED_GROUPS: Group[] = [
     schedule: 'Mon / Wed / Fri 18:30',
     room: 'Room 304 (Chorsu Campus)',
     created_at: '2025-02-01T10:00:00Z',
-    students_count: 14,
+    students_count: 0,
   },
   {
     id: 'group-2',
@@ -130,7 +86,7 @@ export const SEED_GROUPS: Group[] = [
     schedule: 'Tue / Thu / Sat 16:30',
     room: 'Room 201 (Oybek Campus)',
     created_at: '2025-02-03T11:00:00Z',
-    students_count: 12,
+    students_count: 0,
   },
   {
     id: 'group-3',
@@ -141,7 +97,7 @@ export const SEED_GROUPS: Group[] = [
     schedule: 'Mon / Wed / Fri 10:00',
     room: 'Room 102 (Oybek Campus)',
     created_at: '2025-02-05T09:00:00Z',
-    students_count: 10,
+    students_count: 0,
   }
 ];
 
@@ -276,32 +232,7 @@ export const SEED_HOMEWORK: Homework[] = [
   }
 ];
 
-export const SEED_SUBMISSIONS: HomeworkSubmission[] = [
-  {
-    id: 'sub-1',
-    homework_id: 'hw-2',
-    student_id: 'user-student-1',
-    submission_data: {
-      answers: {
-        'q1': 'have we seen',
-        'q2': 'did he confirm',
-        'q3': 'should you',
-        'q4': 'had I reached'
-      },
-      submitted_at: '2025-02-18T16:20:00Z'
-    },
-    score: 100,
-    auto_graded: true,
-    status: 'graded',
-    is_late: false,
-    feedback: 'Flawless accuracy! Excellent command of formal negative inversion.',
-    graded_at: '2025-02-18T16:20:00Z',
-    submitted_at: '2025-02-18T16:20:00Z',
-    homework_title: 'Advanced Inversion & Emphasis Quiz',
-    student_name: 'Jasur Rustamov',
-    max_score: 100
-  }
-];
+export const SEED_SUBMISSIONS: HomeworkSubmission[] = [];
 
 export const SEED_DAILY_WORDS: DailyWord[] = [
   {
@@ -546,172 +477,6 @@ export const SEED_DAILY_WORDS: DailyWord[] = [
   }
 ];
 
-export const SEED_WORD_PROGRESS: WordProgress[] = [
-  {
-    id: 'wp-1',
-    student_id: 'user-student-1',
-    word_id: 'word-1',
-    box: 4,
-    next_review_date: new Date(Date.now() + 86400000 * 5).toISOString().split('T')[0],
-    reviews_count: 5,
-    mastered: false,
-    last_reviewed_at: new Date().toISOString(),
-    word: SEED_DAILY_WORDS[0]
-  },
-  {
-    id: 'wp-2',
-    student_id: 'user-student-1',
-    word_id: 'word-2',
-    box: 5,
-    next_review_date: new Date(Date.now() + 86400000 * 14).toISOString().split('T')[0],
-    reviews_count: 7,
-    mastered: true,
-    last_reviewed_at: new Date().toISOString(),
-    word: SEED_DAILY_WORDS[1]
-  },
-  {
-    id: 'wp-3',
-    student_id: 'user-student-1',
-    word_id: 'word-3',
-    box: 2,
-    next_review_date: new Date().toISOString().split('T')[0],
-    reviews_count: 2,
-    mastered: false,
-    last_reviewed_at: new Date().toISOString(),
-    word: SEED_DAILY_WORDS[2]
-  },
-  {
-    id: 'wp-4',
-    student_id: 'user-student-1',
-    word_id: 'word-4',
-    box: 1,
-    next_review_date: new Date().toISOString().split('T')[0],
-    reviews_count: 1,
-    mastered: false,
-    last_reviewed_at: new Date().toISOString(),
-    word: SEED_DAILY_WORDS[3]
-  },
-  {
-    id: 'wp-5',
-    student_id: 'user-student-1',
-    word_id: 'word-5',
-    box: 1,
-    next_review_date: new Date().toISOString().split('T')[0],
-    reviews_count: 0,
-    mastered: false,
-    word: SEED_DAILY_WORDS[4]
-  }
-];
-
-export const SEED_CHAMPIONSHIP: ChampionshipScore[] = [
-  {
-    id: 'cs-1',
-    student_id: 'user-student-2',
-    student_name: 'Nodira Karimova',
-    month: '2025-09',
-    xp: 1890,
-    rank: 1,
-    lessons_attended: 12,
-    homeworks_completed: 8,
-    group_name: 'IELTS Intensive Target 7.5+',
-    student: SEED_PROFILES[3]
-  },
-  {
-    id: 'cs-2',
-    student_id: 'user-student-1',
-    student_name: 'Jasur Rustamov',
-    month: '2025-09',
-    xp: 1420,
-    rank: 2,
-    lessons_attended: 11,
-    homeworks_completed: 6,
-    group_name: 'IELTS Intensive Target 7.5+',
-    student: SEED_PROFILES[2]
-  },
-  {
-    id: 'cs-3',
-    student_id: 'user-student-3',
-    student_name: 'Bekzod Toshmatov',
-    month: '2025-09',
-    xp: 1210,
-    rank: 3,
-    lessons_attended: 9,
-    homeworks_completed: 5,
-    group_name: 'General English Intermediate B1',
-    student: SEED_PROFILES[4]
-  },
-  {
-    id: 'cs-4',
-    student_id: 'user-other-4',
-    student_name: 'Dilnoza Murodova',
-    month: '2025-09',
-    xp: 980,
-    rank: 4,
-    lessons_attended: 8,
-    homeworks_completed: 4,
-    group_name: 'General English Intermediate B1',
-    student: {
-      id: 'user-other-4',
-      email: 'dilnoza.m@gmail.com',
-      full_name: 'Dilnoza Murodova',
-      role: 'student',
-      level: 'B1',
-      onboarding_completed: true,
-      xp: 980,
-      streak: 5,
-      created_at: '2025-02-12T00:00:00Z'
-    }
-  },
-  {
-    id: 'cs-5',
-    student_id: 'user-other-5',
-    student_name: 'Shoxrux Sobirov',
-    month: '2025-09',
-    xp: 850,
-    rank: 5,
-    lessons_attended: 7,
-    homeworks_completed: 4,
-    group_name: 'Elementary English Starters A2',
-    student: {
-      id: 'user-other-5',
-      email: 'shoxrux.s@gmail.com',
-      full_name: 'Shoxrux Sobirov',
-      role: 'student',
-      level: 'A2',
-      onboarding_completed: true,
-      xp: 850,
-      streak: 4,
-      created_at: '2025-02-14T00:00:00Z'
-    }
-  }
-];
-
-export const SEED_BADGES: Badge[] = [
-  {
-    id: 'b-1',
-    student_id: 'user-student-1',
-    badge_key: 'streak_7',
-    title: 'Consistency Star (7-Day Streak)',
-    description: 'Maintained 7 consecutive days of active English study in Tashkent',
-    icon: 'Flame',
-    awarded_at: '2025-02-14T10:00:00Z'
-  },
-  {
-    id: 'b-2',
-    student_id: 'user-student-1',
-    badge_key: 'vocab_master_25',
-    title: 'Lexical Pioneer',
-    description: 'Mastered 25+ advanced academic vocabulary words in Leitner Box 5',
-    icon: 'Award',
-    awarded_at: '2025-02-16T15:30:00Z'
-  },
-  {
-    id: 'b-3',
-    student_id: 'user-student-1',
-    badge_key: 'podium_silver',
-    title: 'Championship Podium',
-    description: 'Ranked in the top 3 on the Premier School Monthly Championship',
-    icon: 'Trophy',
-    awarded_at: '2025-02-18T18:00:00Z'
-  }
-];
+export const SEED_WORD_PROGRESS: WordProgress[] = [];
+export const SEED_CHAMPIONSHIP: ChampionshipScore[] = [];
+export const SEED_BADGES: Badge[] = [];

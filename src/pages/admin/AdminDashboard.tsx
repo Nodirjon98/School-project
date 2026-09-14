@@ -13,7 +13,7 @@ export const AdminDashboard: React.FC = () => {
   const { t } = useLanguage();
   const { groups, homeworks, submissions, dailyWords, students } = useLMSData();
 
-  const unassignedCount = students.filter(s => !s.group_id).length;
+  const unassignedCount = students.filter(s => !s.group_id && s.status !== 'left').length;
 
   return (
     <div className="space-y-6">
@@ -189,8 +189,8 @@ export const AdminDashboard: React.FC = () => {
           <div className="space-y-3 text-xs">
             <div className="p-3 rounded-xl bg-blue-50/50 border border-blue-100 flex items-start justify-between">
               <div>
-                <span className="font-bold text-blue-950 block">Yangi o'quvchi ro'yxatdan o'tdi</span>
-                <span className="text-slate-600">Jasur Rustamov onboarding testini yakunladi (CEFR B2)</span>
+                <span className="font-bold text-blue-950 block">O'quvchi faolligi</span>
+                <span className="text-slate-600">{students[0]?.full_name || "Shahzoda Ilhomova"} o'quvchi kabinetiga kirdi</span>
               </div>
               <span className="text-[10px] text-slate-400">10 daq avval</span>
             </div>

@@ -17,8 +17,8 @@ export const StudentPaymentsPage: React.FC = () => {
     setPlans(getStoredStudentPayments());
   }, []);
 
-  // Match current user or default to first plan (Alisher Usmonov)
-  const myPlan = plans.find(p => p.student_email === user?.email || p.student_id === user?.id) || plans[0];
+  // Match current user or default to first plan
+  const myPlan = plans.find(p => p.student_email?.toLowerCase() === user?.email?.toLowerCase() || p.student_id === user?.id) || plans[0];
 
   if (!myPlan) {
     return (
