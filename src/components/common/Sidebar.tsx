@@ -82,6 +82,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     {
       category: "O'QUV MATERIALARI",
       items: [
+        { label: 'Essential Grammar (Murphy)', path: '/essential-grammar', icon: <BookOpen className="w-4 h-4 text-amber-400" />, badge: 'A1-A2' },
         { label: '4000 Words Curriculum', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" />, badge: 'Books 1-6' },
         { label: 'Tactics for Listening', path: '/teacher/listening', icon: <Headphones className="w-4 h-4 text-sky-400" />, badge: '24 Units' },
         { label: 'Reading for Real World', path: '/real-world-reading', icon: <BookOpen className="w-4 h-4 text-indigo-400" /> },
@@ -91,6 +92,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     {
       category: "AI & BELLASHUV",
       items: [
+        { label: 'Grammatika Imtihonlari', path: '/admin/grammar-exams', icon: <Sparkles className="w-4 h-4 text-indigo-400" />, badge: 'Exams' },
         { label: 'Speaking & Voice Hub', path: '/teacher/speaking-hub', icon: <Mic className="w-4 h-4 text-emerald-400" />, badge: 'Mr Safoyev' },
         { label: t('aiStudio'), path: '/ai-studio', icon: <BrainCircuit className="w-4 h-4 text-indigo-400" />, badge: 'Gemini 3.8' },
         { label: 'Vocab Contest Arena', path: '/vocab-contest', icon: <Swords className="w-4 h-4 text-amber-400" /> },
@@ -107,11 +109,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         { label: "O'zlashtirish Analytics", path: '/admin/performance', icon: <TrendingUp className="w-4 h-4 text-emerald-400" /> },
         { label: "To'lovlar & Kassa", path: '/admin/payments', icon: <CreditCard className="w-4 h-4 text-emerald-400" />, badge: 'Moliya' },
         { label: t('manageGroups'), path: '/admin/groups', icon: <Users className="w-4 h-4" /> },
+        { label: 'Grammatika Imtihonlari Builder', path: '/admin/grammar-exams', icon: <Sparkles className="w-4 h-4 text-indigo-400" />, badge: 'Exams' },
       ]
     },
     {
       category: "AKADEMIK BAZA",
       items: [
+        { label: 'Essential Grammar (Murphy)', path: '/essential-grammar', icon: <BookOpen className="w-4 h-4 text-amber-400" />, badge: '114 Units' },
         { label: '4000 Words Curriculum', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" /> },
         { label: t('manageWords'), path: '/admin/words', icon: <Database className="w-4 h-4" /> },
         { label: 'Tactics for Listening', path: '/teacher/listening', icon: <Headphones className="w-4 h-4 text-sky-400" /> },
