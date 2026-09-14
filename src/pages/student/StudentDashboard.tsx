@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -6,17 +6,22 @@ import { useLMSData } from '../../contexts/LMSDataContext';
 import { 
   Flame, Zap, Trophy, BookOpen, Clock, 
   CheckCircle2, AlertCircle, ArrowRight, Sparkles, 
-  Layers, ChevronRight, FileText, Award, Radio, Music, Headphones, Mic, PenTool
+  Layers, ChevronRight, FileText, Award, Radio, Music, Headphones, Mic, PenTool,
+  Calendar, MapPin
 } from 'lucide-react';
 import { AIStudyAssistant } from '../../components/student/AIStudyAssistant';
+import { WeeklyTimetable } from '../../components/schedule/WeeklyTimetable';
 
 export const StudentDashboard: React.FC = () => {
   const { profile } = useAuth();
   const { t } = useLanguage();
   const { 
     lessons, homeworks, submissions, dailyWords, 
-    championshipScores, attendance, completeLesson 
+    championshipScores, attendance, completeLesson, groups
   } = useLMSData();
+
+  const [showTimetable, setShowTimetable] = useState(false);
+  const myGroup = groups.find(g => g.id === profile?.group_id) || (profile?.group_id ? groups[0] : groups[0]);
 
   // Find user's championship rank & top scorers
   const sortedChampionship = [...championshipScores].sort((a, b) => a.rank - b.rank);
@@ -216,6 +221,71 @@ export const StudentDashboard: React.FC = () => {
                 <span className="text-sm font-black text-slate-800">{pendingHw.length} tasks</span>
               </div>
             </div>
+          </div>
+
+          {/* Student Class Schedule & Timetable Card */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center">
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-extrabold text-slate-900 text-sm">Mening Dars Jadvalim</h3>
+                    {myGroup && (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-50 text-indigo-700 border border-indigo-200">
+                        {myGroup.level} Daraja
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    {myGroup ? `${myGroup.name} • ${myGroup.schedule}` : 'Guruhga biriktirish kutilmoqda'}
+                  </p>
+                </div>
+              </div>
+
+              {myGroup && (
+                <button
+                  type="button"
+                  onClick={() => setShowTimetable(!showTimetable)}
+                  className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
+                >
+                  <Clock className="w-3.5 h-3.5 text-slate-500" />
+                  <span>{showTimetable ? "Jadvalni yashirish" : "Haftalik to'liq jadval"}</span>
+                </button>
+              )}
+            </div>
+
+            {myGroup ? (
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+                  <div className="flex items-center gap-2 text-slate-700">
+                    <Clock className="w-4 h-4 text-indigo-600 shrink-0" />
+                    <span><strong>Dars vaqti:</strong> {myGroup.schedule}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-slate-700">
+                    <MapPin className="w-4 h-4 text-rose-500 shrink-0" />
+                    <span><strong>Xona:</strong> {myGroup.room || 'Oybek Campus, Room 304'}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-slate-700">
+                    <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+                    <span><strong>Ustoz:</strong> {myGroup.teacher_name || 'Malika Karimova'}</span>
+                  </div>
+                </div>
+
+                {showTimetable && (
+                  <div className="pt-2 animate-in fade-in duration-200">
+                    <WeeklyTimetable groups={groups} userGroupId={myGroup.id} isStudentView={true} />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 flex items-center gap-2.5">
+                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>Siz hali biror guruhga biriktirilmagansiz. Administrator darajangizga qarab tez orada guruh tayinlaydi.</span>
+              </div>
+            )}
           </div>
 
           {/* 4000 Essential English Words Level Progression Banner */}

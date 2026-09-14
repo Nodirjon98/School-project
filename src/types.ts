@@ -22,6 +22,9 @@ export interface Profile {
   streak: number;
   last_active_date?: string;
   avatar_url?: string;
+  group_id?: string;
+  group_name?: string;
+  payment_status?: 'paid' | 'partial' | 'overdue' | 'pending';
   created_at: string;
   updated_at?: string;
 }
@@ -221,7 +224,9 @@ export type RealtimeEventType =
   | 'DEADLINE_ALERT'
   | 'XP_AWARDED'
   | 'EXAM_PUBLISHED'
-  | 'EXAM_COMPLETED';
+  | 'EXAM_COMPLETED'
+  | 'STUDENT_REGISTERED'
+  | 'GROUP_ASSIGNED';
 
 export interface GrammarExamQuestion {
   id: string;
@@ -762,7 +767,7 @@ export interface LiveSpeakingSession {
 // STUDENT PAYMENT SCHEDULE & INVOICE TYPES
 // ============================================================================
 export type PaymentStatus = 'paid' | 'pending' | 'overdue' | 'partial';
-export type PaymentMethod = 'cash' | 'payme' | 'click' | 'uzum' | 'bank_transfer';
+export type PaymentMethod = 'cash' | 'card' | 'payme' | 'click' | 'uzum' | 'bank_transfer';
 export type PaymentPlanType = 'monthly' | 'quarterly' | 'full_course' | 'custom';
 
 export interface PaymentScheduleItem {

@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { SEED_PROFILES } from '../lib/seedData';
 import { getStorageItem, setStorageItem, removeStorageItem } from '../lib/storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { Profile, UserRole } from '../types';
+import { Profile, UserRole, CEFRLevel } from '../types';
 
 interface AuthContextType {
   user: any | null;
@@ -10,7 +10,7 @@ interface AuthContextType {
   role: UserRole;
   loading: boolean;
   signIn: (email: string, password?: string) => Promise<{ error: string | null }>;
-  signUp: (email: string, password: string, fullName: string, role?: UserRole) => Promise<{ error: string | null }>;
+  signUp: (email: string, password: string, fullName: string, role?: UserRole, phone?: string, level?: CEFRLevel) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: string | null }>;
   switchDemoRole: (role: UserRole) => void;
@@ -112,7 +112,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     email: string, 
     _password: string, 
     fullName: string, 
-    role: UserRole = 'student'
+    role: UserRole = 'student',
+    phone?: string,
+    level?: CEFRLevel
   ): Promise<{ error: string | null }> => {
     setLoading(true);
     try {
@@ -121,10 +123,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email,
         full_name: fullName,
         role,
-        level: 'B1',
+        phone: phone || '',
+        level: level || 'B1',
         onboarding_completed: true,
         xp: 100,
         streak: 1,
+        payment_status: 'pending',
         created_at: new Date().toISOString()
       };
 
@@ -136,6 +140,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setStorageItem('premier_registered_users', [...customUsers, newProf]);
       saveProfile(newProf);
       setUser({ id: newProf.id, email: newProf.email });
+      
+      // Dispatch event to inform other active contexts (e.g., LMSDataContext)
+      try {
+        window.dispatchEvent(new CustomEvent('premier:student_registered', { detail: newProf }));
+      } catch (e) {
+        // Safe fallback
+      }
+
       setLoading(false);
       return { error: null };
     } catch (err: any) {

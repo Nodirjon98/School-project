@@ -1,30 +1,44 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useLMSData } from '../../contexts/LMSDataContext';
-import { useAuth } from '../../contexts/AuthContext';
 import { CEFRLevel, Group, Profile } from '../../types';
 import { Modal } from '../../components/common/Modal';
+import { WeeklyTimetable } from '../../components/schedule/WeeklyTimetable';
 import { 
   Users, Plus, Clock, MapPin, 
-  UserPlus, Search, ShieldCheck, Phone, Mail, CheckCircle2, UserCheck
+  UserPlus, Search, Phone, Mail, CheckCircle2,
+  Calendar, CreditCard, AlertCircle, ArrowRight, Sparkles, X, ChevronRight
 } from 'lucide-react';
-import { getStorageItem, setStorageItem } from '../../lib/storage';
-import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 
 export const GroupManager: React.FC = () => {
   const { t } = useLanguage();
-  const { groups, createGroup } = useLMSData();
-  const { signUp } = useAuth();
+  const { 
+    groups, createGroup, students, 
+    assignStudentToGroup, removeStudentFromGroup, registerStudentByAdmin 
+  } = useLMSData();
 
+  // Tab navigation
+  const [activeTab, setActiveTab] = useState<'groups' | 'students' | 'timetable'>('students');
+
+  // Modals state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [selectedGroupForDetail, setSelectedGroupForDetail] = useState<Group | null>(null);
+  const [selectedStudentForAssign, setSelectedStudentForAssign] = useState<Profile | null>(null);
+  const [assignTargetGroupId, setAssignTargetGroupId] = useState('');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Search and Filters
+  const [groupSearch, setGroupSearch] = useState('');
+  const [studentSearch, setStudentSearch] = useState('');
+  const [studentFilter, setStudentFilter] = useState<'all' | 'unassigned' | 'assigned'>('all');
 
   // Group Form states
   const [name, setName] = useState('');
   const [level, setLevel] = useState<CEFRLevel>('B2');
-  const [schedule, setSchedule] = useState('Dush / Chor / Jum 18:30 - 20:00');
+  const [scheduleDays, setScheduleDays] = useState<'MWF' | 'TTS'>('MWF');
+  const [scheduleTime, setScheduleTime] = useState('18:30 - 20:00');
   const [room, setRoom] = useState('Oybek Campus, Room 304');
   const [capacity, setCapacity] = useState(14);
   const [teacherName, setTeacherName] = useState('Malika Karimova');
@@ -38,16 +52,23 @@ export const GroupManager: React.FC = () => {
   const [targetGroupId, setTargetGroupId] = useState('');
   const [studentMessage, setStudentMessage] = useState('');
 
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
+
   const handleCreateGroup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name) return;
+
+    const fullSchedule = `${scheduleDays === 'MWF' ? 'Dush / Chor / Jum' : 'Sesh / Pay / Shan'} ${scheduleTime}`;
 
     await createGroup({
       name,
       level,
       teacher_id: 't1',
       teacher_name: teacherName,
-      schedule,
+      schedule: fullSchedule,
       room,
       capacity: Number(capacity),
       students_count: 0
@@ -55,6 +76,7 @@ export const GroupManager: React.FC = () => {
 
     setIsModalOpen(false);
     setName('');
+    showToast(`"${name}" guruhi muvaffaqiyatli ochildi!`);
   };
 
   const handleCreateStudent = async (e: React.FormEvent) => {
@@ -62,51 +84,97 @@ export const GroupManager: React.FC = () => {
     if (!studentEmail || !studentName) return;
 
     setStudentMessage('');
-    const res = await signUp(studentEmail, studentPassword, studentName, 'student');
-    
-    if (res.error) {
-      setStudentMessage(`Xatolik: ${res.error}`);
-      return;
-    }
+    try {
+      await registerStudentByAdmin({
+        full_name: studentName,
+        email: studentEmail,
+        phone: studentPhone,
+        level: studentLevel,
+        group_id: targetGroupId || undefined,
+        password: studentPassword,
+      });
 
-    // Assign to group and update profile phone/group_id
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from('profiles').update({
-          phone: studentPhone,
-          group_id: targetGroupId,
-          level: studentLevel
-        }).eq('email', studentEmail.toLowerCase());
-      } catch (err) {
-        console.warn('Supabase student update error:', err);
-      }
+      setStudentMessage(`✅ O'quvchi "${studentName}" muvaffaqiyatli saqlandi!`);
+      showToast(`O'quvchi "${studentName}" ro'yxatga olindi!`);
+      setTimeout(() => {
+        setIsStudentModalOpen(false);
+        setStudentMessage('');
+        setStudentName('');
+        setStudentEmail('');
+        setStudentPhone('+998 90 ');
+        setTargetGroupId('');
+      }, 1000);
+    } catch (err: any) {
+      setStudentMessage(`Xatolik: ${err.message}`);
     }
-
-    setStudentMessage(`✅ O'quvchi "${studentName}" muvaffaqiyatli saqlandi! Login: ${studentEmail}`);
-    setTimeout(() => {
-      setIsStudentModalOpen(false);
-      setStudentMessage('');
-      setStudentName('');
-      setStudentEmail('');
-    }, 1500);
   };
 
+  const handleAssignStudent = async () => {
+    if (!selectedStudentForAssign || !assignTargetGroupId) return;
+
+    await assignStudentToGroup(selectedStudentForAssign.id, assignTargetGroupId);
+    const assignedGroup = groups.find(g => g.id === assignTargetGroupId);
+    showToast(`✅ ${selectedStudentForAssign.full_name} "${assignedGroup?.name}" guruhiga joylashtirildi!`);
+    setSelectedStudentForAssign(null);
+    setAssignTargetGroupId('');
+  };
+
+  const handleRemoveFromGroup = async (student: Profile) => {
+    if (window.confirm(`${student.full_name} ni guruhdan chiqarishni tasdiqlaysizmi?`)) {
+      await removeStudentFromGroup(student.id);
+      showToast(`${student.full_name} guruhdan chiqarildi.`);
+    }
+  };
+
+  // KPIs
+  const totalStudents = students.length;
+  const unassignedStudents = students.filter(s => !s.group_id);
+  const assignedStudents = students.filter(s => !!s.group_id);
+
+  // Filtered lists
   const filteredGroups = groups.filter(g => 
-    g.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    g.level.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    g.room?.toLowerCase().includes(searchTerm.toLowerCase())
+    g.name.toLowerCase().includes(groupSearch.toLowerCase()) ||
+    g.level.toLowerCase().includes(groupSearch.toLowerCase()) ||
+    g.room?.toLowerCase().includes(groupSearch.toLowerCase())
   );
 
+  const filteredStudents = students.filter(st => {
+    const matchesSearch = 
+      st.full_name.toLowerCase().includes(studentSearch.toLowerCase()) ||
+      st.email.toLowerCase().includes(studentSearch.toLowerCase()) ||
+      (st.phone && st.phone.includes(studentSearch)) ||
+      (st.level && st.level.toLowerCase().includes(studentSearch.toLowerCase()));
+
+    if (studentFilter === 'unassigned') return matchesSearch && !st.group_id;
+    if (studentFilter === 'assigned') return matchesSearch && !!st.group_id;
+    return matchesSearch;
+  });
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-16">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
+          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+          <span className="text-xs font-bold">{toastMessage}</span>
+        </div>
+      )}
+
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            {t('manageGroupsTitle')}
+          <div className="flex items-center gap-2 mb-1">
+            <span className="px-2.5 py-0.5 rounded-md bg-indigo-50 border border-indigo-200 text-indigo-700 text-[10px] font-black uppercase tracking-wider">
+              Admin & Academic CRM
+            </span>
+            <span className="text-slate-400 text-xs">•</span>
+            <span className="text-xs font-semibold text-slate-500">Guruhlar va O'quvchilar Boshqaruvi</span>
+          </div>
+          <h1 className="text-2xl font-black text-slate-950 tracking-tight">
+            Guruhlar & O'quvchilarni Joylashtirish Markazi
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            Guruhlar jadvali, xonalar va yangi o'quvchilarni ro'yxatga olish (Phase 1 CRM)
+            Yangi ro'yxatdan o'tgan o'quvchilarni qabul qiling, guruhlarga joylang va haftalik dars jadvallarini boshqaring.
           </p>
         </div>
 
@@ -114,7 +182,7 @@ export const GroupManager: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsStudentModalOpen(true)}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition shadow-sm"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition shadow-sm cursor-pointer"
           >
             <UserPlus className="w-4 h-4" />
             <span>+ Yangi O'quvchi Qo'shish</span>
@@ -123,7 +191,7 @@ export const GroupManager: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition shadow-sm"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition shadow-sm cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>+ Yangi Guruh Ochish</span>
@@ -131,58 +199,472 @@ export const GroupManager: React.FC = () => {
         </div>
       </div>
 
-      {/* Search filter */}
-      <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-2xs flex items-center gap-3">
-        <Search className="w-4 h-4 text-slate-400" />
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Guruh nomi, CEFR darajasi yoki xona bo'yicha qidirish..."
-          className="w-full text-xs font-medium bg-transparent focus:outline-hidden text-slate-900 placeholder:text-slate-400"
-        />
+      {/* Top 4 KPI Metrics */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Jami O'quvchilar</span>
+            <Users className="w-4 h-4 text-blue-600" />
+          </div>
+          <div className="text-2xl font-black text-slate-900">{totalStudents} nafar</div>
+          <span className="text-[11px] text-blue-600 font-semibold block mt-0.5">Premier School bazasida</span>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Guruh Kutayotganlar</span>
+            <AlertCircle className="w-4 h-4 text-amber-500" />
+          </div>
+          <div className="text-2xl font-black text-amber-600">{unassignedStudents.length} nafar</div>
+          <span className="text-[11px] text-amber-600 font-bold block mt-0.5">
+            {unassignedStudents.length > 0 ? "⚠️ Joylashtirish talab etiladi" : "Barchasi joylashtirilgan ✓"}
+          </span>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Guruhdagi O'quvchilar</span>
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+          </div>
+          <div className="text-2xl font-black text-slate-900">{assignedStudents.length} nafar</div>
+          <span className="text-[11px] text-emerald-600 font-semibold block mt-0.5">Darslarda faol ishtirokchi</span>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Faol Guruhlar</span>
+            <Calendar className="w-4 h-4 text-purple-600" />
+          </div>
+          <div className="text-2xl font-black text-slate-900">{groups.length} ta guruh</div>
+          <span className="text-[11px] text-purple-600 font-semibold block mt-0.5">Oybek & Chorsu filiallari</span>
+        </div>
       </div>
 
-      {/* Groups Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredGroups.map(g => (
-          <div key={g.id} className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs flex flex-col justify-between hover:border-indigo-300 transition">
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
-                  {g.level} Daraja
-                </span>
-                <span className="text-xs text-slate-400 font-semibold flex items-center gap-1">
-                  <Users className="w-3.5 h-3.5 text-slate-400" />
-                  {g.students_count || 12} / {g.capacity || 14} o'quvchi
-                </span>
-              </div>
+      {/* Navigation Tabs */}
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
+        <button
+          type="button"
+          onClick={() => setActiveTab('students')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+            activeTab === 'students'
+              ? 'bg-indigo-600 text-white shadow-sm'
+              : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+          }`}
+        >
+          <UserPlus className="w-4 h-4" />
+          <span>O'quvchilar Ro'yxati & Guruhga Joylash</span>
+          {unassignedStudents.length > 0 && (
+            <span className="px-1.5 py-0.2 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black animate-pulse">
+              {unassignedStudents.length}
+            </span>
+          )}
+        </button>
 
-              <h3 className="text-base font-bold text-slate-900 mb-1">{g.name}</h3>
+        <button
+          type="button"
+          onClick={() => setActiveTab('groups')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+            activeTab === 'groups'
+              ? 'bg-indigo-600 text-white shadow-sm'
+              : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+          }`}
+        >
+          <Users className="w-4 h-4" />
+          <span>Guruhlar Boshqaruvi ({groups.length})</span>
+        </button>
 
-              <div className="space-y-1.5 my-3 text-xs text-slate-600">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span>{g.schedule}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span>{g.room || 'Oybek Campus, Room 304'}</span>
-                </div>
-              </div>
+        <button
+          type="button"
+          onClick={() => setActiveTab('timetable')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+            activeTab === 'timetable'
+              ? 'bg-indigo-600 text-white shadow-sm'
+              : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+          }`}
+        >
+          <Calendar className="w-4 h-4" />
+          <span>Haftalik Dars Jadvali (Timetable)</span>
+        </button>
+      </div>
+
+      {/* TAB 1: STUDENTS CRM & GROUP ASSIGNMENT */}
+      {activeTab === 'students' && (
+        <div className="space-y-4">
+          {/* Sub Filters & Search */}
+          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <button
+                onClick={() => setStudentFilter('all')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                  studentFilter === 'all'
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                Barchasi ({students.length})
+              </button>
+              <button
+                onClick={() => setStudentFilter('unassigned')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                  studentFilter === 'unassigned'
+                    ? 'bg-amber-500 text-white'
+                    : 'bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100'
+                }`}
+              >
+                <span>⚠️ Guruhsiz O'quvchilar</span>
+                <span className="font-extrabold px-1.5 rounded-full bg-white/20">{unassignedStudents.length}</span>
+              </button>
+              <button
+                onClick={() => setStudentFilter('assigned')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                  studentFilter === 'assigned'
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100'
+                }`}
+              >
+                Guruhga ega ({assignedStudents.length})
+              </button>
             </div>
 
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">Ustoz: {g.teacher_name || 'Malika Karimova'}</span>
-              <span className="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                Faol Guruh
-              </span>
+            <div className="relative w-full sm:w-80">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+              <input
+                type="text"
+                value={studentSearch}
+                onChange={(e) => setStudentSearch(e.target.value)}
+                placeholder="Ism, telefon, email yoki daraja..."
+                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-hidden focus:bg-white"
+              />
             </div>
           </div>
-        ))}
-      </div>
 
-      {/* Modal: Create Group */}
+          {/* Students Table */}
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-bold tracking-wider">
+                  <tr>
+                    <th className="py-3 px-4">O'quvchi</th>
+                    <th className="py-3 px-4">Bog'lanish (Telefon / Email)</th>
+                    <th className="py-3 px-4">Darajasi</th>
+                    <th className="py-3 px-4">Biriktirilgan Guruh</th>
+                    <th className="py-3 px-4">To'lov Holati</th>
+                    <th className="py-3 px-4 text-right">Amallar</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-medium">
+                  {filteredStudents.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="py-8 text-center text-slate-400">
+                        O'quvchilar topilmadi
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredStudents.map((st) => {
+                      const studentGroup = groups.find(g => g.id === st.group_id);
+                      return (
+                        <tr key={st.id} className="hover:bg-slate-50/70 transition">
+                          {/* Student Name & Avatar */}
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
+                                {st.full_name.charAt(0)}
+                              </div>
+                              <div>
+                                <div className="font-bold text-slate-900">{st.full_name}</div>
+                                <div className="text-[10px] text-slate-400">ID: {st.id.slice(-6)}</div>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Contact */}
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            <div className="space-y-0.5">
+                              <div className="text-slate-800 font-semibold flex items-center gap-1">
+                                <Phone className="w-3 h-3 text-slate-400" />
+                                <span>{st.phone || '+998 —'}</span>
+                              </div>
+                              <div className="text-slate-400 text-[11px] flex items-center gap-1">
+                                <Mail className="w-3 h-3 text-slate-300" />
+                                <span>{st.email}</span>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Level */}
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            <span className="px-2 py-0.5 rounded-full font-bold text-[10px] bg-slate-100 text-slate-700 border border-slate-200">
+                              {st.level || 'B1'}
+                            </span>
+                          </td>
+
+                          {/* Group status */}
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            {st.group_id && studentGroup ? (
+                              <div>
+                                <span className="font-bold text-indigo-700 text-xs block">
+                                  {studentGroup.name}
+                                </span>
+                                <span className="text-[10px] text-slate-500">
+                                  {studentGroup.schedule}
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[11px]">
+                                <AlertCircle className="w-3 h-3 text-amber-500" />
+                                Guruhga biriktirilmagan
+                              </span>
+                            )}
+                          </td>
+
+                          {/* Payment status */}
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            {st.payment_status === 'paid' ? (
+                              <span className="px-2 py-0.5 rounded font-bold text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                To'langan ✓
+                              </span>
+                            ) : st.payment_status === 'overdue' ? (
+                              <span className="px-2 py-0.5 rounded font-bold text-[10px] bg-rose-50 text-rose-700 border border-rose-200">
+                                Qarzdor ⚠️
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded font-bold text-[10px] bg-slate-100 text-slate-600 border border-slate-200">
+                                Kutilmoqda ⏳
+                              </span>
+                            )}
+                          </td>
+
+                          {/* Actions */}
+                          <td className="py-3 px-4 text-right whitespace-nowrap">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedStudentForAssign(st);
+                                  setAssignTargetGroupId(st.group_id || groups[0]?.id || '');
+                                }}
+                                className="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs border border-indigo-200 transition cursor-pointer"
+                              >
+                                {st.group_id ? "Guruhni o'zgartirish" : "Guruhga biriktirish →"}
+                              </button>
+
+                              {st.group_id && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveFromGroup(st)}
+                                  className="p-1.5 rounded-xl text-rose-500 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition cursor-pointer"
+                                  title="Guruhdan chiqarish"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              )}
+
+                              <Link
+                                to="/admin/payments"
+                                className="p-1.5 rounded-xl text-slate-500 hover:bg-slate-100 border border-slate-200 transition"
+                                title="To'lov boshqaruvi"
+                              >
+                                <CreditCard className="w-4 h-4 text-emerald-600" />
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: GROUPS MANAGEMENT */}
+      {activeTab === 'groups' && (
+        <div className="space-y-4">
+          <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-2xs flex items-center gap-3">
+            <Search className="w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              value={groupSearch}
+              onChange={(e) => setGroupSearch(e.target.value)}
+              placeholder="Guruh nomi, CEFR darajasi yoki xona bo'yicha qidirish..."
+              className="w-full text-xs font-medium bg-transparent focus:outline-hidden text-slate-900 placeholder:text-slate-400"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredGroups.map(g => {
+              const assignedCount = students.filter(s => s.group_id === g.id).length;
+              return (
+                <div 
+                  key={g.id} 
+                  className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs flex flex-col justify-between hover:border-indigo-300 transition"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                        {g.level} Daraja
+                      </span>
+                      <span className="text-xs text-slate-400 font-semibold flex items-center gap-1">
+                        <Users className="w-3.5 h-3.5 text-slate-400" />
+                        {assignedCount || g.students_count || 12} / {g.capacity || 14} o'quvchi
+                      </span>
+                    </div>
+
+                    <h3 className="text-base font-bold text-slate-900 mb-1">{g.name}</h3>
+
+                    <div className="space-y-1.5 my-3 text-xs text-slate-600">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <span>{g.schedule}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <span>{g.room || 'Oybek Campus, Room 304'}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span className="text-slate-500 font-medium">Ustoz: {g.teacher_name || 'Malika Karimova'}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedGroupForDetail(g)}
+                      className="text-indigo-600 font-bold hover:underline flex items-center gap-0.5 cursor-pointer"
+                    >
+                      <span>O'quvchilari ({assignedCount})</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 3: WEEKLY TIMETABLE */}
+      {activeTab === 'timetable' && (
+        <WeeklyTimetable 
+          groups={groups} 
+          students={students}
+          onSelectGroup={(grp) => setSelectedGroupForDetail(grp)}
+        />
+      )}
+
+      {/* MODAL 1: ASSIGN STUDENT TO GROUP */}
+      <Modal
+        isOpen={!!selectedStudentForAssign}
+        onClose={() => setSelectedStudentForAssign(null)}
+        title="O'quvchini Guruhga Biriktirish"
+      >
+        {selectedStudentForAssign && (
+          <div className="space-y-4">
+            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs">
+              <div className="font-extrabold text-slate-900 text-sm mb-1">
+                {selectedStudentForAssign.full_name}
+              </div>
+              <div className="text-slate-500 space-y-0.5">
+                <div>Email: {selectedStudentForAssign.email}</div>
+                <div>Telefon: {selectedStudentForAssign.phone || 'Kiritilmagan'}</div>
+                <div>CEFR Daraja: <span className="font-bold text-slate-800">{selectedStudentForAssign.level || 'B1'}</span></div>
+                {selectedStudentForAssign.group_name && (
+                  <div className="text-indigo-600 font-bold mt-1">
+                    Hozirgi guruh: {selectedStudentForAssign.group_name}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                Biriktiriladigan Guruhni Tanlang:
+              </label>
+              <select
+                value={assignTargetGroupId}
+                onChange={(e) => setAssignTargetGroupId(e.target.value)}
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:outline-hidden focus:bg-white"
+              >
+                <option value="">Guruhni tanlang...</option>
+                {groups.map((grp) => {
+                  const currentCount = students.filter(s => s.group_id === grp.id).length;
+                  return (
+                    <option key={grp.id} value={grp.id}>
+                      {grp.name} ({grp.level}) • {grp.schedule} • {currentCount}/{grp.capacity || 14} o'quvchi
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setSelectedStudentForAssign(null)}
+                className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold cursor-pointer"
+              >
+                Bekor qilish
+              </button>
+              <button
+                type="button"
+                onClick={handleAssignStudent}
+                disabled={!assignTargetGroupId}
+                className="px-5 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition disabled:opacity-50 cursor-pointer"
+              >
+                Guruhga Joylash ✓
+              </button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* MODAL 2: VIEW GROUP STUDENTS DETAIL */}
+      <Modal
+        isOpen={!!selectedGroupForDetail}
+        onClose={() => setSelectedGroupForDetail(null)}
+        title={selectedGroupForDetail ? `Guruh O'quvchilari: ${selectedGroupForDetail.name}` : ''}
+      >
+        {selectedGroupForDetail && (
+          <div className="space-y-4">
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs flex items-center justify-between">
+              <div>
+                <span className="font-bold text-slate-700 block">{selectedGroupForDetail.schedule}</span>
+                <span className="text-slate-400">{selectedGroupForDetail.room} • Ustoz: {selectedGroupForDetail.teacher_name}</span>
+              </div>
+              <span className="px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 font-extrabold text-xs">
+                {selectedGroupForDetail.level}
+              </span>
+            </div>
+
+            <div className="max-h-72 overflow-y-auto space-y-2">
+              {students.filter(s => s.group_id === selectedGroupForDetail.id).length === 0 ? (
+                <div className="p-6 text-center text-slate-400 text-xs">
+                  Bu guruhga hali o'quvchilar biriktirilmagan.
+                </div>
+              ) : (
+                students.filter(s => s.group_id === selectedGroupForDetail.id).map(st => (
+                  <div key={st.id} className="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+                    <div>
+                      <span className="font-bold text-slate-900 block">{st.full_name}</span>
+                      <span className="text-slate-400 text-[11px]">{st.phone || st.email}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveFromGroup(st)}
+                      className="px-2.5 py-1 rounded-lg text-rose-600 bg-rose-50 hover:bg-rose-100 text-[11px] font-bold transition cursor-pointer"
+                    >
+                      Guruhdan chiqarish
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* MODAL 3: CREATE GROUP */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -228,16 +710,33 @@ export const GroupManager: React.FC = () => {
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Dars Vaqti va Kunlari</label>
-            <input
-              type="text"
-              required
-              value={schedule}
-              onChange={(e) => setSchedule(e.target.value)}
-              placeholder="Dush / Chor / Jum 18:30 - 20:00"
-              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden"
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Dars Kunlari</label>
+              <select
+                value={scheduleDays}
+                onChange={(e) => setScheduleDays(e.target.value as 'MWF' | 'TTS')}
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden"
+              >
+                <option value="MWF">Dushanba / Chorshanba / Juma</option>
+                <option value="TTS">Seshanba / Payshanba / Shanba</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Dars Soati</label>
+              <select
+                value={scheduleTime}
+                onChange={(e) => setScheduleTime(e.target.value)}
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden"
+              >
+                <option value="09:00 - 10:30">09:00 - 10:30</option>
+                <option value="11:00 - 12:30">11:00 - 12:30</option>
+                <option value="14:00 - 15:30">14:00 - 15:30</option>
+                <option value="16:30 - 18:00">16:30 - 18:00</option>
+                <option value="18:30 - 20:00">18:30 - 20:00</option>
+              </select>
+            </div>
           </div>
 
           <div>
@@ -268,21 +767,21 @@ export const GroupManager: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold"
+              className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold cursor-pointer"
             >
               Bekor qilish
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition"
+              className="px-5 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition cursor-pointer"
             >
-              Guruhni saqlash
+              Guruhni Saqlash
             </button>
           </div>
         </form>
       </Modal>
 
-      {/* Modal: Create Student Profile */}
+      {/* MODAL 4: CREATE STUDENT */}
       <Modal
         isOpen={isStudentModalOpen}
         onClose={() => setIsStudentModalOpen(false)}
@@ -373,7 +872,7 @@ export const GroupManager: React.FC = () => {
               onChange={(e) => setTargetGroupId(e.target.value)}
               className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden"
             >
-              <option value="">Guruh tanlanmagan (Hali guruhsiz)</option>
+              <option value="">Guruh tanlanmagan (Hozircha guruhsiz)</option>
               {groups.map(g => (
                 <option key={g.id} value={g.id}>{g.name} ({g.level}) - {g.schedule}</option>
               ))}
@@ -384,13 +883,13 @@ export const GroupManager: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsStudentModalOpen(false)}
-              className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold"
+              className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold cursor-pointer"
             >
               Bekor qilish
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition"
+              className="px-5 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition cursor-pointer"
             >
               O'quvchini Bazaga Saqlash
             </button>
@@ -400,4 +899,3 @@ export const GroupManager: React.FC = () => {
     </div>
   );
 };
-

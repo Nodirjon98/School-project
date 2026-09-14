@@ -11,7 +11,9 @@ import {
 export const AdminDashboard: React.FC = () => {
   const { profile } = useAuth();
   const { t } = useLanguage();
-  const { groups, homeworks, submissions, dailyWords } = useLMSData();
+  const { groups, homeworks, submissions, dailyWords, students } = useLMSData();
+
+  const unassignedCount = students.filter(s => !s.group_id).length;
 
   return (
     <div className="space-y-6">
@@ -25,7 +27,7 @@ export const AdminDashboard: React.FC = () => {
             Administrator Paneli
           </h1>
           <p className="text-xs sm:text-sm text-purple-100 mt-1 leading-relaxed">
-            O'quv markaz faoliyati, guruhlar, davomat ko'rsatkichlari va Llama 3 AI generatsiyalarini boshqaring.
+            O'quv markaz faoliyati, guruhlar, davomat ko'rsatkichlari va Gemini AI generatsiyalarini boshqaring.
           </p>
 
           <div className="flex flex-wrap gap-2.5 mt-6">
@@ -59,11 +61,36 @@ export const AdminDashboard: React.FC = () => {
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white text-purple-900 font-bold text-xs hover:bg-purple-50 transition shadow-sm"
             >
               <Users className="w-4 h-4" />
-              <span>Guruhlar</span>
+              <span>Guruhlar & O'quvchilar</span>
             </Link>
           </div>
         </div>
       </div>
+
+      {/* Unassigned Students Alert Banner */}
+      {unassignedCount > 0 && (
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-700 flex items-center justify-center font-black text-base shrink-0">
+              ⚠️
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-slate-900">
+                {unassignedCount} ta yangi ro'yxatdan o'tgan o'quvchi guruhga biriktirilishini kutmoqda
+              </h4>
+              <p className="text-[11px] text-slate-500">
+                O'quvchilarni darajasiga mos guruhlarga joylashtiring va to'lov grafigini belgilang.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/admin/groups"
+            className="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition shadow-xs whitespace-nowrap text-center"
+          >
+            Guruhlarga joylash →
+          </Link>
+        </div>
+      )}
 
       {/* 4 KPI Metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -72,9 +99,9 @@ export const AdminDashboard: React.FC = () => {
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">O'quvchilar</span>
             <Users className="w-4 h-4 text-blue-600" />
           </div>
-          <div className="text-2xl font-black text-slate-900">48 nafar</div>
+          <div className="text-2xl font-black text-slate-900">{students.length} nafar</div>
           <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1 mt-1">
-            <TrendingUp className="w-3 h-3" /> +14% bu oy
+            <TrendingUp className="w-3 h-3" /> Faol o'quvchilar bazasi
           </span>
         </div>
 

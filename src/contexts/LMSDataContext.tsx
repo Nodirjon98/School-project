@@ -2,11 +2,12 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { 
   Group, Lesson, Attendance, Homework, HomeworkSubmission, 
   DailyWord, WordProgress, ChampionshipScore, Badge, AIContent, AttendanceStatus,
-  GrammarExam, GrammarExamSubmission
+  GrammarExam, GrammarExamSubmission, Profile, CEFRLevel
 } from '../types';
 import { 
   SEED_GROUPS, SEED_LESSONS, SEED_HOMEWORK, SEED_SUBMISSIONS, 
-  SEED_DAILY_WORDS, SEED_WORD_PROGRESS, SEED_CHAMPIONSHIP, SEED_BADGES
+  SEED_DAILY_WORDS, SEED_WORD_PROGRESS, SEED_CHAMPIONSHIP, SEED_BADGES,
+  SEED_PROFILES
 } from '../lib/seedData';
 import { SEED_GRAMMAR_EXAMS } from '../data/seedGrammarExams';
 import { getStorageItem, setStorageItem } from '../lib/storage';
@@ -28,11 +29,16 @@ interface LMSDataContextType {
   aiContents: AIContent[];
   grammarExams: GrammarExam[];
   examSubmissions: GrammarExamSubmission[];
+  students: Profile[];
   loading: boolean;
   
   // Actions
   addGroup: (newGroup: Omit<Group, 'id' | 'created_at'>) => Promise<void>;
   createGroup: (newGroup: Omit<Group, 'id' | 'created_at'>) => Promise<void>;
+  assignStudentToGroup: (studentId: string, groupId: string) => Promise<void>;
+  removeStudentFromGroup: (studentId: string) => Promise<void>;
+  updateStudentProfile: (studentId: string, updates: Partial<Profile>) => Promise<void>;
+  registerStudentByAdmin: (studentData: { full_name: string; email: string; phone?: string; level?: CEFRLevel; group_id?: string; password?: string }) => Promise<Profile>;
   addLesson: (newLesson: Omit<Lesson, 'id' | 'created_at'>) => Promise<void>;
   createLesson: (newLesson: Omit<Lesson, 'id' | 'created_at'>) => Promise<void>;
   completeLesson: (lessonId: string) => Promise<void>;
@@ -70,6 +76,31 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [aiContents, setAIContents] = useState<AIContent[]>(() => getStorageItem('premier_ai_contents', []));
   const [grammarExams, setGrammarExams] = useState<GrammarExam[]>(() => getStorageItem('premier_grammar_exams', SEED_GRAMMAR_EXAMS));
   const [examSubmissions, setExamSubmissions] = useState<GrammarExamSubmission[]>(() => getStorageItem('premier_grammar_submissions', []));
+  const [students, setStudents] = useState<Profile[]>(() => {
+    const registered = getStorageItem<Profile[]>('premier_registered_users', []);
+    const seedStudents = SEED_PROFILES.filter(p => p.role === 'student');
+    const map = new Map<string, Profile>();
+
+    seedStudents.forEach((s, idx) => {
+      const defaultGroupId = idx === 0 ? 'group-1' : idx === 1 ? 'group-2' : 'group-3';
+      const defaultGroupName = idx === 0 ? 'IELTS Intensive Target 7.5+' : idx === 1 ? 'General English Intermediate B1' : 'Elementary English Starters A2';
+      map.set(s.id, {
+        ...s,
+        group_id: s.group_id || defaultGroupId,
+        group_name: s.group_name || defaultGroupName,
+        payment_status: s.payment_status || 'paid',
+      });
+    });
+
+    registered.forEach(r => {
+      if (r.role === 'student') {
+        const existing = map.get(r.id);
+        map.set(r.id, { ...existing, ...r });
+      }
+    });
+
+    return Array.from(map.values());
+  });
   const [loading, setLoading] = useState(false);
 
   // Persistence side-effects
@@ -85,6 +116,39 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => { setStorageItem('premier_ai_contents', aiContents); }, [aiContents]);
   useEffect(() => { setStorageItem('premier_grammar_exams', grammarExams); }, [grammarExams]);
   useEffect(() => { setStorageItem('premier_grammar_submissions', examSubmissions); }, [examSubmissions]);
+
+  // Sync students to storage
+  useEffect(() => {
+    setStorageItem('premier_all_students', students);
+    const registered = getStorageItem<Profile[]>('premier_registered_users', []);
+    const updated = [...registered];
+    students.forEach(st => {
+      const idx = updated.findIndex(u => u.id === st.id || u.email.toLowerCase() === st.email.toLowerCase());
+      if (idx >= 0) {
+        updated[idx] = { ...updated[idx], ...st };
+      } else {
+        updated.push(st);
+      }
+    });
+    setStorageItem('premier_registered_users', updated);
+  }, [students]);
+
+  // Real-time listener for newly registered students
+  useEffect(() => {
+    const handleNewReg = (e: any) => {
+      const newStudent = e.detail as Profile;
+      if (newStudent && newStudent.role === 'student') {
+        setStudents(prev => {
+          if (prev.some(s => s.id === newStudent.id || s.email.toLowerCase() === newStudent.email.toLowerCase())) {
+            return prev;
+          }
+          return [newStudent, ...prev];
+        });
+      }
+    };
+    window.addEventListener('premier:student_registered', handleNewReg);
+    return () => window.removeEventListener('premier:student_registered', handleNewReg);
+  }, []);
 
   // Sync with Supabase on mount if configured
   useEffect(() => {
@@ -547,6 +611,149 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   };
 
+  const assignStudentToGroup = async (studentId: string, groupId: string): Promise<void> => {
+    const targetGroup = groups.find(g => g.id === groupId);
+    if (!targetGroup) return;
+
+    setStudents(prev => prev.map(s => {
+      if (s.id === studentId) {
+        return {
+          ...s,
+          group_id: groupId,
+          group_name: targetGroup.name,
+          updated_at: new Date().toISOString()
+        };
+      }
+      return s;
+    }));
+
+    setGroups(prevGroups => prevGroups.map(g => {
+      if (g.id === groupId) {
+        return { ...g, students_count: (g.students_count || 0) + 1 };
+      }
+      return g;
+    }));
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('profiles').update({
+          group_id: groupId,
+          updated_at: new Date().toISOString()
+        }).eq('id', studentId);
+      } catch (e) {
+        console.warn('Supabase assign student error:', e);
+      }
+    }
+
+    playSound('levelup');
+    realtime.publish({
+      type: 'GROUP_ASSIGNED',
+      title: "O'quvchi guruhga biriktirildi",
+      message: `O'quvchi muvaffaqiyatli "${targetGroup.name}" guruhiga joylashtirildi.`,
+      actor: { id: profile?.id || 'admin', name: profile?.full_name || 'Admin', role: 'admin' }
+    });
+  };
+
+  const removeStudentFromGroup = async (studentId: string): Promise<void> => {
+    const st = students.find(s => s.id === studentId);
+    const oldGroupId = st?.group_id;
+
+    setStudents(prev => prev.map(s => {
+      if (s.id === studentId) {
+        return {
+          ...s,
+          group_id: undefined,
+          group_name: undefined,
+          updated_at: new Date().toISOString()
+        };
+      }
+      return s;
+    }));
+
+    if (oldGroupId) {
+      setGroups(prevGroups => prevGroups.map(g => {
+        if (g.id === oldGroupId) {
+          return { ...g, students_count: Math.max(0, (g.students_count || 1) - 1) };
+        }
+        return g;
+      }));
+    }
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('profiles').update({
+          group_id: null,
+          updated_at: new Date().toISOString()
+        }).eq('id', studentId);
+      } catch (e) {
+        console.warn('Supabase remove student error:', e);
+      }
+    }
+  };
+
+  const updateStudentProfile = async (studentId: string, updates: Partial<Profile>): Promise<void> => {
+    setStudents(prev => prev.map(s => {
+      if (s.id === studentId) {
+        return { ...s, ...updates, updated_at: new Date().toISOString() };
+      }
+      return s;
+    }));
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('profiles').update(updates).eq('id', studentId);
+      } catch (e) {
+        console.warn('Supabase update student profile error:', e);
+      }
+    }
+  };
+
+  const registerStudentByAdmin = async (studentData: {
+    full_name: string;
+    email: string;
+    phone?: string;
+    level?: CEFRLevel;
+    group_id?: string;
+    password?: string;
+  }): Promise<Profile> => {
+    const targetGroup = studentData.group_id ? groups.find(g => g.id === studentData.group_id) : undefined;
+    const newStudent: Profile = {
+      id: `usr-${Date.now()}`,
+      email: studentData.email.toLowerCase(),
+      full_name: studentData.full_name,
+      role: 'student',
+      phone: studentData.phone || '',
+      level: studentData.level || 'B1',
+      group_id: studentData.group_id,
+      group_name: targetGroup?.name,
+      payment_status: 'pending',
+      onboarding_completed: true,
+      xp: 150,
+      streak: 1,
+      created_at: new Date().toISOString()
+    };
+
+    setStudents(prev => [newStudent, ...prev]);
+
+    if (targetGroup) {
+      setGroups(prev => prev.map(g => g.id === targetGroup.id ? { ...g, students_count: (g.students_count || 0) + 1 } : g));
+    }
+
+    const reg = getStorageItem<Profile[]>('premier_registered_users', []);
+    setStorageItem('premier_registered_users', [...reg, newStudent]);
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('profiles').upsert([newStudent]);
+      } catch (e) {
+        console.warn('Supabase registerStudentByAdmin error:', e);
+      }
+    }
+
+    playSound('levelup');
+    return newStudent;
+  };
+
   const resetSeason = () => {
     setChampionshipScores(prev => prev.map(cs => ({ ...cs, xp: 0, lessons_attended: 0, homeworks_completed: 0 })));
   };
@@ -566,9 +773,14 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         aiContents,
         grammarExams,
         examSubmissions,
+        students,
         loading,
         addGroup,
         createGroup: addGroup,
+        assignStudentToGroup,
+        removeStudentFromGroup,
+        updateStudentProfile,
+        registerStudentByAdmin,
         addLesson,
         createLesson: addLesson,
         completeLesson,

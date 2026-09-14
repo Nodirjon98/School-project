@@ -156,27 +156,29 @@ export const ReceivePaymentModal: React.FC<ReceivePaymentModalProps> = ({
           {/* Payment Method Selector */}
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              To'lov tizimi / usuli:
+              To'lov turi va usulini tanlang:
             </label>
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
               {[
-                { id: 'click', name: 'Click', color: 'border-amber-400 bg-amber-50 text-amber-900' },
-                { id: 'payme', name: 'Payme', color: 'border-cyan-400 bg-cyan-50 text-cyan-900' },
-                { id: 'uzum', name: 'Uzum Bank', color: 'border-purple-400 bg-purple-50 text-purple-900' },
-                { id: 'cash', name: 'Naqd pul', color: 'border-emerald-400 bg-emerald-50 text-emerald-900' },
-                { id: 'bank_transfer', name: 'Bank hisobi', color: 'border-blue-400 bg-blue-50 text-blue-900' },
+                { id: 'cash', name: '💵 Naqd pul (Kassa)', desc: 'Kassaga qabul qilindi', color: 'border-emerald-500 bg-emerald-50 text-emerald-900' },
+                { id: 'card', name: '💳 Plastik karta', desc: 'Uzcard / Humo / Terminal', color: 'border-indigo-500 bg-indigo-50 text-indigo-900' },
+                { id: 'click', name: '🟡 Click Evolution', desc: 'Click ilovasi orqali', color: 'border-amber-500 bg-amber-50 text-amber-900' },
+                { id: 'payme', name: '🔵 Payme', desc: 'Payme ilovasi orqali', color: 'border-cyan-500 bg-cyan-50 text-cyan-900' },
+                { id: 'uzum', name: '🟣 Uzum Bank', desc: 'Uzum to\'lovi', color: 'border-purple-500 bg-purple-50 text-purple-900' },
+                { id: 'bank_transfer', name: '🏛️ Bank hisobiga', desc: 'Bank o\'tkazmasi', color: 'border-blue-500 bg-blue-50 text-blue-900' },
               ].map((m) => (
                 <button
                   key={m.id}
                   type="button"
                   onClick={() => setPaymentMethod(m.id as PaymentMethod)}
-                  className={`px-2.5 py-2 rounded-xl text-xs font-bold border transition text-center cursor-pointer ${
+                  className={`p-3 rounded-2xl text-left border transition cursor-pointer ${
                     paymentMethod === m.id
-                      ? `${m.color} ring-2 ring-indigo-600 font-extrabold shadow-xs`
+                      ? `${m.color} ring-2 ring-indigo-600 font-extrabold shadow-sm`
                       : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                   }`}
                 >
-                  {m.name}
+                  <div className="text-xs font-bold text-slate-900">{m.name}</div>
+                  <div className="text-[10px] text-slate-500 mt-0.5">{m.desc}</div>
                 </button>
               ))}
             </div>

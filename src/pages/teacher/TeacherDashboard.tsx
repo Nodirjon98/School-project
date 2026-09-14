@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -7,11 +7,13 @@ import {
   Users, CheckSquare, ClipboardCheck, Sparkles, 
   Calendar, Clock, ArrowRight, BookOpen, Plus, Radio, CheckCircle2, Award 
 } from 'lucide-react';
+import { WeeklyTimetable } from '../../components/schedule/WeeklyTimetable';
 
 export const TeacherDashboard: React.FC = () => {
   const { profile } = useAuth();
   const { t } = useLanguage();
   const { groups, lessons, homeworks, submissions, gradeHomework } = useLMSData();
+  const [viewMode, setViewMode] = useState<'cards' | 'timetable'>('cards');
 
   // Find submissions pending grading
   const pendingGrading = submissions.filter(s => s.status === 'submitted');
@@ -99,17 +101,46 @@ export const TeacherDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Groups Grid */}
+      {/* Groups Section & Timetable */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold text-slate-900">Mening faol guruhlarim</h2>
-          <Link to="/teacher/groups" className="text-xs font-semibold text-blue-600 hover:underline">
-            Barchasini ko'rish
-          </Link>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 className="text-base font-bold text-slate-900">Mening faol guruhlarim & Dars jadvali</h2>
+            <p className="text-xs text-slate-500">Oybek va Chorsu filiallaridagi guruhlar dars grafigi</p>
+          </div>
+
+          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
+            <button
+              type="button"
+              onClick={() => setViewMode('cards')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                viewMode === 'cards'
+                  ? 'bg-white text-slate-900 shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              Guruh kartalari ({groups.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('timetable')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                viewMode === 'timetable'
+                  ? 'bg-indigo-600 text-white shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Haftalik Jadval</span>
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {groups.map(group => (
+        {viewMode === 'timetable' ? (
+          <WeeklyTimetable groups={groups} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {groups.map(group => (
             <div key={group.id} className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -144,7 +175,8 @@ export const TeacherDashboard: React.FC = () => {
             </div>
           ))}
         </div>
-      </div>
+      )}
+    </div>
 
       {/* Real-time Submissions & Progress Stream */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
