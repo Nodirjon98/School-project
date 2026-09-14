@@ -13,71 +13,121 @@ interface SidebarProps {
   onClose: () => void;
 }
 
+interface NavItem {
+  label: string;
+  path: string;
+  icon: React.ReactNode;
+  badge?: string;
+}
+
+interface NavSection {
+  category?: string;
+  items: NavItem[];
+}
+
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { role, profile } = useAuth();
   const { t } = useLanguage();
 
-  interface NavItem {
-    label: string;
-    path: string;
-    icon: React.ReactNode;
-    badge?: string;
-  }
-
-  const studentItems: NavItem[] = [
-    { label: t('dashboard'), path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-    { label: t('lessons'), path: '/lessons', icon: <BookOpen className="w-5 h-5" /> },
-    { label: 'Tactics for Listening', path: '/listening', icon: <Headphones className="w-5 h-5 text-sky-400" />, badge: '3rd Ed' },
-    { label: 'Karaoke & Songs', path: '/karaoke', icon: <Music className="w-5 h-5 text-purple-400" />, badge: 'Gap-Fill' },
-    { label: 'Podcasts & TED', path: '/podcasts', icon: <Radio className="w-5 h-5 text-teal-400" />, badge: 'BBC/TED' },
-    { label: 'Hayotiy Dialoglar (Roleplay)', path: '/dialogues', icon: <MessagesSquare className="w-5 h-5 text-rose-400" />, badge: 'Situations' },
-    { label: 'Speaking w/ Mr. Safoyev', path: '/speaking', icon: <Mic className="w-5 h-5 text-emerald-400" />, badge: 'Live AI' },
-    { label: '4000 Words & Reading', path: '/curriculum', icon: <BookOpen className="w-5 h-5 text-emerald-400" />, badge: 'A1-C2' },
-    { label: 'Reading for Real World', path: '/real-world-reading', icon: <BookOpen className="w-5 h-5 text-indigo-400" />, badge: 'Books 1-3' },
-    { label: 'TOEFL 6.0 Essays', path: '/toefl-essays', icon: <FileText className="w-5 h-5 text-indigo-400" />, badge: 'Chunks' },
-    { label: 'Vocab Contest Arena', path: '/vocab-contest', icon: <Swords className="w-5 h-5 text-amber-400" />, badge: '1v1 Live' },
-    { label: 'Yutuqlar & Sertifikatlar', path: '/achievements', icon: <Award className="w-5 h-5 text-amber-300" />, badge: 'Badges' },
-    { label: t('homework'), path: '/homework', icon: <CheckSquare className="w-5 h-5" />, badge: 'Due' },
-    { label: t('dailyWords'), path: '/daily-words', icon: <Layers className="w-5 h-5" />, badge: '25+ SRS' },
-    { label: 'IELTS Writing AI', path: '/ielts-writing', icon: <PenTool className="w-5 h-5 text-indigo-400" />, badge: 'Band 9' },
-    { label: 'CEFR Diagnostic', path: '/placement-test', icon: <Award className="w-5 h-5 text-amber-400" />, badge: 'Cert' },
-    { label: t('grammarPractice'), path: '/grammar', icon: <Sparkles className="w-5 h-5 text-indigo-400" />, badge: 'AI' },
-    { label: "Mening To'lovlarim", path: '/student/payments', icon: <CreditCard className="w-5 h-5 text-emerald-400" />, badge: 'Cheklar' },
-    { label: t('championship'), path: '/championship', icon: <Trophy className="w-5 h-5 text-amber-400" /> },
+  const studentSections: NavSection[] = [
+    {
+      category: "ASOSIY",
+      items: [
+        { label: t('dashboard'), path: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+        { label: t('lessons'), path: '/lessons', icon: <BookOpen className="w-4 h-4" /> },
+        { label: t('homework'), path: '/homework', icon: <CheckSquare className="w-4 h-4" />, badge: 'Due' },
+        { label: "Mening To'lovlarim", path: '/student/payments', icon: <CreditCard className="w-4 h-4 text-emerald-400" />, badge: 'Cheklar' },
+      ]
+    },
+    {
+      category: "O'QUV DASTURI",
+      items: [
+        { label: '4000 Words & Reading', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" />, badge: 'A1-C2' },
+        { label: 'Tactics for Listening', path: '/listening', icon: <Headphones className="w-4 h-4 text-sky-400" />, badge: 'Oxford' },
+        { label: 'Karaoke & Podkastlar', path: '/karaoke', icon: <Music className="w-4 h-4 text-purple-400" />, badge: 'Audio' },
+        { label: 'Reading for Real World', path: '/real-world-reading', icon: <BookOpen className="w-4 h-4 text-indigo-400" /> },
+      ]
+    },
+    {
+      category: "AI & AMALIYOT",
+      items: [
+        { label: 'Speaking w/ Mr. Safoyev', path: '/speaking', icon: <Mic className="w-4 h-4 text-emerald-400" />, badge: 'Live AI' },
+        { label: 'IELTS Writing AI', path: '/ielts-writing', icon: <PenTool className="w-4 h-4 text-indigo-400" />, badge: 'Band 9' },
+        { label: 'CEFR Diagnostic', path: '/placement-test', icon: <Award className="w-4 h-4 text-amber-400" />, badge: 'Cert' },
+      ]
+    },
+    {
+      category: "BELLASHUV & YUTUQLAR",
+      items: [
+        { label: 'Vocab Contest Arena', path: '/vocab-contest', icon: <Swords className="w-4 h-4 text-amber-400" />, badge: '1v1 Live' },
+        { label: t('dailyWords'), path: '/daily-words', icon: <Layers className="w-4 h-4" />, badge: 'SRS' },
+        { label: t('championship'), path: '/championship', icon: <Trophy className="w-4 h-4 text-amber-400" /> },
+        { label: 'Yutuqlar & Sertifikatlar', path: '/achievements', icon: <Award className="w-4 h-4 text-amber-300" /> },
+      ]
+    }
   ];
 
-  const teacherItems: NavItem[] = [
-    { label: t('dashboard'), path: '/teacher/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-    { label: 'Tactics for Listening', path: '/teacher/listening', icon: <Headphones className="w-5 h-5 text-sky-400" />, badge: '24 Units' },
-    { label: 'Speaking & Voice Hub', path: '/teacher/speaking-hub', icon: <Mic className="w-5 h-5 text-emerald-400" />, badge: 'Mr Safoyev' },
-    { label: t('myGroups'), path: '/teacher/groups', icon: <Users className="w-5 h-5" /> },
-    { label: '4000 Words Curriculum', path: '/curriculum', icon: <BookOpen className="w-5 h-5 text-emerald-400" />, badge: 'Books 1-6' },
-    { label: 'Reading for Real World', path: '/real-world-reading', icon: <BookOpen className="w-5 h-5 text-indigo-400" />, badge: 'Books 1-3' },
-    { label: 'TOEFL 6.0 Essays', path: '/toefl-essays', icon: <FileText className="w-5 h-5 text-indigo-400" />, badge: 'Chunks' },
-    { label: 'Vocab Contest Arena', path: '/vocab-contest', icon: <Swords className="w-5 h-5 text-amber-400" />, badge: 'Live 1v1' },
-    { label: t('attendance'), path: '/teacher/attendance', icon: <ClipboardCheck className="w-5 h-5" /> },
-    { label: t('homework'), path: '/teacher/homework', icon: <CheckSquare className="w-5 h-5" /> },
-    { label: t('aiStudio'), path: '/ai-studio', icon: <BrainCircuit className="w-5 h-5 text-indigo-400" />, badge: 'Gemini 3.8' },
-    { label: t('championship'), path: '/championship', icon: <Trophy className="w-5 h-5" /> },
+  const teacherSections: NavSection[] = [
+    {
+      category: "ASOSIY",
+      items: [
+        { label: t('dashboard'), path: '/teacher/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+        { label: t('myGroups'), path: '/teacher/groups', icon: <Users className="w-4 h-4" /> },
+        { label: t('attendance'), path: '/teacher/attendance', icon: <ClipboardCheck className="w-4 h-4" /> },
+        { label: t('homework'), path: '/teacher/homework', icon: <CheckSquare className="w-4 h-4" /> },
+      ]
+    },
+    {
+      category: "O'QUV MATERIALARI",
+      items: [
+        { label: '4000 Words Curriculum', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" />, badge: 'Books 1-6' },
+        { label: 'Tactics for Listening', path: '/teacher/listening', icon: <Headphones className="w-4 h-4 text-sky-400" />, badge: '24 Units' },
+        { label: 'Reading for Real World', path: '/real-world-reading', icon: <BookOpen className="w-4 h-4 text-indigo-400" /> },
+        { label: 'TOEFL 6.0 Essays', path: '/toefl-essays', icon: <FileText className="w-4 h-4 text-indigo-400" /> },
+      ]
+    },
+    {
+      category: "AI & BELLASHUV",
+      items: [
+        { label: 'Speaking & Voice Hub', path: '/teacher/speaking-hub', icon: <Mic className="w-4 h-4 text-emerald-400" />, badge: 'Mr Safoyev' },
+        { label: t('aiStudio'), path: '/ai-studio', icon: <BrainCircuit className="w-4 h-4 text-indigo-400" />, badge: 'Gemini 3.8' },
+        { label: 'Vocab Contest Arena', path: '/vocab-contest', icon: <Swords className="w-4 h-4 text-amber-400" /> },
+        { label: t('championship'), path: '/championship', icon: <Trophy className="w-4 h-4" /> },
+      ]
+    }
   ];
 
-  const adminItems: NavItem[] = [
-    { label: t('adminAnalytics'), path: '/admin/dashboard', icon: <BarChart3 className="w-5 h-5" /> },
-    { label: "O'zlashtirish (Analytics)", path: '/admin/performance', icon: <TrendingUp className="w-5 h-5 text-emerald-400" />, badge: 'Recharts' },
-    { label: "Faoliyat & Nazorat", path: '/admin/activity', icon: <Clock className="w-5 h-5 text-indigo-400" />, badge: 'Audit' },
-    { label: "To'lovlar & Kassa", path: '/admin/payments', icon: <CreditCard className="w-5 h-5 text-emerald-400" />, badge: 'Moliya' },
-    { label: 'Tactics for Listening', path: '/teacher/listening', icon: <Headphones className="w-5 h-5 text-sky-400" />, badge: 'Oxford' },
-    { label: 'Speaking & Voice Hub', path: '/admin/speaking-hub', icon: <Mic className="w-5 h-5 text-emerald-400" />, badge: 'Mr Safoyev' },
-    { label: t('manageGroups'), path: '/admin/groups', icon: <Users className="w-5 h-5" /> },
-    { label: '4000 Words Curriculum', path: '/curriculum', icon: <BookOpen className="w-5 h-5 text-emerald-400" />, badge: 'Books 1-6' },
-    { label: 'Reading for Real World', path: '/real-world-reading', icon: <BookOpen className="w-5 h-5 text-indigo-400" />, badge: 'Books 1-3' },
-    { label: 'TOEFL 6.0 Essays', path: '/toefl-essays', icon: <FileText className="w-5 h-5 text-indigo-400" />, badge: 'Chunks' },
-    { label: t('manageWords'), path: '/admin/words', icon: <Database className="w-5 h-5" /> },
-    { label: t('aiStudio'), path: '/ai-studio', icon: <BrainCircuit className="w-5 h-5 text-indigo-400" />, badge: 'Gemini 3.8' },
-    { label: t('championship'), path: '/championship', icon: <Trophy className="w-5 h-5 text-amber-400" /> },
+  const adminSections: NavSection[] = [
+    {
+      category: "BOSHQARUV & MOLIYA",
+      items: [
+        { label: t('adminAnalytics'), path: '/admin/dashboard', icon: <BarChart3 className="w-4 h-4" /> },
+        { label: "O'zlashtirish Analytics", path: '/admin/performance', icon: <TrendingUp className="w-4 h-4 text-emerald-400" /> },
+        { label: "To'lovlar & Kassa", path: '/admin/payments', icon: <CreditCard className="w-4 h-4 text-emerald-400" />, badge: 'Moliya' },
+        { label: t('manageGroups'), path: '/admin/groups', icon: <Users className="w-4 h-4" /> },
+      ]
+    },
+    {
+      category: "AKADEMIK BAZA",
+      items: [
+        { label: '4000 Words Curriculum', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" /> },
+        { label: t('manageWords'), path: '/admin/words', icon: <Database className="w-4 h-4" /> },
+        { label: 'Tactics for Listening', path: '/teacher/listening', icon: <Headphones className="w-4 h-4 text-sky-400" /> },
+        { label: 'Reading for Real World', path: '/real-world-reading', icon: <BookOpen className="w-4 h-4 text-indigo-400" /> },
+      ]
+    },
+    {
+      category: "NAZORAT & AI",
+      items: [
+        { label: "Faoliyat Audit Log", path: '/admin/activity', icon: <Clock className="w-4 h-4 text-indigo-400" /> },
+        { label: 'Speaking & Voice Hub', path: '/admin/speaking-hub', icon: <Mic className="w-4 h-4 text-emerald-400" /> },
+        { label: t('aiStudio'), path: '/ai-studio', icon: <BrainCircuit className="w-4 h-4 text-indigo-400" /> },
+        { label: t('championship'), path: '/championship', icon: <Trophy className="w-4 h-4 text-amber-400" /> },
+      ]
+    }
   ];
 
-  const items = role === 'admin' ? adminItems : role === 'teacher' ? teacherItems : studentItems;
+  const sections = role === 'admin' ? adminSections : role === 'teacher' ? teacherSections : studentSections;
   const userXp = profile?.xp || 1240;
   const xpPercentage = Math.min(100, Math.max(15, Math.round(((userXp % 2000) / 2000) * 100)));
 
@@ -98,7 +148,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         }`}
       >
         {/* Brand Header */}
-        <div className="p-6 flex items-center justify-between border-b border-slate-800">
+        <div className="p-5 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center font-bold text-white shadow-sm">
               P
@@ -121,7 +171,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Portal Role Badge */}
-        <div className="px-5 py-2.5 bg-slate-800/40 border-b border-slate-800/80 flex items-center justify-between">
+        <div className="px-5 py-2 bg-slate-800/40 border-b border-slate-800/80 flex items-center justify-between">
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
             {role.toUpperCase()} PORTAL
           </span>
@@ -130,43 +180,52 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </span>
         </div>
 
-        {/* Nav links */}
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {items.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              onClick={() => {
-                if (window.innerWidth < 1024) onClose();
-              }}
-              className={({ isActive }) =>
-                `flex items-center justify-between px-3 py-2.5 transition-colors text-sm font-medium ${
-                  isActive
-                    ? 'bg-indigo-600/15 text-indigo-400 border-r-2 border-indigo-500'
-                    : 'text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg cursor-pointer'
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <div className="flex items-center gap-3">
-                    <span className={isActive ? 'text-indigo-400' : 'opacity-60'}>
-                      {item.icon}
-                    </span>
-                    <span>{item.label}</span>
-                  </div>
-                  {item.badge && (
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide ${
-                      isActive 
-                        ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40' 
-                        : 'bg-slate-800 text-slate-400 border border-slate-700'
-                    }`}>
-                      {item.badge}
-                    </span>
-                  )}
-                </>
+        {/* Categorized Nav links */}
+        <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
+          {sections.map((sec, secIdx) => (
+            <div key={sec.category || secIdx} className="space-y-1">
+              {sec.category && (
+                <div className="px-3 pt-1 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                  {sec.category}
+                </div>
               )}
-            </NavLink>
+              {sec.items.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => {
+                    if (window.innerWidth < 1024) onClose();
+                  }}
+                  className={({ isActive }) =>
+                    `flex items-center justify-between px-3 py-2 transition-colors text-xs font-medium rounded-lg ${
+                      isActive
+                        ? 'bg-indigo-600/20 text-indigo-300 font-bold border-l-2 border-indigo-500'
+                        : 'text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer'
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className={isActive ? 'text-indigo-400' : 'opacity-70'}>
+                          {item.icon}
+                        </span>
+                        <span className="truncate">{item.label}</span>
+                      </div>
+                      {item.badge && (
+                        <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold uppercase tracking-wide flex-shrink-0 ${
+                          isActive 
+                            ? 'bg-indigo-500/30 text-indigo-200 border border-indigo-500/50' 
+                            : 'bg-slate-800 text-slate-400 border border-slate-700'
+                        }`}>
+                          {item.badge}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </NavLink>
+              ))}
+            </div>
           ))}
         </nav>
 

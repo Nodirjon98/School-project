@@ -6,7 +6,7 @@ import { useLMSData } from '../../contexts/LMSDataContext';
 import { 
   Flame, Zap, Trophy, BookOpen, Clock, 
   CheckCircle2, AlertCircle, ArrowRight, Sparkles, 
-  Layers, ChevronRight, FileText, Award, Radio, Music, Headphones
+  Layers, ChevronRight, FileText, Award, Radio, Music, Headphones, Mic, PenTool
 } from 'lucide-react';
 import { AIStudyAssistant } from '../../components/student/AIStudyAssistant';
 
@@ -48,14 +48,98 @@ export const StudentDashboard: React.FC = () => {
         {/* Left Column (8 cols): Hero Banner, Quick Stats, Lessons & Daily Word */}
         <div className="lg:col-span-8 flex flex-col gap-6">
           
+          {/* First-time Student Quick Start Guide Banner */}
+          <div className="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-2xl p-5 border border-indigo-800/40 text-white shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+                  Yangi O'quvchi Qo'llanmasi • 3 Qadamda Boshlang
+                </span>
+              </div>
+              <span className="text-[11px] text-slate-400">Premier LMS Guide</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Step 1 */}
+              <Link
+                to="/placement-test"
+                className="group p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-indigo-600/30 hover:border-indigo-400 transition flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center text-xs font-black">1</span>
+                    <Award className="w-4 h-4 text-amber-300" />
+                  </div>
+                  <h4 className="text-xs font-bold text-white group-hover:text-amber-200 transition">
+                    Darajangizni Aniqlang
+                  </h4>
+                  <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">
+                    CEFR Diagnostic Test (A1-C2) topshirish
+                  </p>
+                </div>
+                <div className="mt-3 text-[10px] font-bold text-amber-400 flex items-center gap-1">
+                  <span>Testni boshlash</span>
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              {/* Step 2 */}
+              <Link
+                to="/lessons"
+                className="group p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-indigo-600/30 hover:border-indigo-400 transition flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-xs font-black">2</span>
+                    <BookOpen className="w-4 h-4 text-indigo-300" />
+                  </div>
+                  <h4 className="text-xs font-bold text-white group-hover:text-indigo-200 transition">
+                    Bugungi Darsga Kiring
+                  </h4>
+                  <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">
+                    Guruh va kunlik dars jadvali
+                  </p>
+                </div>
+                <div className="mt-3 text-[10px] font-bold text-indigo-300 flex items-center gap-1">
+                  <span>Darsga o'tish</span>
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+
+              {/* Step 3 */}
+              <Link
+                to="/curriculum"
+                className="group p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-emerald-600/30 hover:border-emerald-400 transition flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-xs font-black">3</span>
+                    <Sparkles className="w-4 h-4 text-emerald-300" />
+                  </div>
+                  <h4 className="text-xs font-bold text-white group-hover:text-emerald-200 transition">
+                    4000 Words Darsligi
+                  </h4>
+                  <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">
+                    Audio va lug'at bilan mashq qilish
+                  </p>
+                </div>
+                <div className="mt-3 text-[10px] font-bold text-emerald-400 flex items-center gap-1">
+                  <span>Kitobni ochish</span>
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            </div>
+          </div>
+
           {/* Indigo Hero Banner */}
           <div className="bg-indigo-600 rounded-2xl p-6 sm:p-7 text-white flex items-center justify-between relative overflow-hidden shadow-sm">
             <div className="z-10 max-w-xl">
               <h2 className="text-xl sm:text-2xl font-bold mb-1 tracking-tight">
-                Good morning, {profile?.full_name?.split(' ')[0] || 'Azizbek'}!
+                Xush kelibsiz, {profile?.full_name?.split(' ')[0] || 'O\'quvchi'}!
               </h2>
               <p className="text-indigo-100 opacity-90 text-xs sm:text-sm leading-relaxed">
-                You have {lessons.length > 0 ? lessons.length : 2} lessons today. {pendingHw.length > 0 ? `Your assignment for '${pendingHw[0].title}' is pending.` : 'All homework assignments are completed!'}
+                Bugun sizda {lessons.length > 0 ? lessons.length : 2} ta dars rejalashtirilgan. {pendingHw.length > 0 ? `'${pendingHw[0].title}' topshirig'ingiz bajarilishini kutmoqda.` : 'Barcha topshiriqlar bajarilgan!'}
               </p>
 
               <div className="mt-4 flex flex-wrap items-center gap-2.5">
@@ -67,31 +151,18 @@ export const StudentDashboard: React.FC = () => {
                   <span>4000 Words & Reading</span>
                 </Link>
                 <Link
-                  to="/ielts-writing"
+                  to="/speaking"
                   className="bg-white text-indigo-700 px-3.5 py-2 rounded-lg text-xs font-bold shadow-xs hover:bg-indigo-50 transition inline-flex items-center gap-1.5"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>IELTS Writing AI</span>
-                </Link>
-                <Link
-                  to="/speaking"
-                  className="bg-indigo-500 text-white px-3.5 py-2 rounded-lg text-xs font-bold border border-indigo-400 hover:bg-indigo-400 transition inline-flex items-center gap-1.5"
-                >
+                  <Mic className="w-3.5 h-3.5 text-indigo-600" />
                   <span>Speaking Simulator</span>
                 </Link>
                 <Link
-                  to="/placement-test"
-                  className="bg-indigo-700/80 text-white px-3 py-2 rounded-lg text-xs font-bold border border-indigo-400/60 hover:bg-indigo-700 transition inline-flex items-center gap-1.5"
+                  to="/ielts-writing"
+                  className="bg-indigo-500 text-white px-3.5 py-2 rounded-lg text-xs font-bold border border-indigo-400 hover:bg-indigo-400 transition inline-flex items-center gap-1.5"
                 >
-                  <Award className="w-3.5 h-3.5 text-amber-300" />
-                  <span>CEFR Diagnostic</span>
-                </Link>
-                <Link
-                  to="/daily-words"
-                  className="bg-indigo-800/80 text-indigo-100 hover:text-white px-3 py-2 rounded-lg text-xs font-medium border border-indigo-600/40 hover:bg-indigo-800 transition hidden sm:inline-flex items-center gap-1.5"
-                >
-                  <Layers className="w-3.5 h-3.5" />
-                  <span>Vocabulary SRS</span>
+                  <PenTool className="w-3.5 h-3.5" />
+                  <span>IELTS Writing AI</span>
                 </Link>
               </div>
             </div>
