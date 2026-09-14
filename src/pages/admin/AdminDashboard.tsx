@@ -5,7 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { useLMSData } from '../../contexts/LMSDataContext';
 import { 
   Users, BookOpen, CheckSquare, BarChart3, 
-  TrendingUp, Award, Building, Sparkles, Plus, ArrowRight 
+  TrendingUp, Award, Building, Sparkles, Plus, ArrowRight, Clock 
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
