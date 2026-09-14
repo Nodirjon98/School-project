@@ -3,7 +3,8 @@ import {
   Users, Clock, ShieldCheck, AlertTriangle, Search, Filter, 
   Eye, CheckCircle2, PauseCircle, Monitor, Smartphone, Tablet, 
   BookOpen, Layers, Headphones, FileEdit, Mic, Sparkles, ChevronRight,
-  TrendingUp, Download, RefreshCw, X, MessageSquare, PhoneCall, Calendar
+  TrendingUp, Download, RefreshCw, X, MessageSquare, PhoneCall, Calendar,
+  KeyRound, Copy, Check, ExternalLink, ShieldAlert
 } from 'lucide-react';
 import { useLMSData } from '../../contexts/LMSDataContext';
 import { StudentTelemetryLog, StudentActionEvent, TelemetryModule } from '../../types';
@@ -12,12 +13,19 @@ import { Modal } from '../../components/common/Modal';
 export const StudentMonitoringPage: React.FC = () => {
   const { telemetryLogs, actionEvents, groups, students, saveTeacherNote } = useLMSData();
 
+  const [mainTab, setMainTab] = useState<'monitoring' | 'credentials'>('monitoring');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGroup, setSelectedGroup] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'online' | 'idle' | 'warning'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'online' | 'idle' | 'not_logged_in'>('all');
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const [teacherNoteInput, setTeacherNoteInput] = useState('');
-  const [activeTab, setActiveTab] = useState<'overview' | 'timeline'>('overview');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
 
   // Convert telemetryLogs dictionary to array
   const telemetryList = useMemo(() => {
@@ -25,10 +33,10 @@ export const StudentMonitoringPage: React.FC = () => {
   }, [telemetryLogs]);
 
   // KPIs
-  const totalStudents = telemetryList.length;
+  const totalStudents = students.length;
   const onlineCount = telemetryList.filter(s => s.online_status === 'online').length;
   const idleCount = telemetryList.filter(s => s.online_status === 'idle').length;
-  const warningCount = telemetryList.filter(s => s.risk_level === 'warning' || s.risk_level === 'danger').length;
+  const notLoggedInCount = telemetryList.filter(s => !s.last_active_at || s.last_active_label === 'Hali kirmagan').length;
 
   const totalActiveSeconds = telemetryList.reduce((acc, s) => acc + s.today_active_seconds, 0);
   const avgTodayMins = totalStudents > 0 ? Math.round(totalActiveSeconds / totalStudents / 60) : 0;
@@ -36,7 +44,7 @@ export const StudentMonitoringPage: React.FC = () => {
   const totalIdleSeconds = telemetryList.reduce((acc, s) => acc + s.idle_paused_seconds, 0);
   const totalBlockedIdleMins = Math.round(totalIdleSeconds / 60);
 
-  // Filtered students
+  // Filtered students for monitoring
   const filteredStudents = useMemo(() => {
     return telemetryList.filter(st => {
       const matchesSearch = 
@@ -49,7 +57,7 @@ export const StudentMonitoringPage: React.FC = () => {
         statusFilter === 'all' ? true :
         statusFilter === 'online' ? st.online_status === 'online' :
         statusFilter === 'idle' ? st.online_status === 'idle' :
-        statusFilter === 'warning' ? (st.risk_level === 'warning' || st.risk_level === 'danger') : true;
+        statusFilter === 'not_logged_in' ? (!st.last_active_at || st.last_active_label === 'Hali kirmagan') : true;
 
       return matchesSearch && matchesGroup && matchesStatus;
     });
@@ -65,6 +73,7 @@ export const StudentMonitoringPage: React.FC = () => {
   }, [actionEvents, selectedStudentId]);
 
   const formatMinutes = (seconds: number) => {
+    if (!seconds || seconds === 0) return '0 daqiqa';
     const mins = Math.floor(seconds / 60);
     const hours = Math.floor(mins / 60);
     const remMins = mins % 60;
@@ -80,23 +89,42 @@ export const StudentMonitoringPage: React.FC = () => {
   const handleSaveNote = () => {
     if (selectedStudentId) {
       saveTeacherNote(selectedStudentId, teacherNoteInput);
+      showToast("Qayd muvaffaqiyatli saqlandi!");
     }
   };
 
-  const getModuleIcon = (mod: TelemetryModule) => {
-    switch (mod) {
-      case 'stories': return <BookOpen className="w-3.5 h-3.5 text-rose-500" />;
-      case 'vocab': return <Layers className="w-3.5 h-3.5 text-amber-500" />;
-      case 'listening': return <Headphones className="w-3.5 h-3.5 text-sky-500" />;
-      case 'grammar': return <Sparkles className="w-3.5 h-3.5 text-indigo-500" />;
-      case 'homework': return <FileEdit className="w-3.5 h-3.5 text-emerald-500" />;
-      case 'speaking': return <Mic className="w-3.5 h-3.5 text-purple-500" />;
-      default: return <Clock className="w-3.5 h-3.5 text-slate-400" />;
-    }
+  // Copy SMS / Telegram format credentials for a student
+  const handleCopyCredentials = (st: typeof students[0]) => {
+    const text = `Assalomu alaykum! Premier School ta'lim platformasidagi shaxsiy kabinetingiz ma'lumotlari:\n\n👤 O'quvchi: ${st.full_name}\n🌐 Sayt: ${window.location.origin}/login\n📧 Login (Email): ${st.email}\n🔑 Parol: ${st.password || 'Premier2026!'}\n\nIltimos, platformaga kirib darslarni va uy vazifalarini bajarishni boshlang!`;
+    navigator.clipboard.writeText(text);
+    setCopiedId(st.id);
+    showToast(`"${st.full_name}" uchun login va parol nusxalandi!`);
+    setTimeout(() => setCopiedId(null), 2500);
+  };
+
+  // Export all credentials as CSV
+  const handleExportCSV = () => {
+    const headers = "ID,F.I.Sh,Guruh,Telefon,Email (Login),Parol\n";
+    const rows = students.map(s => `"${s.id}","${s.full_name}","${s.group_name || 'Guruhsiz'}","${s.phone || ''}","${s.email}","${s.password || 'Premier2026!'}"`).join('\n');
+    const blob = new Blob([headers + rows], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `premier_students_credentials_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    showToast("Barcha login-parollar CSV faylga yuklandi!");
   };
 
   return (
     <div className="space-y-6 pb-16">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-bold shadow-xl border border-slate-700 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -106,343 +134,440 @@ export const StudentMonitoringPage: React.FC = () => {
               Jonli Nazorat Markazi
             </span>
             <span className="text-slate-400 text-xs">•</span>
-            <span className="text-xs font-semibold text-slate-500">Anti-Cheat & Telemetriya</span>
+            <span className="text-xs font-semibold text-slate-500">Real Vaqt & Telemetriya</span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            O'quvchilar Faoliyati va Jonli Nazorati
+            O'quvchilar Nazorati va Login-Parollar
           </h1>
           <p className="text-sm text-slate-600 mt-1 max-w-2xl">
-            Real vaqt rejimida o'quvchilar qaysi bo'limda dars qilayotgani, sof o'qish vaqti va qurilmadan uzoqlashganida to'xtatilgan soxta daqiqalar nazorati.
+            Real o'quvchilar faoliyati, darsga sarflagan aniq daqiqalari, ekrandan uzoqlashgan bo'sh vaqtlari hamda o'quvchilarga tarqatiladigan kirish ma'lumotlari.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Tab Controls */}
+        <div className="flex items-center p-1 rounded-2xl bg-slate-100 border border-slate-200 shadow-2xs self-start sm:self-auto">
           <button
-            onClick={() => window.location.reload()}
-            className="px-3.5 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition flex items-center gap-2 shadow-2xs cursor-pointer"
+            onClick={() => setMainTab('monitoring')}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+              mainTab === 'monitoring'
+                ? 'bg-white text-indigo-700 shadow-2xs font-black'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
           >
-            <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
-            <span>Yangilash</span>
+            <Clock className="w-3.5 h-3.5" />
+            <span>Faoliyat & Nazorat ({totalStudents})</span>
+          </button>
+          <button
+            onClick={() => setMainTab('credentials')}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+              mainTab === 'credentials'
+                ? 'bg-white text-emerald-700 shadow-2xs font-black'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <KeyRound className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Login & Parollar (Tarqatish)</span>
           </button>
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Onlayn o'quvchilar */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Hozir Onlayn</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+      {mainTab === 'credentials' ? (
+        /* ========================================================
+           TAB 2: CREDENTIALS DISTRIBUTION (LOGIN & PAROLLAR)
+           ======================================================== */
+        <div className="space-y-4">
+          <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-sky-500/10 border border-emerald-200/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <KeyRound className="w-5 h-5 text-emerald-600" />
+                <h2 className="text-base font-black text-slate-900">
+                  O'quvchilar Kirish Ma'lumotlari (Login & Parollar)
+                </h2>
+              </div>
+              <p className="text-xs text-slate-600 mt-1 max-w-2xl">
+                O'quvchilarga platformaga kirishi uchun ushbu login va parollarni bering. O'quvchi birinchi marta kirishi bilan, uning faoliyati orqa fonda avtomatik nazorat qilinadi.
+              </p>
             </div>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-slate-900">{onlineCount}</span>
-            <span className="text-xs font-bold text-slate-400">/ {totalStudents} o'quvchi</span>
-          </div>
-          <p className="text-[11px] font-medium text-emerald-600 mt-1">
-            {onlineCount > 0 ? "Ayni paytda faol dars qilmoqda" : "Hozircha onlayn o'quvchi yo'q"}
-          </p>
-        </div>
-
-        {/* Bugungi o'rtacha dars vaqti */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">O'rtacha Dars Vaqti</span>
-            <div className="w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
-              <Clock className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-slate-900">{avgTodayMins}</span>
-            <span className="text-xs font-bold text-slate-500">daqiqa / kun</span>
-          </div>
-          <p className="text-[11px] font-medium text-slate-500 mt-1">
-            Sof tasdiqlangan o'qish vaqti
-          </p>
-        </div>
-
-        {/* Aniqlangan soxta vaqt (Anti-cheat) */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Ushlangan Bo'sh Vaqt</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
-              <ShieldCheck className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-amber-600">{totalBlockedIdleMins}</span>
-            <span className="text-xs font-bold text-slate-500">daq soxta vaqt</span>
-          </div>
-          <p className="text-[11px] font-medium text-slate-500 mt-1">
-            90s avto-pauza orqali chiqarib tashlangan
-          </p>
-        </div>
-
-        {/* Xavf guruhi */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Diqqat Talab</span>
-            <div className="w-8 h-8 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600">
-              <AlertTriangle className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-rose-600">{warningCount}</span>
-            <span className="text-xs font-bold text-slate-500">o'quvchi</span>
-          </div>
-          <p className="text-[11px] font-medium text-rose-600 mt-1">
-            3 kundan ortiq kirmagan yoki orqada
-          </p>
-        </div>
-      </div>
-
-      {/* Filter and Search Bar */}
-      <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          {/* Search Box */}
-          <div className="relative flex-1 sm:w-64">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="O'quvchi ismi yoki telefon..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 focus:bg-white focus:outline-hidden focus:border-indigo-500 transition"
-            />
-          </div>
-
-          {/* Group Filter */}
-          <select
-            value={selectedGroup}
-            onChange={(e) => setSelectedGroup(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 focus:bg-white focus:outline-hidden transition"
-          >
-            <option value="all">Barcha Guruhlar ({groups.length})</option>
-            {groups.map(g => (
-              <option key={g.id} value={g.id}>{g.name}</option>
-            ))}
-          </select>
-
-          {/* Status Filter Buttons */}
-          <div className="flex items-center p-0.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold">
             <button
-              onClick={() => setStatusFilter('all')}
-              className={`px-3 py-1.5 rounded-lg transition ${statusFilter === 'all' ? 'bg-white text-indigo-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'}`}
+              onClick={handleExportCSV}
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer shrink-0"
             >
-              Barchasi ({totalStudents})
-            </button>
-            <button
-              onClick={() => setStatusFilter('online')}
-              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1 ${statusFilter === 'online' ? 'bg-white text-emerald-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'}`}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              Onlayn ({onlineCount})
-            </button>
-            <button
-              onClick={() => setStatusFilter('warning')}
-              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1 ${statusFilter === 'warning' ? 'bg-white text-rose-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'}`}
-            >
-              <AlertTriangle className="w-3 h-3 text-rose-500" />
-              Xavf ({warningCount})
+              <Download className="w-4 h-4" />
+              <span>Barchasini Excel/CSV ga yuklash</span>
             </button>
           </div>
-        </div>
 
-        <div className="text-xs font-bold text-slate-500 self-end md:self-center">
-          Topildi: <span className="text-slate-900 font-black">{filteredStudents.length}</span> nafar o'quvchi
-        </div>
-      </div>
-
-      {/* Main Student Surveillance Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-black text-slate-500 uppercase tracking-wider">
-                <th className="py-3.5 px-4">O'quvchi</th>
-                <th className="py-3.5 px-3">Holat & Sahifa</th>
-                <th className="py-3.5 px-3">Qurilma</th>
-                <th className="py-3.5 px-3">Sof Dars Vaqti (Bugun)</th>
-                <th className="py-3.5 px-3">Bloklangan Bo'sh Vaqt</th>
-                <th className="py-3.5 px-3">Bo'limlar Taqsimoti</th>
-                <th className="py-3.5 px-3">Tasdiqlangan Natija</th>
-                <th className="py-3.5 px-4 text-right">Harakat</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-xs">
-              {filteredStudents.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="py-12 text-center text-slate-400 font-medium">
-                    Hech qanday o'quvchi topilmadi.
-                  </td>
-                </tr>
-              ) : (
-                filteredStudents.map((st) => {
-                  const storiesMins = Math.round((st.module_breakdown?.stories_seconds || 0) / 60);
-                  const vocabMins = Math.round((st.module_breakdown?.vocab_seconds || 0) / 60);
-                  const listeningMins = Math.round((st.module_breakdown?.listening_seconds || 0) / 60);
-                  const grammarMins = Math.round((st.module_breakdown?.grammar_seconds || 0) / 60);
-
-                  return (
-                    <tr key={st.student_id} className="hover:bg-slate-50/60 transition group">
-                      {/* Student Info */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="relative">
-                            <div className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 font-black flex items-center justify-center text-xs">
-                              {st.student_name.slice(0, 2).toUpperCase()}
-                            </div>
-                            <span 
-                              className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
-                                st.online_status === 'online' ? 'bg-emerald-500' :
-                                st.online_status === 'idle' ? 'bg-amber-400' : 'bg-slate-300'
-                              }`} 
-                            />
-                          </div>
-                          <div>
-                            <div className="font-extrabold text-slate-900 group-hover:text-indigo-600 transition flex items-center gap-1.5">
-                              {st.student_name}
-                              {st.risk_level === 'warning' && (
-                                <span className="px-1.5 py-0.2 rounded-md bg-rose-50 border border-rose-200 text-rose-600 text-[10px] font-black">
-                                  Xavf
-                                </span>
-                              )}
-                            </div>
-                            <div className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
-                              <span>{st.group_name}</span>
-                              <span>•</span>
-                              <span className="font-semibold text-slate-600">{st.level}</span>
-                            </div>
-                          </div>
-                        </div>
+          {/* Credentials Table */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-200 text-[11px] font-black text-slate-500 uppercase tracking-wider">
+                    <th className="py-3.5 px-4">№</th>
+                    <th className="py-3.5 px-4">O'quvchi F.I.Sh</th>
+                    <th className="py-3.5 px-3">Guruh</th>
+                    <th className="py-3.5 px-3">Telefon</th>
+                    <th className="py-3.5 px-4">Login (Email)</th>
+                    <th className="py-3.5 px-4">Parol</th>
+                    <th className="py-3.5 px-4 text-right">Ota-onaga Yuborish</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-xs">
+                  {students.map((st, idx) => (
+                    <tr key={st.id} className="hover:bg-slate-50/60 transition">
+                      <td className="py-3 px-4 font-bold text-slate-400 text-[11px]">{idx + 1}</td>
+                      <td className="py-3 px-4 font-extrabold text-slate-900">{st.full_name}</td>
+                      <td className="py-3 px-3">
+                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-bold">
+                          {st.group_name || "Guruhsiz"}
+                        </span>
                       </td>
-
-                      {/* Online Status & Current Page */}
-                      <td className="py-3.5 px-3">
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-1.5">
-                            {st.online_status === 'online' && (
-                              <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                Onlayn
-                              </span>
-                            )}
-                            {st.online_status === 'idle' && (
-                              <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-black flex items-center gap-1">
-                                <PauseCircle className="w-3 h-3 text-amber-500" />
-                                Avto-Pauza
-                              </span>
-                            )}
-                            {st.online_status === 'offline' && (
-                              <span className="text-[11px] font-semibold text-slate-500">
-                                {st.last_active_label || 'Oflayn'}
-                              </span>
-                            )}
-                          </div>
-                          {st.current_page && (
-                            <span className="text-[10px] text-slate-400 mt-1 truncate max-w-[140px]" title={st.current_page}>
-                              {st.current_page}
-                            </span>
-                          )}
-                        </div>
+                      <td className="py-3 px-3 font-semibold text-slate-600">
+                        {st.phone || <span className="text-slate-400 italic">Kiritilmagan</span>}
                       </td>
-
-                      {/* Device */}
-                      <td className="py-3.5 px-3">
-                        <div className="flex items-center gap-1.5 text-slate-600">
-                          {st.device === 'mobile' ? (
-                            <Smartphone className="w-3.5 h-3.5 text-slate-400" />
-                          ) : st.device === 'tablet' ? (
-                            <Tablet className="w-3.5 h-3.5 text-slate-400" />
-                          ) : (
-                            <Monitor className="w-3.5 h-3.5 text-slate-400" />
-                          )}
-                          <span className="text-[11px] capitalize">{st.device}</span>
-                        </div>
+                      <td className="py-3 px-4 font-mono text-[11px] text-indigo-700 font-bold">
+                        {st.email}
                       </td>
-
-                      {/* Active Time Today */}
-                      <td className="py-3.5 px-3">
-                        <div>
-                          <div className="font-black text-slate-900 text-xs">
-                            {formatMinutes(st.today_active_seconds)}
-                          </div>
-                          <div className="text-[10px] text-slate-500 mt-0.5">
-                            Jami: {formatMinutes(st.total_active_seconds)}
-                          </div>
-                        </div>
+                      <td className="py-3 px-4 font-mono text-[11px] text-slate-900 font-bold bg-slate-50/50">
+                        {st.password || 'Premier2026!'}
                       </td>
-
-                      {/* Blocked Idle Time (Anti-cheat) */}
-                      <td className="py-3.5 px-3">
-                        {st.idle_paused_seconds > 0 ? (
-                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-amber-700 text-[11px] font-bold">
-                            <ShieldCheck className="w-3 h-3 text-amber-500" />
-                            <span>{Math.round(st.idle_paused_seconds / 60)} daq bekor</span>
-                          </div>
-                        ) : (
-                          <span className="text-slate-400 text-[11px]">0 daq</span>
-                        )}
-                      </td>
-
-                      {/* Module breakdown pills */}
-                      <td className="py-3.5 px-3">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          {storiesMins > 0 && (
-                            <span className="px-1.5 py-0.5 rounded bg-rose-50 text-rose-700 text-[10px] font-bold flex items-center gap-1" title="Stories">
-                              <BookOpen className="w-2.5 h-2.5" />
-                              {storiesMins}m
-                            </span>
-                          )}
-                          {vocabMins > 0 && (
-                            <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 text-[10px] font-bold flex items-center gap-1" title="Vocabulary">
-                              <Layers className="w-2.5 h-2.5" />
-                              {vocabMins}m
-                            </span>
-                          )}
-                          {listeningMins > 0 && (
-                            <span className="px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 text-[10px] font-bold flex items-center gap-1" title="Listening">
-                              <Headphones className="w-2.5 h-2.5" />
-                              {listeningMins}m
-                            </span>
-                          )}
-                          {grammarMins > 0 && (
-                            <span className="px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 text-[10px] font-bold flex items-center gap-1" title="Grammar">
-                              <Sparkles className="w-2.5 h-2.5" />
-                              {grammarMins}m
-                            </span>
-                          )}
-                        </div>
-                      </td>
-
-                      {/* Verified Tasks */}
-                      <td className="py-3.5 px-3">
-                        <div className="flex items-center gap-1 text-emerald-700 font-bold text-xs">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                          <span>{st.verified_tasks_count} ta topshiriq</span>
-                        </div>
-                      </td>
-
-                      {/* Action */}
-                      <td className="py-3.5 px-4 text-right">
+                      <td className="py-3 px-4 text-right">
                         <button
-                          onClick={() => handleOpenDossier(st)}
-                          className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 text-xs font-bold transition flex items-center gap-1 ml-auto cursor-pointer"
+                          onClick={() => handleCopyCredentials(st)}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition inline-flex items-center gap-1.5 cursor-pointer ${
+                            copiedId === st.id
+                              ? 'bg-emerald-600 text-white shadow-xs'
+                              : 'bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700'
+                          }`}
                         >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>Dosye</span>
+                          {copiedId === st.id ? (
+                            <>
+                              <Check className="w-3.5 h-3.5" />
+                              <span>Nusxalandi!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3.5 h-3.5" />
+                              <span>SMS/Telegram matni</span>
+                            </>
+                          )}
                         </button>
                       </td>
                     </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </div>
+      ) : (
+        /* ========================================================
+           TAB 1: LIVE ACTIVITY & SURVEILLANCE
+           ======================================================== */
+        <>
+          {/* KPI Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Onlayn o'quvchilar */}
+            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs relative overflow-hidden">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Hozir Onlayn</span>
+                <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
+                  <span className={`w-2.5 h-2.5 rounded-full ${onlineCount > 0 ? 'bg-emerald-500 animate-ping' : 'bg-slate-300'}`} />
+                </div>
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-3xl font-black text-slate-900">{onlineCount}</span>
+                <span className="text-xs font-bold text-slate-400">/ {totalStudents} o'quvchi</span>
+              </div>
+              <p className="text-[11px] font-medium text-slate-500 mt-1">
+                {onlineCount > 0 ? "Ayni paytda faol dars qilmoqda" : "Hozircha faol o'quvchi yo'q"}
+              </p>
+            </div>
+
+            {/* Bugungi o'rtacha dars vaqti */}
+            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">O'rtacha Dars Vaqti</span>
+                <div className="w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
+                  <Clock className="w-4 h-4" />
+                </div>
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-3xl font-black text-slate-900">{avgTodayMins}</span>
+                <span className="text-xs font-bold text-slate-500">daqiqa / kun</span>
+              </div>
+              <p className="text-[11px] font-medium text-slate-500 mt-1">
+                Sof tasdiqlangan dars vaqti
+              </p>
+            </div>
+
+            {/* Aniqlangan soxta vaqt (Anti-cheat) */}
+            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Ushlangan Bo'sh Vaqt</span>
+                <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-3xl font-black text-amber-600">{totalBlockedIdleMins}</span>
+                <span className="text-xs font-bold text-slate-500">daq soxta vaqt</span>
+              </div>
+              <p className="text-[11px] font-medium text-slate-500 mt-1">
+                90s avto-pauza orqali chiqarilgan
+              </p>
+            </div>
+
+            {/* Hali kirmaganlar */}
+            <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Hali Kirmaganlar</span>
+                <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600">
+                  <Users className="w-4 h-4" />
+                </div>
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-3xl font-black text-slate-700">{notLoggedInCount}</span>
+                <span className="text-xs font-bold text-slate-400">/ {totalStudents} o'quvchi</span>
+              </div>
+              <p className="text-[11px] font-medium text-slate-500 mt-1">
+                Login-parol berilishi kutilmoqda
+              </p>
+            </div>
+          </div>
+
+          {/* Filter and Search Bar */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+              {/* Search Box */}
+              <div className="relative flex-1 sm:w-64">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="O'quvchi ismi yoki telefon..."
+                  className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 focus:bg-white focus:outline-hidden focus:border-indigo-500 transition"
+                />
+              </div>
+
+              {/* Group Filter */}
+              <select
+                value={selectedGroup}
+                onChange={(e) => setSelectedGroup(e.target.value)}
+                className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 focus:bg-white focus:outline-hidden transition"
+              >
+                <option value="all">Barcha Guruhlar ({groups.length})</option>
+                {groups.map(g => (
+                  <option key={g.id} value={g.id}>{g.name}</option>
+                ))}
+              </select>
+
+              {/* Status Filter Buttons */}
+              <div className="flex items-center p-0.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold">
+                <button
+                  onClick={() => setStatusFilter('all')}
+                  className={`px-3 py-1.5 rounded-lg transition ${statusFilter === 'all' ? 'bg-white text-indigo-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'}`}
+                >
+                  Barchasi ({totalStudents})
+                </button>
+                <button
+                  onClick={() => setStatusFilter('online')}
+                  className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1 ${statusFilter === 'online' ? 'bg-white text-emerald-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'}`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  Onlayn ({onlineCount})
+                </button>
+                <button
+                  onClick={() => setStatusFilter('not_logged_in')}
+                  className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1 ${statusFilter === 'not_logged_in' ? 'bg-white text-slate-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'}`}
+                >
+                  Hali kirmagan ({notLoggedInCount})
+                </button>
+              </div>
+            </div>
+
+            <div className="text-xs font-bold text-slate-500 self-end md:self-center">
+              Topildi: <span className="text-slate-900 font-black">{filteredStudents.length}</span> nafar o'quvchi
+            </div>
+          </div>
+
+          {/* Main Student Surveillance Table */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-black text-slate-500 uppercase tracking-wider">
+                    <th className="py-3.5 px-4">O'quvchi</th>
+                    <th className="py-3.5 px-3">Holat</th>
+                    <th className="py-3.5 px-3">Oxirgi Kirish</th>
+                    <th className="py-3.5 px-3">Sof Dars Vaqti</th>
+                    <th className="py-3.5 px-3">Ushlangan Bo'sh Vaqt</th>
+                    <th className="py-3.5 px-3">Bo'limlar Taqsimoti</th>
+                    <th className="py-3.5 px-3">Topshirilgan Natija</th>
+                    <th className="py-3.5 px-4 text-right">Harakat</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-xs">
+                  {filteredStudents.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="py-12 text-center text-slate-400 font-medium">
+                        Hech qanday o'quvchi topilmadi.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredStudents.map((st) => {
+                      const storiesMins = Math.round((st.module_breakdown?.stories_seconds || 0) / 60);
+                      const vocabMins = Math.round((st.module_breakdown?.vocab_seconds || 0) / 60);
+                      const listeningMins = Math.round((st.module_breakdown?.listening_seconds || 0) / 60);
+                      const grammarMins = Math.round((st.module_breakdown?.grammar_seconds || 0) / 60);
+                      const isNotLoggedIn = !st.last_active_at || st.last_active_label === 'Hali kirmagan';
+
+                      return (
+                        <tr key={st.student_id} className="hover:bg-slate-50/60 transition group">
+                          {/* Student Info */}
+                          <td className="py-3.5 px-4">
+                            <div className="flex items-center gap-3">
+                              <div className="relative">
+                                <div className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 font-black flex items-center justify-center text-xs">
+                                  {st.student_name.slice(0, 2).toUpperCase()}
+                                </div>
+                                <span 
+                                  className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
+                                    st.online_status === 'online' ? 'bg-emerald-500' :
+                                    st.online_status === 'idle' ? 'bg-amber-400' : 'bg-slate-300'
+                                  }`} 
+                                />
+                              </div>
+                              <div>
+                                <div className="font-extrabold text-slate-900 group-hover:text-indigo-600 transition flex items-center gap-1.5">
+                                  {st.student_name}
+                                </div>
+                                <div className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
+                                  <span>{st.group_name}</span>
+                                  <span>•</span>
+                                  <span className="font-semibold text-slate-600">{st.level}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Online Status */}
+                          <td className="py-3.5 px-3">
+                            <div className="flex items-center gap-1.5">
+                              {st.online_status === 'online' ? (
+                                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black flex items-center gap-1">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                  Onlayn
+                                </span>
+                              ) : st.online_status === 'idle' ? (
+                                <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-black flex items-center gap-1">
+                                  <PauseCircle className="w-3 h-3 text-amber-500" />
+                                  Avto-Pauza
+                                </span>
+                              ) : isNotLoggedIn ? (
+                                <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold">
+                                  Hali kirmagan
+                                </span>
+                              ) : (
+                                <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold">
+                                  Oflayn
+                                </span>
+                              )}
+                            </div>
+                          </td>
+
+                          {/* Last Active */}
+                          <td className="py-3.5 px-3 text-slate-500 text-[11px]">
+                            {st.last_active_label || 'Hali kirmagan'}
+                          </td>
+
+                          {/* Active Time Today */}
+                          <td className="py-3.5 px-3">
+                            <div>
+                              <div className="font-black text-slate-900 text-xs">
+                                {formatMinutes(st.today_active_seconds)}
+                              </div>
+                              <div className="text-[10px] text-slate-500 mt-0.5">
+                                Jami: {formatMinutes(st.total_active_seconds)}
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Blocked Idle Time (Anti-cheat) */}
+                          <td className="py-3.5 px-3">
+                            {st.idle_paused_seconds > 0 ? (
+                              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-amber-700 text-[11px] font-bold">
+                                <ShieldCheck className="w-3 h-3 text-amber-500" />
+                                <span>{Math.round(st.idle_paused_seconds / 60)} daq bekor</span>
+                              </div>
+                            ) : (
+                              <span className="text-slate-400 text-[11px]">0 daq</span>
+                            )}
+                          </td>
+
+                          {/* Module breakdown pills */}
+                          <td className="py-3.5 px-3">
+                            {storiesMins === 0 && vocabMins === 0 && listeningMins === 0 && grammarMins === 0 ? (
+                              <span className="text-slate-400 text-[11px] italic">Boshlanmagan</span>
+                            ) : (
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                {storiesMins > 0 && (
+                                  <span className="px-1.5 py-0.5 rounded bg-rose-50 text-rose-700 text-[10px] font-bold flex items-center gap-1" title="Stories">
+                                    <BookOpen className="w-2.5 h-2.5" />
+                                    {storiesMins}m
+                                  </span>
+                                )}
+                                {vocabMins > 0 && (
+                                  <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 text-[10px] font-bold flex items-center gap-1" title="Vocabulary">
+                                    <Layers className="w-2.5 h-2.5" />
+                                    {vocabMins}m
+                                  </span>
+                                )}
+                                {listeningMins > 0 && (
+                                  <span className="px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 text-[10px] font-bold flex items-center gap-1" title="Listening">
+                                    <Headphones className="w-2.5 h-2.5" />
+                                    {listeningMins}m
+                                  </span>
+                                )}
+                                {grammarMins > 0 && (
+                                  <span className="px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 text-[10px] font-bold flex items-center gap-1" title="Grammar">
+                                    <Sparkles className="w-2.5 h-2.5" />
+                                    {grammarMins}m
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                          </td>
+
+                          {/* Verified Tasks */}
+                          <td className="py-3.5 px-3">
+                            <div className="flex items-center gap-1 text-emerald-700 font-bold text-xs">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                              <span>{st.verified_tasks_count} ta</span>
+                            </div>
+                          </td>
+
+                          {/* Action */}
+                          <td className="py-3.5 px-4 text-right">
+                            <button
+                              onClick={() => handleOpenDossier(st)}
+                              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 text-xs font-bold transition flex items-center gap-1 ml-auto cursor-pointer"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                              <span>Dosye</span>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Student Dossier Modal */}
       {selectedStudent && (
@@ -487,7 +612,7 @@ export const StudentMonitoringPage: React.FC = () => {
                   </span>
                 ) : (
                   <span className="text-xs font-semibold text-slate-500">
-                    Oxirgi kirish: {selectedStudent.last_active_label || selectedStudent.last_active_at}
+                    {selectedStudent.last_active_label || 'Hali kirmagan'}
                   </span>
                 )}
               </div>
@@ -592,13 +717,12 @@ export const StudentMonitoringPage: React.FC = () => {
               <div className="max-h-48 overflow-y-auto space-y-2 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
                 {studentActions.length === 0 ? (
                   <p className="text-slate-400 text-center py-4 font-medium">
-                    Hozircha amallar tarixi yozilmagan.
+                    Hozircha amallar tarixi yo'q (O'quvchi hali kirmagan).
                   </p>
                 ) : (
                   studentActions.slice(0, 15).map(action => (
                     <div key={action.id} className="flex items-start justify-between py-1.5 border-b border-slate-200/60 last:border-0">
                       <div className="flex items-center gap-2">
-                        {getModuleIcon(action.module)}
                         <span className="font-bold text-slate-800">{action.details.title || action.action_type}</span>
                         {action.details.score !== undefined && (
                           <span className="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[10px] font-black">
@@ -630,7 +754,7 @@ export const StudentMonitoringPage: React.FC = () => {
                   type="text"
                   value={teacherNoteInput}
                   onChange={(e) => setTeacherNoteInput(e.target.value)}
-                  placeholder="Masalan: Uy vazifasini tez bajaryapti, lekin Listeningga ko'proq e'tibor qaratishi kerak..."
+                  placeholder="O'quvchi haqida shaxsiy qayd..."
                   className="flex-1 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 focus:bg-white focus:outline-hidden focus:border-indigo-500 transition"
                 />
                 <button

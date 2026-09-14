@@ -123,7 +123,35 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   });
 
   const [telemetryLogs, setTelemetryLogs] = useState<Record<string, StudentTelemetryLog>>(() => {
-    return getStorageItem<Record<string, StudentTelemetryLog>>('premier_student_telemetry', {});
+    const stored = getStorageItem<Record<string, StudentTelemetryLog>>('premier_student_telemetry', {});
+    const cleaned: Record<string, StudentTelemetryLog> = {};
+    Object.entries(stored).forEach(([k, v]) => {
+      if (v.last_active_label?.includes('oldin') || v.last_active_label === 'Ayni paytda faol') {
+        cleaned[k] = {
+          ...v,
+          online_status: 'offline',
+          last_active_at: '',
+          last_active_label: 'Hali kirmagan',
+          total_active_seconds: 0,
+          today_active_seconds: 0,
+          weekly_active_seconds: 0,
+          idle_paused_seconds: 0,
+          verified_tasks_count: 0,
+          module_breakdown: {
+            stories_seconds: 0,
+            vocab_seconds: 0,
+            listening_seconds: 0,
+            grammar_seconds: 0,
+            homework_seconds: 0,
+            speaking_seconds: 0,
+            other_seconds: 0
+          }
+        };
+      } else {
+        cleaned[k] = v;
+      }
+    });
+    return cleaned;
   });
   const [actionEvents, setActionEvents] = useState<StudentActionEvent[]>(() => {
     return getStorageItem<StudentActionEvent[]>('premier_student_action_events', []);
@@ -139,15 +167,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       students.forEach((st, idx) => {
         if (!next[st.id]) {
           changed = true;
-          const randomRecentMins = 10 + (idx * 25) % 180;
-          const lastActive = new Date(Date.now() - randomRecentMins * 60000).toISOString();
-          const baseActiveMins = 25 + (idx * 17) % 75;
-          const storiesMins = Math.floor(baseActiveMins * 0.4);
-          const vocabMins = Math.floor(baseActiveMins * 0.25);
-          const listeningMins = Math.floor(baseActiveMins * 0.2);
-          const grammarMins = Math.max(0, baseActiveMins - (storiesMins + vocabMins + listeningMins));
-          const idleMins = Math.floor(4 + (idx * 3) % 15);
-
           next[st.id] = {
             id: `tel-${st.id}`,
             student_id: st.id,
@@ -156,29 +175,29 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
             group_name: st.group_name || "Guruhga biriktirilmagan",
             group_id: st.group_id,
             phone: st.phone,
-            level: st.level || 'Intermediate B1',
-            online_status: idx === 0 || idx === 1 ? 'online' : (idx === 2 ? 'idle' : 'offline'),
-            current_page: idx === 0 ? '/stories' : (idx === 1 ? '/daily-words' : undefined),
-            current_module: idx === 0 ? 'stories' : (idx === 1 ? 'vocab' : undefined),
-            device: idx % 3 === 0 ? 'desktop' : 'mobile',
-            last_active_at: lastActive,
-            last_active_label: idx === 0 || idx === 1 ? 'Ayni paytda faol' : (idx === 2 ? '10 daqiqa oldin' : `${Math.floor(randomRecentMins / 60)} soat oldin`),
-            total_active_seconds: (baseActiveMins + 120) * 60,
-            today_active_seconds: baseActiveMins * 60,
-            weekly_active_seconds: (baseActiveMins * 4 + 30) * 60,
-            idle_paused_seconds: idleMins * 60,
-            verified_tasks_count: 3 + (idx % 5),
+            level: st.level || 'B1',
+            online_status: 'offline',
+            current_page: undefined,
+            current_module: undefined,
+            device: 'mobile',
+            last_active_at: '',
+            last_active_label: 'Hali kirmagan',
+            total_active_seconds: 0,
+            today_active_seconds: 0,
+            weekly_active_seconds: 0,
+            idle_paused_seconds: 0,
+            verified_tasks_count: 0,
             module_breakdown: {
-              stories_seconds: storiesMins * 60,
-              vocab_seconds: vocabMins * 60,
-              listening_seconds: listeningMins * 60,
-              grammar_seconds: grammarMins * 60,
-              homework_seconds: 15 * 60,
-              speaking_seconds: 20 * 60,
+              stories_seconds: 0,
+              vocab_seconds: 0,
+              listening_seconds: 0,
+              grammar_seconds: 0,
+              homework_seconds: 0,
+              speaking_seconds: 0,
               other_seconds: 0
             },
-            risk_level: idx % 9 === 0 ? 'warning' : 'normal',
-            risk_reasons: idx % 9 === 0 ? ["Oxirgi 3 kunda dars qilmadi"] : undefined,
+            risk_level: 'normal',
+            risk_reasons: undefined,
             teacher_notes: ''
           };
         } else {
