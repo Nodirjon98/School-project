@@ -117,15 +117,15 @@ export const SEED_TEACHER_ACTIVITIES: TeacherActivityMetric[] = [
     avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop',
     active_groups_count: 3,
     total_students_count: 36,
-    total_teaching_hours: 312,
-    today_hours: 6.5,
-    homeworks_assigned: 42,
-    homeworks_graded: 188,
-    avg_grading_turnaround_hours: 1.8,
-    feedback_quality_score: 4.96,
-    attendance_logging_rate: 99.2,
-    last_active: 'Ayni paytda darsda / platformada',
-    status: 'online'
+    total_teaching_hours: 0,
+    today_hours: 0,
+    homeworks_assigned: 0,
+    homeworks_graded: 0,
+    avg_grading_turnaround_hours: 0,
+    feedback_quality_score: 5.0,
+    attendance_logging_rate: 100,
+    last_active: 'Darslar kutilmoqda',
+    status: 'offline'
   },
   {
     id: 'teach-2',
@@ -135,69 +135,19 @@ export const SEED_TEACHER_ACTIVITIES: TeacherActivityMetric[] = [
     avatar_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop',
     active_groups_count: 3,
     total_students_count: 36,
-    total_teaching_hours: 240,
-    today_hours: 5.0,
-    homeworks_assigned: 31,
-    homeworks_graded: 142,
-    avg_grading_turnaround_hours: 2.4,
-    feedback_quality_score: 4.88,
-    attendance_logging_rate: 96.5,
-    last_active: '15 daqiqa oldin',
-    status: 'online'
+    total_teaching_hours: 0,
+    today_hours: 0,
+    homeworks_assigned: 0,
+    homeworks_graded: 0,
+    avg_grading_turnaround_hours: 0,
+    feedback_quality_score: 5.0,
+    attendance_logging_rate: 100,
+    last_active: 'Darslar kutilmoqda',
+    status: 'offline'
   }
 ];
 
-export const SEED_PLATFORM_AUDIT: PlatformAuditAction[] = [
-  {
-    id: 'aud-1',
-    timestamp: '2026-09-14 17:30:10',
-    actor_name: 'Shahzoda Ilhomova',
-    actor_role: 'student',
-    module: 'listening',
-    action_description: 'Tactics for Listening: Unit 1 bo\'yicha topshiriqni bajardi (Ball: 95%)',
-    duration_minutes: 18,
-    device: 'Desktop Chrome'
-  },
-  {
-    id: 'aud-2',
-    timestamp: '2026-09-14 17:15:05',
-    actor_name: 'Manzura Sayfullayeva',
-    actor_role: 'student',
-    module: 'speaking',
-    action_description: 'Mr. Safoyev AI Voice bilan Speaking Part 2 mashqi o\'tkazdi (Fluency: 7.5)',
-    duration_minutes: 22,
-    device: 'Mobile Safari'
-  },
-  {
-    id: 'aud-3',
-    timestamp: '2026-09-14 16:50:40',
-    actor_name: 'Nodirjon Safoyev',
-    actor_role: 'teacher',
-    module: 'homework',
-    action_description: "General English guruhining uy vazifalarini ko'rib chiqdi",
-    duration_minutes: 35,
-    device: 'MacBook Pro'
-  },
-  {
-    id: 'aud-4',
-    timestamp: '2026-09-14 16:30:15',
-    actor_name: 'Administrator',
-    actor_role: 'admin',
-    module: 'payment',
-    action_description: "Manzura Sayfullayeva maxsus oylik to'lov kvitansiyasini tasdiqladi (400,000 UZS)",
-    device: 'Admin Portal'
-  },
-  {
-    id: 'aud-5',
-    timestamp: '2026-09-14 16:10:00',
-    actor_name: "O'lmas Rasulov",
-    actor_role: 'student',
-    module: 'vocabulary',
-    action_description: '4000 Essential English Words: Book 1, Unit 1 testida 20 ta yangi so\'zni o\'zlashtirdi',
-    duration_minutes: 25,
-    device: 'Desktop Windows'
-  }
-];
+export const SEED_PLATFORM_AUDIT: PlatformAuditAction[] = [];
 
 // LocalStorage helpers for persistence
 export function getStoredStudentPayments(): StudentPaymentPlan[] {
@@ -262,9 +212,21 @@ export function saveStoredStudentActivities(acts: StudentActivityMetric[]) {
 }
 
 export function getStoredTeacherActivities(): TeacherActivityMetric[] {
-  return getStorageItem('premier_teacher_activities', SEED_TEACHER_ACTIVITIES);
+  const stored = getStorageItem<TeacherActivityMetric[]>('premier_teacher_activities', []);
+  const hasFakeHours = stored.some(t => t.total_teaching_hours > 50);
+  if (stored.length === 0 || hasFakeHours) {
+    setStorageItem('premier_teacher_activities', SEED_TEACHER_ACTIVITIES);
+    return SEED_TEACHER_ACTIVITIES;
+  }
+  return stored;
 }
 
 export function getStoredPlatformAudit(): PlatformAuditAction[] {
-  return getStorageItem('premier_platform_audit', SEED_PLATFORM_AUDIT);
+  const stored = getStorageItem<PlatformAuditAction[]>('premier_platform_audit', []);
+  const hasFakeLogs = stored.some(a => a.id === 'aud-1' || a.action_description.includes("Unit 1 bo'yicha"));
+  if (stored.length === 0 || hasFakeLogs) {
+    setStorageItem('premier_platform_audit', SEED_PLATFORM_AUDIT);
+    return SEED_PLATFORM_AUDIT;
+  }
+  return stored;
 }

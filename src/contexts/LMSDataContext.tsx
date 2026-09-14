@@ -104,9 +104,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const isLegacyDummy = 
         r.id.startsWith('user-student-') || 
         r.id.startsWith('user-other-') || 
-        r.id.startsWith('student-1') || 
-        r.id.startsWith('student-2') || 
-        r.id.startsWith('student-3') ||
+        (r.id.startsWith('student-') && !r.id.startsWith('student-official-') && !r.id.match(/^student-\d{13}/)) ||
         r.full_name === 'Jasur Rustamov' ||
         r.full_name === 'Nodira Karimova' ||
         r.full_name === 'Bekzod Toshmatov' ||
@@ -115,11 +113,20 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       if (r.role === 'student' && !deletedIds.has(r.id) && !isLegacyDummy) {
         const existing = map.get(r.id);
-        map.set(r.id, { ...existing, ...r });
+        if (existing) {
+          map.set(r.id, { ...existing, ...r });
+        } else if (r.id.startsWith('student-official-') || r.id.match(/^student-\d{13}/)) {
+          map.set(r.id, r);
+        }
       }
     });
 
-    return Array.from(map.values());
+    const allStudents = Array.from(map.values());
+    if (stored.length !== allStudents.length) {
+      setStorageItem('premier_all_students', allStudents);
+    }
+
+    return allStudents;
   });
 
   const [telemetryLogs, setTelemetryLogs] = useState<Record<string, StudentTelemetryLog>>(() => {

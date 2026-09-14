@@ -141,6 +141,10 @@ export const PaymentManagementPage: React.FC = () => {
   const totalPaid = plans.reduce((acc, p) => acc + p.paid_amount, 0);
   const totalRemaining = plans.reduce((acc, p) => acc + p.remaining_amount, 0);
   const totalOverdue = plans.filter(p => p.overall_status === 'overdue').reduce((acc, p) => acc + p.remaining_amount, 0);
+  const currentMonthExpected = plans.reduce((acc, p) => {
+    const firstSch = p.schedules[0];
+    return acc + (firstSch ? firstSch.amount : p.base_monthly_fee);
+  }, 0);
   const collectionRate = totalExpected > 0 ? Math.round((totalPaid / totalExpected) * 100) : 0;
 
   // Filter plans
@@ -279,41 +283,71 @@ export const PaymentManagementPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white border border-rose-200/80 shadow-2xs bg-rose-50/10">
+        {/* Card 4: Muddati O'tgan Qarzdorlik (Only red if totalOverdue > 0) */}
+        <div className={`p-4 rounded-2xl border shadow-2xs ${
+          totalOverdue > 0 
+            ? 'bg-rose-50/30 border-rose-300 text-rose-700' 
+            : 'bg-white border-slate-200/90'
+        }`}>
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-rose-700 uppercase tracking-wider">Qoldiq Qarzdorlik:</span>
-            <div className="p-1.5 rounded-xl bg-rose-100 text-rose-600">
-              <AlertTriangle className="w-4 h-4" />
+            <span className={`text-[11px] font-bold uppercase tracking-wider ${
+              totalOverdue > 0 ? 'text-rose-700' : 'text-slate-500'
+            }`}>
+              Muddati O'tgan Qarzdorlik:
+            </span>
+            <div className={`p-1.5 rounded-xl ${
+              totalOverdue > 0 ? 'bg-rose-100 text-rose-600' : 'bg-emerald-50 text-emerald-600'
+            }`}>
+              {totalOverdue > 0 ? <AlertTriangle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
             </div>
           </div>
           <div className="mt-2">
-            <span className="text-xl font-black text-rose-700">
-              {totalRemaining.toLocaleString()}
+            <span className={`text-xl font-black ${
+              totalOverdue > 0 ? 'text-rose-700' : 'text-slate-950'
+            }`}>
+              {totalOverdue.toLocaleString()}
             </span>
-            <span className="text-[11px] font-bold text-rose-600 ml-1">UZS</span>
+            <span className="text-[11px] font-bold text-slate-500 ml-1">UZS</span>
           </div>
-          <div className="mt-1 text-[10px] font-semibold text-rose-600">
-            Rejadagi kutilayotgan summa
+          <div className={`mt-1 text-[10px] font-semibold ${
+            totalOverdue > 0 ? 'text-rose-600' : 'text-emerald-700'
+          }`}>
+            {totalOverdue > 0 ? 'Muddati o\'tgan to\'lovlar' : 'Muddati o\'tgan qarzdorlik yo\'q ✓'}
           </div>
         </div>
 
+        {/* Card 5: Kutilayotgan Oylik Reja */}
         <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">To'lov Intizomi:</span>
-            <div className="p-1.5 rounded-xl bg-amber-50 text-amber-600">
-              <Percent className="w-4 h-4" />
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Kutilayotgan Tushum:</span>
+            <div className="p-1.5 rounded-xl bg-indigo-50 text-indigo-600">
+              <Calendar className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-xl font-black text-slate-950">{collectionRate}%</span>
-            <span className="text-[10px] font-semibold text-slate-500">yig'ildi</span>
+          <div className="mt-2">
+            <span className="text-xl font-black text-slate-950">
+              {currentMonthExpected.toLocaleString()}
+            </span>
+            <span className="text-[11px] font-bold text-slate-500 ml-1">UZS</span>
           </div>
-          <div className="mt-1.5 w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
-            <div 
-              className="h-full bg-indigo-600 rounded-full transition-all duration-500" 
-              style={{ width: `${collectionRate}%` }} 
-            />
+          <div className="mt-1 text-[10px] font-semibold text-slate-500">
+            Joriy oy rejasi • Kurs: {totalExpected.toLocaleString()} UZS
           </div>
+        </div>
+      </div>
+
+      {/* Informative Guidance Banner */}
+      <div className="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 flex items-start gap-3.5">
+        <div className="p-2 rounded-xl bg-indigo-100 text-indigo-700 shrink-0 mt-0.5">
+          <Sparkles className="w-4 h-4" />
+        </div>
+        <div className="text-xs">
+          <h4 className="font-extrabold text-indigo-950">
+            Kassa va To'lovlar Tizimi — Haqiqiy Hisob-kitob
+          </h4>
+          <p className="text-slate-600 mt-0.5 leading-relaxed">
+            Hozircha yangi o'quv oyi boshlanish arafasida bo'lganligi sababli hech qanday muddati o'tgan qarzdorlik yo'q (<strong>0 UZS</strong>). O'quvchilar naqd pul yoki plastik karta orqali to'lov topshirishlari bilanoq, har bir to'lov bo'yicha <strong>"To'lov Qabul Qilish"</strong> tugmasini bosib tizimga kiritishingiz va QR-kodli rasmiy to'lov cheki (kvitansiya) chiqarib berishingiz mumkin.
+          </p>
         </div>
       </div>
 
