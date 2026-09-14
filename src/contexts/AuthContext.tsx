@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { SEED_PROFILES } from '../lib/seedData';
+import { PREMIER_OFFICIAL_STUDENTS } from '../data/premierStudentsData';
 import { getStorageItem, setStorageItem, removeStorageItem } from '../lib/storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { Profile, UserRole, CEFRLevel } from '../types';
@@ -71,6 +72,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (matched) {
         setUser({ id: matched.id, email: matched.email });
         saveProfile(matched);
+        setLoading(false);
+        return { error: null };
+      }
+
+      // Look up in official premier students
+      const officialMatched = PREMIER_OFFICIAL_STUDENTS.find(p => p.email.toLowerCase() === email.toLowerCase());
+      if (officialMatched) {
+        setUser({ id: officialMatched.id, email: officialMatched.email });
+        saveProfile(officialMatched);
         setLoading(false);
         return { error: null };
       }

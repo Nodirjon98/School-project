@@ -9,6 +9,7 @@ import {
   SEED_DAILY_WORDS, SEED_WORD_PROGRESS, SEED_CHAMPIONSHIP, SEED_BADGES,
   SEED_PROFILES
 } from '../lib/seedData';
+import { PREMIER_OFFICIAL_STUDENTS } from '../data/premierStudentsData';
 import { SEED_GRAMMAR_EXAMS } from '../data/seedGrammarExams';
 import { getStorageItem, setStorageItem } from '../lib/storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
@@ -37,6 +38,7 @@ interface LMSDataContextType {
   createGroup: (newGroup: Omit<Group, 'id' | 'created_at'>) => Promise<void>;
   assignStudentToGroup: (studentId: string, groupId: string) => Promise<void>;
   removeStudentFromGroup: (studentId: string) => Promise<void>;
+  deleteStudent: (studentId: string) => Promise<void>;
   updateStudentProfile: (studentId: string, updates: Partial<Profile>) => Promise<void>;
   registerStudentByAdmin: (studentData: { full_name: string; email: string; phone?: string; level?: CEFRLevel; group_id?: string; password?: string }) => Promise<Profile>;
   addLesson: (newLesson: Omit<Lesson, 'id' | 'created_at'>) => Promise<void>;
@@ -77,23 +79,35 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [grammarExams, setGrammarExams] = useState<GrammarExam[]>(() => getStorageItem('premier_grammar_exams', SEED_GRAMMAR_EXAMS));
   const [examSubmissions, setExamSubmissions] = useState<GrammarExamSubmission[]>(() => getStorageItem('premier_grammar_submissions', []));
   const [students, setStudents] = useState<Profile[]>(() => {
-    const registered = getStorageItem<Profile[]>('premier_registered_users', []);
-    const seedStudents = SEED_PROFILES.filter(p => p.role === 'student');
+    const stored = getStorageItem<Profile[]>('premier_all_students', []);
+    const deletedIds = new Set(getStorageItem<string[]>('premier_deleted_student_ids', []));
     const map = new Map<string, Profile>();
 
-    seedStudents.forEach((s, idx) => {
-      const defaultGroupId = idx === 0 ? 'group-1' : idx === 1 ? 'group-2' : 'group-3';
-      const defaultGroupName = idx === 0 ? 'IELTS Intensive Target 7.5+' : idx === 1 ? 'General English Intermediate B1' : 'Elementary English Starters A2';
-      map.set(s.id, {
-        ...s,
-        group_id: s.group_id || defaultGroupId,
-        group_name: s.group_name || defaultGroupName,
-        payment_status: s.payment_status || 'paid',
-      });
+    // 1. Seed official premier students from real records
+    PREMIER_OFFICIAL_STUDENTS.forEach((st) => {
+      if (!deletedIds.has(st.id)) {
+        map.set(st.id, st);
+      }
     });
 
-    registered.forEach(r => {
-      if (r.role === 'student') {
+    // 2. Add original seed students if not duplicated
+    SEED_PROFILES.filter(p => p.role === 'student').forEach((s, idx) => {
+      if (deletedIds.has(s.id)) return;
+      const defaultGroupId = idx === 0 ? 'group-1' : idx === 1 ? 'group-2' : 'group-3';
+      const defaultGroupName = idx === 0 ? 'IELTS Intensive Target 7.5+' : idx === 1 ? 'General English Intermediate B1' : 'Elementary English Starters A2';
+      if (!map.has(s.id)) {
+        map.set(s.id, {
+          ...s,
+          group_id: s.group_id || defaultGroupId,
+          group_name: s.group_name || defaultGroupName,
+          payment_status: s.payment_status || 'paid',
+        });
+      }
+    });
+
+    // 3. Apply any user updates from localStorage
+    stored.forEach(r => {
+      if (r.role === 'student' && !deletedIds.has(r.id)) {
         const existing = map.get(r.id);
         map.set(r.id, { ...existing, ...r });
       }
@@ -754,6 +768,45 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return newStudent;
   };
 
+  const deleteStudent = async (studentId: string): Promise<void> => {
+    const target = students.find(s => s.id === studentId);
+    const targetGroupId = target?.group_id;
+
+    setStudents(prev => prev.filter(s => s.id !== studentId));
+
+    if (targetGroupId) {
+      setGroups(prevGroups => prevGroups.map(g => {
+        if (g.id === targetGroupId) {
+          return { ...g, students_count: Math.max(0, (g.students_count || 1) - 1) };
+        }
+        return g;
+      }));
+    }
+
+    const registered = getStorageItem<Profile[]>('premier_registered_users', []);
+    setStorageItem('premier_registered_users', registered.filter(r => r.id !== studentId && r.email !== target?.email));
+
+    const deletedIds = getStorageItem<string[]>('premier_deleted_student_ids', []);
+    if (!deletedIds.includes(studentId)) {
+      setStorageItem('premier_deleted_student_ids', [...deletedIds, studentId]);
+    }
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('profiles').delete().eq('id', studentId);
+      } catch (e) {
+        console.warn('Supabase delete student error:', e);
+      }
+    }
+
+    realtime.publish({
+      type: 'GROUP_ASSIGNED',
+      title: "O'quvchi o'chirildi",
+      message: `${target?.full_name || "O'quvchi"} tizimdan o'chirildi.`,
+      actor: { id: profile?.id || 'admin', name: profile?.full_name || 'Admin', role: 'admin' }
+    });
+  };
+
   const resetSeason = () => {
     setChampionshipScores(prev => prev.map(cs => ({ ...cs, xp: 0, lessons_attended: 0, homeworks_completed: 0 })));
   };
@@ -779,6 +832,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         createGroup: addGroup,
         assignStudentToGroup,
         removeStudentFromGroup,
+        deleteStudent,
         updateStudentProfile,
         registerStudentByAdmin,
         addLesson,

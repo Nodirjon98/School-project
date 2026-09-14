@@ -22,6 +22,11 @@ export interface Profile {
   streak: number;
   last_active_date?: string;
   avatar_url?: string;
+  birth_date?: string;
+  status?: 'active' | 'left' | 'inactive';
+  payment_type?: 'full' | 'custom' | 'free';
+  custom_fee?: number;
+  password?: string;
   group_id?: string;
   group_name?: string;
   payment_status?: 'paid' | 'partial' | 'overdue' | 'pending';

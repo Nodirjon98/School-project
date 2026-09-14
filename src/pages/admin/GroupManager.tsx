@@ -8,14 +8,15 @@ import { WeeklyTimetable } from '../../components/schedule/WeeklyTimetable';
 import { 
   Users, Plus, Clock, MapPin, 
   UserPlus, Search, Phone, Mail, CheckCircle2,
-  Calendar, CreditCard, AlertCircle, ArrowRight, Sparkles, X, ChevronRight
+  Calendar, CreditCard, AlertCircle, ArrowRight, Sparkles, X, ChevronRight,
+  Trash2, KeyRound, Copy, Check, UserX, UserCheck, Eye
 } from 'lucide-react';
 
 export const GroupManager: React.FC = () => {
   const { t } = useLanguage();
   const { 
     groups, createGroup, students, 
-    assignStudentToGroup, removeStudentFromGroup, registerStudentByAdmin 
+    assignStudentToGroup, removeStudentFromGroup, deleteStudent, registerStudentByAdmin 
   } = useLMSData();
 
   // Tab navigation
@@ -26,6 +27,8 @@ export const GroupManager: React.FC = () => {
   const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
   const [selectedGroupForDetail, setSelectedGroupForDetail] = useState<Group | null>(null);
   const [selectedStudentForAssign, setSelectedStudentForAssign] = useState<Profile | null>(null);
+  const [selectedStudentForCredentials, setSelectedStudentForCredentials] = useState<Profile | null>(null);
+  const [copiedField, setCopiedField] = useState<'login' | 'password' | 'all' | null>(null);
   const [assignTargetGroupId, setAssignTargetGroupId] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -33,6 +36,7 @@ export const GroupManager: React.FC = () => {
   const [groupSearch, setGroupSearch] = useState('');
   const [studentSearch, setStudentSearch] = useState('');
   const [studentFilter, setStudentFilter] = useState<'all' | 'unassigned' | 'assigned'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'left'>('all');
 
   // Group Form states
   const [name, setName] = useState('');
@@ -126,8 +130,33 @@ export const GroupManager: React.FC = () => {
     }
   };
 
+  const copyToClipboard = (text: string, field: 'login' | 'password' | 'all') => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2500);
+  };
+
+  const handleDeleteStudent = async (student: Profile) => {
+    const confirmDelete = window.confirm(
+      `"${student.full_name}" o'quvchisini tizimdan butunlay o'chirishni tasdiqlaysizmi?\n\nBu o'quvchi barcha guruhlardan chiqariladi va ma'lumotlar bazasidan butunlay o'chiriladi.`
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await deleteStudent(student.id);
+      showToast(`🗑️ "${student.full_name}" o'quvchisi tizimdan o'chirildi.`);
+      if (selectedStudentForCredentials?.id === student.id) {
+        setSelectedStudentForCredentials(null);
+      }
+    } catch (err: any) {
+      alert(`Xatolik: ${err.message}`);
+    }
+  };
+
   // KPIs
   const totalStudents = students.length;
+  const activeStudentsCount = students.filter(s => s.status !== 'left').length;
+  const leftStudentsCount = students.filter(s => s.status === 'left').length;
   const unassignedStudents = students.filter(s => !s.group_id);
   const assignedStudents = students.filter(s => !!s.group_id);
 
@@ -145,9 +174,15 @@ export const GroupManager: React.FC = () => {
       (st.phone && st.phone.includes(studentSearch)) ||
       (st.level && st.level.toLowerCase().includes(studentSearch.toLowerCase()));
 
-    if (studentFilter === 'unassigned') return matchesSearch && !st.group_id;
-    if (studentFilter === 'assigned') return matchesSearch && !!st.group_id;
-    return matchesSearch;
+    if (!matchesSearch) return false;
+
+    if (studentFilter === 'unassigned' && st.group_id) return false;
+    if (studentFilter === 'assigned' && !st.group_id) return false;
+
+    if (statusFilter === 'active' && st.status === 'left') return false;
+    if (statusFilter === 'left' && st.status !== 'left') return false;
+
+    return true;
   });
 
   return (
@@ -291,42 +326,87 @@ export const GroupManager: React.FC = () => {
       {activeTab === 'students' && (
         <div className="space-y-4">
           {/* Sub Filters & Search */}
-          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <button
-                onClick={() => setStudentFilter('all')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                  studentFilter === 'all'
-                    ? 'bg-slate-900 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                Barchasi ({students.length})
-              </button>
-              <button
-                onClick={() => setStudentFilter('unassigned')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
-                  studentFilter === 'unassigned'
-                    ? 'bg-amber-500 text-white'
-                    : 'bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100'
-                }`}
-              >
-                <span>⚠️ Guruhsiz O'quvchilar</span>
-                <span className="font-extrabold px-1.5 rounded-full bg-white/20">{unassignedStudents.length}</span>
-              </button>
-              <button
-                onClick={() => setStudentFilter('assigned')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                  studentFilter === 'assigned'
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100'
-                }`}
-              >
-                Guruhga ega ({assignedStudents.length})
-              </button>
+          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Assignment filter */}
+              <div className="flex items-center bg-slate-100 p-1 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => setStudentFilter('all')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    studentFilter === 'all'
+                      ? 'bg-white text-slate-900 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Barchasi ({students.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStudentFilter('unassigned')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                    studentFilter === 'unassigned'
+                      ? 'bg-amber-500 text-white shadow-xs'
+                      : 'text-amber-800 hover:text-amber-900'
+                  }`}
+                >
+                  <span>Guruhsiz</span>
+                  <span className="font-extrabold px-1 rounded-full bg-white/20 text-[10px]">{unassignedStudents.length}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStudentFilter('assigned')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    studentFilter === 'assigned'
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-emerald-800 hover:text-emerald-900'
+                  }`}
+                >
+                  Guruhdagi ({assignedStudents.length})
+                </button>
+              </div>
+
+              {/* Status filter: Active vs Left */}
+              <div className="flex items-center bg-slate-100 p-1 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter('all')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    statusFilter === 'all'
+                      ? 'bg-white text-slate-900 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Barcha holat
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter('active')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                    statusFilter === 'active'
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-emerald-700 hover:text-emerald-900'
+                  }`}
+                >
+                  <span>🟢 Faollar</span>
+                  <span className="font-extrabold px-1.5 py-0.2 rounded-full bg-white/20 text-[10px]">{activeStudentsCount}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter('left')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                    statusFilter === 'left'
+                      ? 'bg-rose-600 text-white shadow-xs'
+                      : 'text-rose-700 hover:text-rose-900'
+                  }`}
+                >
+                  <span>🔴 Kelmayotganlar</span>
+                  <span className="font-extrabold px-1.5 py-0.2 rounded-full bg-white/20 text-[10px]">{leftStudentsCount}</span>
+                </button>
+              </div>
             </div>
 
-            <div className="relative w-full sm:w-80">
+            <div className="relative w-full md:w-72">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
               <input
                 type="text"
@@ -345,8 +425,9 @@ export const GroupManager: React.FC = () => {
                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-bold tracking-wider">
                   <tr>
                     <th className="py-3 px-4">O'quvchi</th>
+                    <th className="py-3 px-4">Holati</th>
                     <th className="py-3 px-4">Bog'lanish (Telefon / Email)</th>
-                    <th className="py-3 px-4">Darajasi</th>
+                    <th className="py-3 px-4">Darajasi & Tarif</th>
                     <th className="py-3 px-4">Biriktirilgan Guruh</th>
                     <th className="py-3 px-4">To'lov Holati</th>
                     <th className="py-3 px-4 text-right">Amallar</th>
@@ -355,26 +436,54 @@ export const GroupManager: React.FC = () => {
                 <tbody className="divide-y divide-slate-100 font-medium">
                   {filteredStudents.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-400">
+                      <td colSpan={7} className="py-8 text-center text-slate-400">
                         O'quvchilar topilmadi
                       </td>
                     </tr>
                   ) : (
                     filteredStudents.map((st) => {
                       const studentGroup = groups.find(g => g.id === st.group_id);
+                      const isLeft = st.status === 'left';
                       return (
-                        <tr key={st.id} className="hover:bg-slate-50/70 transition">
+                        <tr key={st.id} className={`transition ${isLeft ? 'bg-rose-50/25 hover:bg-rose-50/45' : 'hover:bg-slate-50/70'}`}>
                           {/* Student Name & Avatar */}
                           <td className="py-3 px-4 whitespace-nowrap">
                             <div className="flex items-center gap-2.5">
-                              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
+                              <div className={`w-8 h-8 rounded-full text-white font-bold text-xs flex items-center justify-center shrink-0 ${
+                                isLeft ? 'bg-slate-400' : 'bg-gradient-to-tr from-indigo-500 to-purple-600'
+                              }`}>
                                 {st.full_name.charAt(0)}
                               </div>
                               <div>
-                                <div className="font-bold text-slate-900">{st.full_name}</div>
-                                <div className="text-[10px] text-slate-400">ID: {st.id.slice(-6)}</div>
+                                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                                  <span>{st.full_name}</span>
+                                  {st.password && (
+                                    <span className="text-[10px] px-1 py-0.2 rounded bg-indigo-50 text-indigo-600 font-mono" title="Login va parol faol">
+                                      🔑
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-[10px] text-slate-400 flex items-center gap-1.5">
+                                  <span>ID: {st.id.slice(-6)}</span>
+                                  {st.birth_date && <span>• {st.birth_date}</span>}
+                                </div>
                               </div>
                             </div>
+                          </td>
+
+                          {/* Status */}
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            {isLeft ? (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-bold text-[10px] bg-rose-50 text-rose-700 border border-rose-200">
+                                <UserX className="w-3 h-3 text-rose-500" />
+                                Kelmayapti (Ketgan)
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-bold text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <UserCheck className="w-3 h-3 text-emerald-500" />
+                                Faol o'quvchi
+                              </span>
+                            )}
                           </td>
 
                           {/* Contact */}
@@ -391,11 +500,24 @@ export const GroupManager: React.FC = () => {
                             </div>
                           </td>
 
-                          {/* Level */}
+                          {/* Level & Fee Type */}
                           <td className="py-3 px-4 whitespace-nowrap">
-                            <span className="px-2 py-0.5 rounded-full font-bold text-[10px] bg-slate-100 text-slate-700 border border-slate-200">
-                              {st.level || 'B1'}
-                            </span>
+                            <div className="space-y-0.5">
+                              <span className="px-2 py-0.5 rounded-full font-bold text-[10px] bg-slate-100 text-slate-700 border border-slate-200 inline-block">
+                                {st.level || 'B1'}
+                              </span>
+                              <div className="text-[11px] font-semibold">
+                                {st.payment_type === 'free' ? (
+                                  <span className="text-purple-600 font-bold">Grant (Bepul)</span>
+                                ) : st.payment_type === 'custom' ? (
+                                  <span className="text-amber-700 font-bold">
+                                    {st.custom_fee ? `${st.custom_fee.toLocaleString()} so'm` : 'Maxsus narx'}
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-600">To'liq to'lov</span>
+                                )}
+                              </div>
+                            </div>
                           </td>
 
                           {/* Group status */}
@@ -437,22 +559,32 @@ export const GroupManager: React.FC = () => {
                           {/* Actions */}
                           <td className="py-3 px-4 text-right whitespace-nowrap">
                             <div className="flex items-center justify-end gap-1.5">
+                              {/* View Credentials Button */}
+                              <button
+                                type="button"
+                                onClick={() => setSelectedStudentForCredentials(st)}
+                                className="p-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition cursor-pointer"
+                                title="Login va parolni ko'rish"
+                              >
+                                <KeyRound className="w-4 h-4" />
+                              </button>
+
                               <button
                                 type="button"
                                 onClick={() => {
                                   setSelectedStudentForAssign(st);
                                   setAssignTargetGroupId(st.group_id || groups[0]?.id || '');
                                 }}
-                                className="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs border border-indigo-200 transition cursor-pointer"
+                                className="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-200 transition cursor-pointer"
                               >
-                                {st.group_id ? "Guruhni o'zgartirish" : "Guruhga biriktirish →"}
+                                {st.group_id ? "Guruhni almashtirish" : "Guruhga joylash →"}
                               </button>
 
                               {st.group_id && (
                                 <button
                                   type="button"
                                   onClick={() => handleRemoveFromGroup(st)}
-                                  className="p-1.5 rounded-xl text-rose-500 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition cursor-pointer"
+                                  className="p-1.5 rounded-xl text-amber-600 hover:bg-amber-50 border border-transparent hover:border-amber-200 transition cursor-pointer"
                                   title="Guruhdan chiqarish"
                                 >
                                   <X className="w-4 h-4" />
@@ -466,6 +598,16 @@ export const GroupManager: React.FC = () => {
                               >
                                 <CreditCard className="w-4 h-4 text-emerald-600" />
                               </Link>
+
+                              {/* DELETE BUTTON */}
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteStudent(st)}
+                                className="p-1.5 rounded-xl text-rose-500 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition cursor-pointer"
+                                title="O'quvchini butunlay o'chirish"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
                             </div>
                           </td>
                         </tr>
@@ -895,6 +1037,123 @@ export const GroupManager: React.FC = () => {
             </button>
           </div>
         </form>
+      </Modal>
+
+      {/* MODAL 5: STUDENT CREDENTIALS & LOGIN/PASSWORD */}
+      <Modal
+        isOpen={!!selectedStudentForCredentials}
+        onClose={() => { setSelectedStudentForCredentials(null); setCopiedField(null); }}
+        title="O'quvchining Shaxsiy Login & Parol Ma'lumotlari"
+      >
+        {selectedStudentForCredentials && (
+          <div className="space-y-4">
+            <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-between">
+              <div>
+                <div className="text-sm font-black text-slate-900">{selectedStudentForCredentials.full_name}</div>
+                <div className="text-xs text-slate-500">
+                  {selectedStudentForCredentials.level || 'B1'} daraja • {selectedStudentForCredentials.phone || 'Telefon kiritilmagan'}
+                </div>
+              </div>
+              <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                selectedStudentForCredentials.status === 'left'
+                  ? 'bg-rose-100 text-rose-800'
+                  : 'bg-emerald-100 text-emerald-800'
+              }`}>
+                {selectedStudentForCredentials.status === 'left' ? "Kelmayapti (Ketgan)" : "Faol o'quvchi"}
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {/* Login/Email */}
+              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] font-bold text-slate-500 uppercase">Login / Email</span>
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(selectedStudentForCredentials.email, 'login')}
+                    className="flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                  >
+                    {copiedField === 'login' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedField === 'login' ? "Nusxa olindi!" : "Nusxa olish"}</span>
+                  </button>
+                </div>
+                <div className="font-mono text-xs font-bold text-slate-900 select-all">
+                  {selectedStudentForCredentials.email}
+                </div>
+              </div>
+
+              {/* Password */}
+              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] font-bold text-slate-500 uppercase">Kirish Paroli</span>
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(selectedStudentForCredentials.password || 'premier2026', 'password')}
+                    className="flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                  >
+                    {copiedField === 'password' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedField === 'password' ? "Nusxa olindi!" : "Nusxa olish"}</span>
+                  </button>
+                </div>
+                <div className="font-mono text-sm font-black text-indigo-700 select-all tracking-wider">
+                  {selectedStudentForCredentials.password || 'premier2026'}
+                </div>
+              </div>
+
+              {/* Payment Info */}
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                  <span className="text-[10px] text-slate-400 block uppercase font-bold">To'lov Tarifi</span>
+                  <span className="font-bold text-slate-800">
+                    {selectedStudentForCredentials.payment_type === 'free' 
+                      ? 'Grant (Bepul)' 
+                      : selectedStudentForCredentials.payment_type === 'custom' 
+                      ? `Maxsus (${selectedStudentForCredentials.custom_fee ? selectedStudentForCredentials.custom_fee.toLocaleString() + " so'm" : "kelishilgan"})` 
+                      : "To'liq (Standart)"}
+                  </span>
+                </div>
+                <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                  <span className="text-[10px] text-slate-400 block uppercase font-bold">Tug'ilgan sana</span>
+                  <span className="font-bold text-slate-800">{selectedStudentForCredentials.birth_date || "Kiritilmagan"}</span>
+                </div>
+              </div>
+
+              {/* One-click SMS/Telegram Message copy */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const smsText = `Assalomu alaykum, hurmatli ota-ona! Premier School platformasidagi shaxsiy kabinet login ma'lumotlari:\nO'quvchi: ${selectedStudentForCredentials.full_name}\nLogin: ${selectedStudentForCredentials.email}\nParol: ${selectedStudentForCredentials.password || 'premier2026'}\nKirish: https://premier-school-lms.vercel.app/login`;
+                    copyToClipboard(smsText, 'all');
+                  }}
+                  className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                >
+                  {copiedField === 'all' ? <Check className="w-4 h-4 text-emerald-300" /> : <Copy className="w-4 h-4" />}
+                  <span>{copiedField === 'all' ? "Ota-ona uchun SMS nusxalandi!" : "Ota-ona uchun to'liq SMS xabarini nusxalash"}</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => handleDeleteStudent(selectedStudentForCredentials)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-rose-600 hover:bg-rose-50 text-xs font-bold border border-rose-200 transition cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>O'quvchini O'chirish</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedStudentForCredentials(null)}
+                className="px-4 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"
+              >
+                Yopish
+              </button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );
