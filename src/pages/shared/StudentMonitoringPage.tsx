@@ -4,7 +4,7 @@ import {
   Eye, CheckCircle2, PauseCircle, Monitor, Smartphone, Tablet, 
   BookOpen, Layers, Headphones, FileEdit, Mic, Sparkles, ChevronRight,
   TrendingUp, Download, RefreshCw, X, MessageSquare, PhoneCall, Calendar,
-  KeyRound, Copy, Check, ExternalLink, ShieldAlert
+  KeyRound, Copy, Check, ExternalLink, ShieldAlert, FileSpreadsheet
 } from 'lucide-react';
 import { useLMSData } from '../../contexts/LMSDataContext';
 import { StudentTelemetryLog, StudentActionEvent, TelemetryModule } from '../../types';
@@ -20,12 +20,33 @@ export const StudentMonitoringPage: React.FC = () => {
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const [teacherNoteInput, setTeacherNoteInput] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [copiedAllType, setCopiedAllType] = useState<'telegram' | 'table' | null>(null);
+  const [credSearchQuery, setCredSearchQuery] = useState('');
+  const [credSelectedGroup, setCredSelectedGroup] = useState<string>('all');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
   };
+
+  // Filtered credentials list for credentials tab
+  const filteredCredentials = useMemo(() => {
+    return students.filter(st => {
+      const q = credSearchQuery.toLowerCase();
+      const matchesSearch = 
+        st.full_name.toLowerCase().includes(q) ||
+        st.email.toLowerCase().includes(q) ||
+        (st.phone && st.phone.includes(q));
+      
+      const matchesGroup = 
+        credSelectedGroup === 'all' || 
+        st.group_id === credSelectedGroup || 
+        st.group_name === credSelectedGroup;
+
+      return matchesSearch && matchesGroup;
+    });
+  }, [students, credSearchQuery, credSelectedGroup]);
 
   // Convert telemetryLogs dictionary to array
   const telemetryList = useMemo(() => {
@@ -93,7 +114,7 @@ export const StudentMonitoringPage: React.FC = () => {
     }
   };
 
-  // Copy SMS / Telegram format credentials for a student
+  // Copy SMS / Telegram format credentials for a single student
   const handleCopyCredentials = (st: typeof students[0]) => {
     const text = `Assalomu alaykum! Premier School ta'lim platformasidagi shaxsiy kabinetingiz ma'lumotlari:\n\n👤 O'quvchi: ${st.full_name}\n🌐 Sayt: ${window.location.origin}/login\n📧 Login (Email): ${st.email}\n🔑 Parol: ${st.password || 'Premier2026!'}\n\nIltimos, platformaga kirib darslarni va uy vazifalarini bajarishni boshlang!`;
     navigator.clipboard.writeText(text);
@@ -102,17 +123,72 @@ export const StudentMonitoringPage: React.FC = () => {
     setTimeout(() => setCopiedId(null), 2500);
   };
 
-  // Export all credentials as CSV
+  // Copy ALL credentials formatted for Telegram / SMS / Notes
+  const handleCopyAllTelegram = () => {
+    const list = filteredCredentials.length > 0 ? filteredCredentials : students;
+    if (list.length === 0) {
+      showToast("Nusxalash uchun o'quvchilar topilmadi!");
+      return;
+    }
+
+    const groupTitle = credSelectedGroup !== 'all' 
+      ? groups.find(g => g.id === credSelectedGroup)?.name || credSelectedGroup
+      : "Barcha Guruhlar";
+
+    let text = `🎓 PREMIER SCHOOL — O'QUVCHILARNING LOGIN VA PAROLLARI\n`;
+    text += `📋 Guruh: ${groupTitle}\n`;
+    text += `👥 Jami o'quvchilar: ${list.length} nafar\n`;
+    text += `🌐 Platformaga kirish: ${window.location.origin}/login\n`;
+    text += `========================================\n\n`;
+
+    list.forEach((st, idx) => {
+      text += `${idx + 1}. 👤 ${st.full_name}\n`;
+      if (st.group_name) text += `   📚 Guruh: ${st.group_name}\n`;
+      if (st.phone) text += `   📱 Tel: ${st.phone}\n`;
+      text += `   📧 Login: ${st.email}\n`;
+      text += `   🔑 Parol: ${st.password || 'Premier2026!'}\n`;
+      text += `----------------------------------------\n`;
+    });
+
+    text += `\n💡 Eslatma: O'quvchilar ushbu login va parol orqali tizimga kirib darslar va vazifalarni bajarishlari mumkin.`;
+
+    navigator.clipboard.writeText(text);
+    setCopiedAllType('telegram');
+    showToast(`Barcha ${list.length} ta o'quvchining login va paroli nusxalandi (Telegram formatida)!`);
+    setTimeout(() => setCopiedAllType(null), 3000);
+  };
+
+  // Copy ALL credentials as a clean Table (tab-separated, directly pastable into Excel or Google Sheets)
+  const handleCopyAllTable = () => {
+    const list = filteredCredentials.length > 0 ? filteredCredentials : students;
+    if (list.length === 0) {
+      showToast("Nusxalash uchun o'quvchilar topilmadi!");
+      return;
+    }
+
+    let text = "№\tF.I.Sh\tGuruh\tTelefon\tLogin (Email)\tParol\n";
+    list.forEach((st, idx) => {
+      text += `${idx + 1}\t${st.full_name}\t${st.group_name || 'Guruhsiz'}\t${st.phone || '-'}\t${st.email}\t${st.password || 'Premier2026!'}\n`;
+    });
+
+    navigator.clipboard.writeText(text);
+    setCopiedAllType('table');
+    showToast(`Barcha ${list.length} ta o'quvchi ma'lumotlari jadval (Excel) formatida nusxalandi!`);
+    setTimeout(() => setCopiedAllType(null), 3000);
+  };
+
+  // Export credentials as CSV
   const handleExportCSV = () => {
+    const list = filteredCredentials.length > 0 ? filteredCredentials : students;
     const headers = "ID,F.I.Sh,Guruh,Telefon,Email (Login),Parol\n";
-    const rows = students.map(s => `"${s.id}","${s.full_name}","${s.group_name || 'Guruhsiz'}","${s.phone || ''}","${s.email}","${s.password || 'Premier2026!'}"`).join('\n');
+    const rows = list.map(s => `"${s.id}","${s.full_name}","${s.group_name || 'Guruhsiz'}","${s.phone || ''}","${s.email}","${s.password || 'Premier2026!'}"`).join('\n');
     const blob = new Blob([headers + rows], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `premier_students_credentials_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
-    showToast("Barcha login-parollar CSV faylga yuklandi!");
+    showToast(`${list.length} ta o'quvchi login-paroli CSV faylga yuklandi!`);
   };
 
   return (
@@ -176,7 +252,7 @@ export const StudentMonitoringPage: React.FC = () => {
            TAB 2: CREDENTIALS DISTRIBUTION (LOGIN & PAROLLAR)
            ======================================================== */
         <div className="space-y-4">
-          <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-sky-500/10 border border-emerald-200/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-sky-500/10 border border-emerald-200/80 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
                 <KeyRound className="w-5 h-5 text-emerald-600" />
@@ -188,13 +264,85 @@ export const StudentMonitoringPage: React.FC = () => {
                 O'quvchilarga platformaga kirishi uchun ushbu login va parollarni bering. O'quvchi birinchi marta kirishi bilan, uning faoliyati orqa fonda avtomatik nazorat qilinadi.
               </p>
             </div>
-            <button
-              onClick={handleExportCSV}
-              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer shrink-0"
-            >
-              <Download className="w-4 h-4" />
-              <span>Barchasini Excel/CSV ga yuklash</span>
-            </button>
+
+            {/* Quick Bulk Copy & Export Action Buttons */}
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <button
+                onClick={handleCopyAllTelegram}
+                className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black transition flex items-center gap-2 shadow-xs cursor-pointer"
+                title="Barcha login va parollarni Telegram/SMS uchun qulay formatda bir martada nusxalash"
+              >
+                {copiedAllType === 'telegram' ? (
+                  <>
+                    <Check className="w-4 h-4 text-emerald-300" />
+                    <span>Barchasi Nusxalandi! ({filteredCredentials.length})</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    <span>Barchasini Nusxalash ({filteredCredentials.length} ta)</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={handleCopyAllTable}
+                className="px-3.5 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold transition flex items-center gap-2 shadow-2xs cursor-pointer"
+                title="Excel yoki Google Sheets ga to'g'ridan-to'g'ri jadval ko'rinishida nusxalash (Ctrl+V)"
+              >
+                {copiedAllType === 'table' ? (
+                  <>
+                    <Check className="w-4 h-4 text-emerald-600" />
+                    <span>Jadval Nusxalandi!</span>
+                  </>
+                ) : (
+                  <>
+                    <FileSpreadsheet className="w-4 h-4 text-slate-500" />
+                    <span>Excel Jadvali nusxasi</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={handleExportCSV}
+                className="px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer"
+                title="CSV fayl ko'rinishida yuklab olish"
+              >
+                <Download className="w-4 h-4" />
+                <span>CSV Yuklash</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Search and Group Filter for Credentials */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+              <div className="relative flex-1 sm:w-72">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={credSearchQuery}
+                  onChange={(e) => setCredSearchQuery(e.target.value)}
+                  placeholder="Ism, email yoki telefon bo'yicha qidirish..."
+                  className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 focus:bg-white focus:outline-hidden focus:border-indigo-500 transition"
+                />
+              </div>
+
+              <select
+                value={credSelectedGroup}
+                onChange={(e) => setCredSelectedGroup(e.target.value)}
+                className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 focus:bg-white focus:outline-hidden transition"
+              >
+                <option value="all">Barcha Guruhlar ({students.length} nafar)</option>
+                {groups.map(g => (
+                  <option key={g.id} value={g.id}>{g.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="text-xs font-bold text-slate-500 self-end md:self-center">
+              Ko'rsatilmoqda: <span className="text-indigo-600 font-black">{filteredCredentials.length}</span> / {students.length} nafar o'quvchi
+            </div>
           </div>
 
           {/* Credentials Table */}
@@ -213,48 +361,56 @@ export const StudentMonitoringPage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-xs">
-                  {students.map((st, idx) => (
-                    <tr key={st.id} className="hover:bg-slate-50/60 transition">
-                      <td className="py-3 px-4 font-bold text-slate-400 text-[11px]">{idx + 1}</td>
-                      <td className="py-3 px-4 font-extrabold text-slate-900">{st.full_name}</td>
-                      <td className="py-3 px-3">
-                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-bold">
-                          {st.group_name || "Guruhsiz"}
-                        </span>
-                      </td>
-                      <td className="py-3 px-3 font-semibold text-slate-600">
-                        {st.phone || <span className="text-slate-400 italic">Kiritilmagan</span>}
-                      </td>
-                      <td className="py-3 px-4 font-mono text-[11px] text-indigo-700 font-bold">
-                        {st.email}
-                      </td>
-                      <td className="py-3 px-4 font-mono text-[11px] text-slate-900 font-bold bg-slate-50/50">
-                        {st.password || 'Premier2026!'}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <button
-                          onClick={() => handleCopyCredentials(st)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition inline-flex items-center gap-1.5 cursor-pointer ${
-                            copiedId === st.id
-                              ? 'bg-emerald-600 text-white shadow-xs'
-                              : 'bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700'
-                          }`}
-                        >
-                          {copiedId === st.id ? (
-                            <>
-                              <Check className="w-3.5 h-3.5" />
-                              <span>Nusxalandi!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3.5 h-3.5" />
-                              <span>SMS/Telegram matni</span>
-                            </>
-                          )}
-                        </button>
+                  {filteredCredentials.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="py-12 text-center text-slate-400 font-medium">
+                        Qidiruv bo'yicha hech qanday o'quvchi topilmadi.
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    filteredCredentials.map((st, idx) => (
+                      <tr key={st.id} className="hover:bg-slate-50/60 transition">
+                        <td className="py-3 px-4 font-bold text-slate-400 text-[11px]">{idx + 1}</td>
+                        <td className="py-3 px-4 font-extrabold text-slate-900">{st.full_name}</td>
+                        <td className="py-3 px-3">
+                          <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-bold">
+                            {st.group_name || "Guruhsiz"}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 font-semibold text-slate-600">
+                          {st.phone || <span className="text-slate-400 italic">Kiritilmagan</span>}
+                        </td>
+                        <td className="py-3 px-4 font-mono text-[11px] text-indigo-700 font-bold">
+                          {st.email}
+                        </td>
+                        <td className="py-3 px-4 font-mono text-[11px] text-slate-900 font-bold bg-slate-50/50">
+                          {st.password || 'Premier2026!'}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <button
+                            onClick={() => handleCopyCredentials(st)}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition inline-flex items-center gap-1.5 cursor-pointer ${
+                              copiedId === st.id
+                                ? 'bg-emerald-600 text-white shadow-xs'
+                                : 'bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700'
+                            }`}
+                          >
+                            {copiedId === st.id ? (
+                              <>
+                                <Check className="w-3.5 h-3.5" />
+                                <span>Nusxalandi!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5" />
+                                <span>SMS/Telegram matni</span>
+                              </>
+                            )}
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
