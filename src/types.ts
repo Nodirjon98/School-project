@@ -1164,6 +1164,14 @@ export interface StoryQuestion {
   explanationUz?: string;
 }
 
+export interface StoryTrueFalseNotGiven {
+  id: string;
+  order: number;
+  statement: string;
+  correctAnswer: 'True' | 'False' | 'Not Given';
+  explanationUz: string;
+}
+
 export interface StoryForReproduction {
   id: string;
   storyNumber: number;
@@ -1177,7 +1185,9 @@ export interface StoryForReproduction {
   summaryUz: string;
   vocabulary: StoryVocabulary[];
   questions: StoryQuestion[];
+  trueFalseQuestions?: StoryTrueFalseNotGiven[];
   reproductionOutline: string[];
   modelRetelling: string;
 }
+
 

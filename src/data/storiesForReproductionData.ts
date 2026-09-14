@@ -186,6 +186,50 @@ export const STORIES_FOR_REPRODUCTION: StoryForReproduction[] = [
         correctOptionIndex: 1,
         explanationUz: "U: 'Bular o'tgan yilgilar, jo'natish yodimdan ko'tarilgan ekan' deb aytdi."
       }
+    ],
+    trueFalseQuestions: [
+      {
+        id: 's1-tf1',
+        order: 1,
+        statement: 'Mrs Smith bought the Christmas cards two days before Christmas.',
+        correctAnswer: 'False',
+        explanationUz: "Matnda: 'It was two weeks before Christmas' (ikki hafta oldin), ikki kun emas."
+      },
+      {
+        id: 's1-tf2',
+        order: 2,
+        statement: "Mrs Smith bought cards to send to her own friends and her husband's friends.",
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'She bought a lot of Christmas cards to send to her friends and to her husband\\'s friends'."
+      },
+      {
+        id: 's1-tf3',
+        order: 3,
+        statement: 'Mrs Smith asked her husband to write the cards while she was cooking the dinner.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'Will you please write the cards while I am cooking the dinner?'"
+      },
+      {
+        id: 's1-tf4',
+        order: 4,
+        statement: "Mr Smith's study was located on the second floor of their house.",
+        correctAnswer: 'Not Given',
+        explanationUz: "Matnda janob Smitning ish xonasi nechanchi qavatda ekanligi haqida ma'lumot berilmagan."
+      },
+      {
+        id: 's1-tf5',
+        order: 5,
+        statement: 'All the cards in the box already had addresses and stamps on them.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'All of them had addresses and stamps on them'."
+      },
+      {
+        id: 's1-tf6',
+        order: 6,
+        statement: "Mr Smith had posted all of last year's Christmas cards on time.",
+        correctAnswer: 'False',
+        explanationUz: "Xato: U o'tgan yilgi kartochkalarni jo'natishni unutib qo'ygan ('I forgot to post them')."
+      }
     ]
   },
   {
@@ -457,6 +501,50 @@ export const STORIES_FOR_REPRODUCTION: StoryForReproduction[] = [
         correctOptionIndex: 1,
         explanationUz: "Jimmi: 'Ha, bir erkak qildi, lekin u faqat Billi bilan gaplashmoqchi bo'ldi' dedi."
       }
+    ],
+    trueFalseQuestions: [
+      {
+        id: 's2-tf1',
+        order: 1,
+        statement: 'Mrs Jones went to the shops because she had run out of bread.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'she had no bread in the house, so she left the baby at home and went to the shops'."
+      },
+      {
+        id: 's2-tf2',
+        order: 2,
+        statement: 'Jimmy was seven years old when the telephone rang.',
+        correctAnswer: 'False',
+        explanationUz: "Xato, Jimmi 5 yoshda edi ('five-year-old brother')."
+      },
+      {
+        id: 's2-tf3',
+        order: 3,
+        statement: 'The caller on the phone was a man named Mr Baker.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'say to her, \"Mr Baker telephoned\".'"
+      },
+      {
+        id: 's2-tf4',
+        order: 4,
+        statement: "Mr Baker was a close colleague of Jimmy's father.",
+        correctAnswer: 'Not Given',
+        explanationUz: "Matnda Janob Beyker kim ekanligi yoki otasining tanishi ekanligi haqida ma'lumot berilmagan."
+      },
+      {
+        id: 's2-tf5',
+        order: 5,
+        statement: 'Jimmy could write all the letters of the English alphabet easily.',
+        correctAnswer: 'False',
+        explanationUz: "Xato, Jimmi B harfini qanday yozishni ham bilmas edi ('How do you make a B?')."
+      },
+      {
+        id: 's2-tf6',
+        order: 6,
+        statement: "Jimmy took the telephone to the baby's bed and handed it to Billy.",
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'Jimmy took the telephone to the baby\'s bed and gave it to Billy'."
+      }
     ]
   },
   {
@@ -675,6 +763,50 @@ export const STORIES_FOR_REPRODUCTION: StoryForReproduction[] = [
         correctOptionIndex: 1,
         explanationUz: "U: 'Qani chiq va jang qil, sen va dunyodagi barcha boshqa panjaxaralar! Men sendan qo'rqmayman!' deb baqirdi."
       }
+    ],
+    trueFalseQuestions: [
+      {
+        id: 's3-tf1',
+        order: 1,
+        statement: 'Nasreddin\'s shed was dark because it had very dirty windows.',
+        correctAnswer: 'False',
+        explanationUz: "Xato, unda umuman deraza yo'q edi ('It had no windows, so it was very dark')."
+      },
+      {
+        id: 's3-tf2',
+        order: 2,
+        statement: 'Nasreddin entered the shed specifically to find a garden fork.',
+        correctAnswer: 'False',
+        explanationUz: "Xato, u narvon olish uchun kirgan edi ('to get a ladder')."
+      },
+      {
+        id: 's3-tf3',
+        order: 3,
+        statement: 'The garden fork hit Nasreddin on the head and on his left leg.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'The fork hit him on the head and knocked him down. Then it fell on top of him and hit him hard on the left leg'."
+      },
+      {
+        id: 's3-tf4',
+        order: 4,
+        statement: 'Nasreddin kept an old sword under his bed.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'He had an old sword under his bed'."
+      },
+      {
+        id: 's3-tf5',
+        order: 5,
+        statement: 'Nasreddin\'s neighbors came outside to watch him fight the fork.',
+        correctAnswer: 'Not Given',
+        explanationUz: "Matnda qo'shnilar chiqqani yoki ko'rgani haqida hech qanday ma'lumot keltirilmagan."
+      },
+      {
+        id: 's3-tf6',
+        order: 6,
+        statement: 'Nasreddin was deeply afraid of fighting the garden forks.',
+        correctAnswer: 'False',
+        explanationUz: "Xato: Nasriddin 'I'm not afraid of you!' (Men sizlardan qo'rqmayman) deb baqirdi."
+      }
     ]
   },
   {
@@ -834,6 +966,50 @@ export const STORIES_FOR_REPRODUCTION: StoryForReproduction[] = [
         options: ['"Yes, he died last Monday"', '\'He is very well. This beer is for him. But I have stopped drinking beer because it is dangerous for me.\'', '"No, we had an argument"', '"He moved to another city"'],
         correctOptionIndex: 1,
         explanationUz: "U: 'Do'stim sog'-salomat. Bu pivo uniki. Men o'zim ichishni tashladim' deb javob berdi."
+      }
+    ],
+    trueFalseQuestions: [
+      {
+        id: 's4-tf1',
+        order: 1,
+        statement: 'The man visited the bar at different times each day.',
+        correctAnswer: 'False',
+        explanationUz: "Xato: U har kuni aynan bir xil vaqtda borar edi ('at the same time every day')."
+      },
+      {
+        id: 's4-tf2',
+        order: 2,
+        statement: 'The man originally ordered two beers because he did not like to drink alone.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'Because I do not like to drink alone. I drink with my friend'."
+      },
+      {
+        id: 's4-tf3',
+        order: 3,
+        statement: 'The barman\'s name was Richard.',
+        correctAnswer: 'Not Given',
+        explanationUz: "Matnda barmenning ismi tilga olinmagan."
+      },
+      {
+        id: 's4-tf4',
+        order: 4,
+        statement: 'A few days later, the man\'s friend had sadly passed away.',
+        correctAnswer: 'False',
+        explanationUz: "Xato: Uning do'sti vafot etmagan, sog'-salomat edi ('He is very well')."
+      },
+      {
+        id: 's4-tf5',
+        order: 5,
+        statement: 'The man stopped drinking beer on his doctor\'s orders.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'My doctor doesn\'t want me to drink any more because it is dangerous for me'."
+      },
+      {
+        id: 's4-tf6',
+        order: 6,
+        statement: 'The man had been visiting this specific bar for over ten years.',
+        correctAnswer: 'Not Given',
+        explanationUz: "Matnda uning bu barga necha yildan buyon kelishi haqida hech qanday ma'lumot yo'q."
       }
     ]
   },
@@ -1062,6 +1238,50 @@ export const STORIES_FOR_REPRODUCTION: StoryForReproduction[] = [
         correctOptionIndex: 1,
         explanationUz: "U: 'Kechirasiz, NOT (Emas) so'zini ko'rmay qolibman' dedi."
       }
+    ],
+    trueFalseQuestions: [
+      {
+        id: 's5-tf1',
+        order: 1,
+        statement: 'Mr Black had eyesight problems that made shooting dangerous.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'his eyes were not good any more'."
+      },
+      {
+        id: 's5-tf2',
+        order: 2,
+        statement: 'Mr Black had previously shot and killed several of his close friends.',
+        correctAnswer: 'False',
+        explanationUz: "Xato: U do'stlarini o'ldirmagan, faqat sal qolgan edi ('nearly shot people')."
+      },
+      {
+        id: 's5-tf3',
+        order: 3,
+        statement: 'The young friend used blue paint to write on the piece of paper.',
+        correctAnswer: 'Not Given',
+        explanationUz: "Matnda yozuv qanday rangda yozilganligi haqida ma'lumot berilmagan."
+      },
+      {
+        id: 's5-tf4',
+        order: 4,
+        statement: 'The piece of paper successfully prevented Mr Black from shooting.',
+        correctAnswer: 'False',
+        explanationUz: "Xato: Qog'oz uni otishdan to'xtata olmadi ('it did not save him. Mr Black shot at him')."
+      },
+      {
+        id: 's5-tf5',
+        order: 5,
+        statement: 'Mr Black\'s shot hit the young man\'s hat off his head.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'Mr Black shot at him and knocked his hat off'."
+      },
+      {
+        id: 's5-tf6',
+        order: 6,
+        statement: 'Mr Black saw the piece of paper, but failed to notice the word NOT.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'Yes, I did [see the paper]... I did not see the word NOT'."
+      }
     ]
   },
   {
@@ -1269,6 +1489,50 @@ export const STORIES_FOR_REPRODUCTION: StoryForReproduction[] = [
         options: ['"The paths were too confusing"', '\'I didn\'t quite lose my way. I just got tired and I didn\'t want to walk home!\'', '"The fog was too thick"', '"I lost my spectacles"'],
         correctOptionIndex: 1,
         explanationUz: "U: 'Unchalik ham adashmadim. Shunchaki charchab qoldim va piyoda yurishni xohlamadim!' deb aytdi."
+      }
+    ],
+    trueFalseQuestions: [
+      {
+        id: 's6-tf1',
+        order: 1,
+        statement: 'Mrs Brown\'s grandfather normally returned from the park at 12:30 for lunch.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'and came home at half past twelve for his lunch'."
+      },
+      {
+        id: 's6-tf2',
+        order: 2,
+        statement: 'The police car arrived outside the house at one o\'clock in the afternoon.',
+        correctAnswer: 'False',
+        explanationUz: "Xato: Politsiya soat 12:00 da (at twelve o'clock) kelgan edi."
+      },
+      {
+        id: 's6-tf3',
+        order: 3,
+        statement: 'The policemen charged Mrs Brown a fine for bringing her grandfather home.',
+        correctAnswer: 'Not Given',
+        explanationUz: "Matnda politsiyaga pul to'langani yoki jarima yozilgani haqida hech qanday ma'lumot yo'q."
+      },
+      {
+        id: 's6-tf4',
+        order: 4,
+        statement: 'The grandfather had visited that same park almost daily for twenty years.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'you have been to that park nearly every day for twenty years'."
+      },
+      {
+        id: 's6-tf5',
+        order: 5,
+        statement: 'The grandfather was genuinely lost and could not find the park exit.',
+        correctAnswer: 'False',
+        explanationUz: "Xato: U aslida adashmagan edi, shunchaki charchagan va piyoda yurishni xohlamagan edi ('I didn\'t quite lose my way')."
+      },
+      {
+        id: 's6-tf6',
+        order: 6,
+        statement: 'The grandfather smiled and closed one eye when telling Mrs Brown the truth.',
+        correctAnswer: 'True',
+        explanationUz: "To'g'ri: 'The old man smiled, closed one eye and said...'."
       }
     ]
   }

@@ -20,9 +20,12 @@ export const StoriesForReproductionPage: React.FC = () => {
 
   // Active Story state
   const [activeStoryId, setActiveStoryId] = useState<string>('story-1');
-  const [activeTab, setActiveTab] = useState<'story' | 'vocabulary' | 'questions' | 'reproduction'>('story');
+  const [activeTab, setActiveTab] = useState<'story' | 'vocabulary' | 'questions' | 'tfng' | 'reproduction'>('story');
   const [fontSize, setFontSize] = useState<'sm' | 'base' | 'lg'>('base');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // True / False / Not Given state
+  const [tfAnswers, setTfAnswers] = useState<Record<string, 'True' | 'False' | 'Not Given'>>({});
 
   // Audio / Speech Synthesis state
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -148,6 +151,18 @@ export const StoriesForReproductionPage: React.FC = () => {
     if (optionIdx === correctIdx) {
       playSound('pop');
       addXP(10, `Correct Answer in Story ${activeStory.storyNumber}`);
+    } else {
+      playSound('tap');
+    }
+  };
+
+  // Handle True / False / Not Given Selection
+  const handleSelectTfAnswer = (qId: string, answer: 'True' | 'False' | 'Not Given', correctAns: 'True' | 'False' | 'Not Given') => {
+    if (tfAnswers[qId]) return;
+    setTfAnswers(prev => ({ ...prev, [qId]: answer }));
+    if (answer === correctAns) {
+      playSound('pop');
+      addXP(10, `Correct T/F/NG in Story ${activeStory.storyNumber}`);
     } else {
       playSound('tap');
     }
@@ -358,6 +373,8 @@ export const StoriesForReproductionPage: React.FC = () => {
                       <div className="flex items-center gap-2 mt-1.5 text-[10px] text-slate-400">
                         <span className="font-semibold text-indigo-600">{story.questions.length} ta savol</span>
                         <span>•</span>
+                        <span className="text-rose-600 font-semibold">{story.trueFalseQuestions?.length || 6} ta T/F/NG</span>
+                        <span>•</span>
                         <span>{story.vocabulary.length} ta lug'at</span>
                         {isDone && (
                           <>
@@ -475,6 +492,19 @@ export const StoriesForReproductionPage: React.FC = () => {
                 >
                   <ListChecks className="w-3.5 h-3.5" />
                   <span>Savol-Javoblar ({activeStory.questions.length})</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('tfng')}
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                    activeTab === 'tfng'
+                      ? 'bg-white text-rose-700 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <HelpCircle className="w-3.5 h-3.5" />
+                  <span>True / False / Not Given ({activeStory.trueFalseQuestions?.length || 6})</span>
                 </button>
 
                 <button
@@ -911,17 +941,166 @@ export const StoriesForReproductionPage: React.FC = () => {
 
                 <button
                   type="button"
-                  onClick={() => setActiveTab('reproduction')}
+                  onClick={() => setActiveTab('tfng')}
                   className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5 cursor-pointer"
                 >
-                  <PenTool className="w-3.5 h-3.5" />
-                  <span>Reproduction Studio</span>
+                  <HelpCircle className="w-3.5 h-3.5" />
+                  <span>True / False / Not Given Mashqlari →</span>
                 </button>
               </div>
             </div>
           )}
 
-          {/* TAB 4: REPRODUCTION STUDIO (RETELL IN OWN WORDS) */}
+          {/* TAB 4: TRUE / FALSE / NOT GIVEN (IELTS READING STYLE) */}
+          {activeTab === 'tfng' && (
+            <div className="space-y-4">
+              <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-2xs space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="px-2.5 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-[10px] font-black uppercase">
+                        Reading Comprehension
+                      </span>
+                      <span className="text-xs font-bold text-slate-500">IELTS Standarti</span>
+                    </div>
+                    <h3 className="text-base font-black text-slate-900 tracking-tight">
+                      True / False / Not Given Mashqlari
+                    </h3>
+                  </div>
+
+                  <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700">
+                    <Award className="w-4 h-4 text-amber-500" />
+                    <span>To'g'ri: {
+                      (activeStory.trueFalseQuestions || []).filter(q => tfAnswers[q.id] === q.correctAnswer).length
+                    } / {(activeStory.trueFalseQuestions || []).length}</span>
+                  </div>
+                </div>
+
+                <div className="text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200/60 leading-relaxed">
+                  <span className="font-bold text-slate-800">Qoida: </span>
+                  Agar fikr hikoya matniga to'g'ri kelsa — <span className="font-bold text-emerald-700">True</span>; agar matnga teskari yoki noto'g'ri bo'lsa — <span className="font-bold text-rose-700">False</span>; agar matnda bu haqda ma'lumot berilmagan bo'lsa — <span className="font-bold text-amber-700">Not Given</span> deb belgilang.
+                </div>
+              </div>
+
+              {/* Statements List */}
+              <div className="space-y-3">
+                {(activeStory.trueFalseQuestions || []).map((q) => {
+                  const userAnswer = tfAnswers[q.id];
+                  const hasAnswered = userAnswer !== undefined;
+                  const isCorrect = userAnswer === q.correctAnswer;
+
+                  return (
+                    <div
+                      key={q.id}
+                      className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-2xs space-y-3"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-2.5">
+                          <span className="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center font-black text-xs shrink-0 mt-0.5">
+                            {q.order}
+                          </span>
+                          <p className="text-xs sm:text-sm font-bold text-slate-900 leading-relaxed">
+                            {q.statement}
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => speakText(q.statement)}
+                          className="p-1 rounded-lg text-slate-400 hover:text-indigo-600 transition cursor-pointer shrink-0"
+                          title="Fikrni tinglash"
+                        >
+                          <Volume2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      {/* 3 Decision Buttons: True, False, Not Given */}
+                      <div className="grid grid-cols-3 gap-2 pt-1">
+                        {(['True', 'False', 'Not Given'] as const).map((opt) => {
+                          const isSelected = userAnswer === opt;
+                          const isOptCorrect = q.correctAnswer === opt;
+
+                          let btnStyle = 'bg-slate-50 border-slate-200 text-slate-800 hover:bg-slate-100';
+                          if (hasAnswered) {
+                            if (isOptCorrect) {
+                              btnStyle = 'bg-emerald-50 border-emerald-300 text-emerald-900 font-black shadow-xs';
+                            } else if (isSelected && !isOptCorrect) {
+                              btnStyle = 'bg-rose-50 border-rose-300 text-rose-900 font-bold';
+                            } else {
+                              btnStyle = 'bg-slate-50/50 border-slate-100 text-slate-400 opacity-60';
+                            }
+                          }
+
+                          return (
+                            <button
+                              key={opt}
+                              type="button"
+                              disabled={hasAnswered}
+                              onClick={() => handleSelectTfAnswer(q.id, opt, q.correctAnswer)}
+                              className={`py-2.5 px-3 rounded-xl border text-xs font-bold text-center transition flex items-center justify-center gap-1.5 cursor-pointer ${btnStyle}`}
+                            >
+                              <span>{opt}</span>
+                              {hasAnswered && isOptCorrect && <Check className="w-4 h-4 text-emerald-600" />}
+                              {hasAnswered && isSelected && !isOptCorrect && <X className="w-4 h-4 text-rose-500" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Explanation in Uzbek after answering */}
+                      {hasAnswered && (
+                        <div className={`p-3 rounded-xl border text-xs leading-relaxed animate-in fade-in duration-150 ${
+                          isCorrect 
+                            ? 'bg-emerald-50/80 border-emerald-200 text-emerald-950' 
+                            : 'bg-rose-50/80 border-rose-200 text-rose-950'
+                        }`}>
+                          <div className="flex items-center gap-1.5 font-bold mb-0.5">
+                            {isCorrect ? (
+                              <>
+                                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                                <span>To'g'ri topdingiz! (+10 XP)</span>
+                              </>
+                            ) : (
+                              <>
+                                <X className="w-4 h-4 text-rose-600" />
+                                <span>To'g'ri javob: <span className="font-extrabold underline">{q.correctAnswer}</span></span>
+                              </>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-700 mt-1">
+                            {q.explanationUz}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Bottom Navigation to Reproduction */}
+              <div className="bg-rose-50 border border-rose-200 p-4 rounded-2xl flex items-center justify-between">
+                <div>
+                  <div className="text-xs font-bold text-rose-900">
+                    True / False / Not Given savollarini yakunladingizmi?
+                  </div>
+                  <div className="text-[11px] text-rose-700">
+                    Endi hikoyani to'liq qayta aytib berish (Reproduction) studiyasiga o'ting!
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('reproduction')}
+                  className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                >
+                  <PenTool className="w-3.5 h-3.5" />
+                  <span>Reproduction Studio →</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: REPRODUCTION STUDIO (RETELL IN OWN WORDS) */}
           {activeTab === 'reproduction' && (
             <div className="space-y-4">
               <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-4">
