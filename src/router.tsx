@@ -61,6 +61,9 @@ const PageLoader: React.FC = () => (
   </div>
 );
 
+// Lazy Loaded Public Pages
+const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
+
 const HomeRedirect: React.FC = () => {
   const { role, user, profile } = useAuth();
   if (!user && !profile) return <Navigate to="/login" replace />;
@@ -73,7 +76,8 @@ export const AppRouter: React.FC = () => {
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>
-        {/* Public Routes */}
+        {/* Public Landing & Auth Routes */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -96,8 +100,8 @@ export const AppRouter: React.FC = () => {
             </ProtectedRoute>
           }
         >
-          {/* Default route */}
-          <Route path="/" element={<HomeRedirect />} />
+          {/* Default app redirect */}
+          <Route path="/app" element={<HomeRedirect />} />
 
           {/* Student Routes */}
           <Route path="/dashboard" element={<StudentDashboard />} />
