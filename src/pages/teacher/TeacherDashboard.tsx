@@ -29,7 +29,7 @@ export const TeacherDashboard: React.FC = () => {
             Xush kelibsiz, {profile?.full_name || 'Ustoz'}!
           </h1>
           <p className="text-xs sm:text-sm text-indigo-100 mt-1 leading-relaxed">
-            Bugungi darslar davomatini belgilang, uy vazifalarini tekshiring va Groq AI orqali dars rejalari tuzing.
+            Bugungi darslar davomatini belgilang, uy vazifalarini tekshiring va Gemini AI orqali dars rejalari tuzing.
           </p>
 
           <div className="flex flex-wrap gap-2.5 mt-6">

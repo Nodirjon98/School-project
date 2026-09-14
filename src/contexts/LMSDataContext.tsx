@@ -1,12 +1,14 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { 
   Group, Lesson, Attendance, Homework, HomeworkSubmission, 
-  DailyWord, WordProgress, ChampionshipScore, Badge, AIContent, AttendanceStatus 
+  DailyWord, WordProgress, ChampionshipScore, Badge, AIContent, AttendanceStatus,
+  GrammarExam, GrammarExamSubmission
 } from '../types';
 import { 
   SEED_GROUPS, SEED_LESSONS, SEED_HOMEWORK, SEED_SUBMISSIONS, 
   SEED_DAILY_WORDS, SEED_WORD_PROGRESS, SEED_CHAMPIONSHIP, SEED_BADGES
 } from '../lib/seedData';
+import { SEED_GRAMMAR_EXAMS } from '../data/seedGrammarExams';
 import { getStorageItem, setStorageItem } from '../lib/storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from './AuthContext';
@@ -24,6 +26,8 @@ interface LMSDataContextType {
   championshipScores: ChampionshipScore[];
   badges: Badge[];
   aiContents: AIContent[];
+  grammarExams: GrammarExam[];
+  examSubmissions: GrammarExamSubmission[];
   loading: boolean;
   
   // Actions
@@ -39,6 +43,9 @@ interface LMSDataContextType {
   gradeSubmission: (submissionId: string, score: number, feedback: string) => Promise<void>;
   addDailyWord: (word: Omit<DailyWord, 'id' | 'created_at'>) => Promise<void>;
   updateWordReview: (wordId: string, remembered: boolean) => Promise<void>;
+  createGrammarExam: (exam: Omit<GrammarExam, 'id' | 'createdAt'>) => Promise<GrammarExam>;
+  deleteGrammarExam: (examId: string) => Promise<void>;
+  submitGrammarExam: (submission: Omit<GrammarExamSubmission, 'id' | 'submittedAt'>) => Promise<void>;
   addXP: (amount: number, reason?: string) => void;
   awardXp: (amount: number, reason?: string) => void;
   awardBadge: (badgeKey: string, title: string, description: string, icon: string) => void;
@@ -61,6 +68,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [championshipScores, setChampionshipScores] = useState<ChampionshipScore[]>(() => getStorageItem('premier_championship', SEED_CHAMPIONSHIP));
   const [badges, setBadges] = useState<Badge[]>(() => getStorageItem('premier_badges', SEED_BADGES));
   const [aiContents, setAIContents] = useState<AIContent[]>(() => getStorageItem('premier_ai_contents', []));
+  const [grammarExams, setGrammarExams] = useState<GrammarExam[]>(() => getStorageItem('premier_grammar_exams', SEED_GRAMMAR_EXAMS));
+  const [examSubmissions, setExamSubmissions] = useState<GrammarExamSubmission[]>(() => getStorageItem('premier_grammar_submissions', []));
   const [loading, setLoading] = useState(false);
 
   // Persistence side-effects
@@ -74,6 +83,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => { setStorageItem('premier_championship', championshipScores); }, [championshipScores]);
   useEffect(() => { setStorageItem('premier_badges', badges); }, [badges]);
   useEffect(() => { setStorageItem('premier_ai_contents', aiContents); }, [aiContents]);
+  useEffect(() => { setStorageItem('premier_grammar_exams', grammarExams); }, [grammarExams]);
+  useEffect(() => { setStorageItem('premier_grammar_submissions', examSubmissions); }, [examSubmissions]);
 
   // Sync with Supabase on mount if configured
   useEffect(() => {
@@ -146,6 +157,12 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setHomeworks(prev => [hw, ...prev.filter(h => h.id !== hw.id)]);
       } else if (event.type === 'LESSON_COMPLETED' && event.data?.lessonId) {
         // Mark lesson attendance or status
+      } else if (event.type === 'EXAM_PUBLISHED' && event.data?.exam) {
+        const ex = event.data.exam as GrammarExam;
+        setGrammarExams(prev => [ex, ...prev.filter(e => e.id !== ex.id)]);
+      } else if (event.type === 'EXAM_COMPLETED' && event.data?.submission) {
+        const sub = event.data.submission as GrammarExamSubmission;
+        setExamSubmissions(prev => [sub, ...prev.filter(s => s.id !== sub.id)]);
       }
     });
 
@@ -480,6 +497,56 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setAIContents(prev => [item, ...prev]);
   };
 
+  const createGrammarExam = async (exam: Omit<GrammarExam, 'id' | 'createdAt'>): Promise<GrammarExam> => {
+    const newExam: GrammarExam = {
+      ...exam,
+      id: `exam-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      createdBy: profile?.full_name || 'Instructor'
+    };
+    setGrammarExams(prev => [newExam, ...prev]);
+
+    realtime.publish({
+      type: 'EXAM_PUBLISHED',
+      title: 'Yangi Grammatika Imtihoni',
+      message: `"${newExam.title}" e'lon qilindi (${newExam.durationMinutes} daqiqa, ${newExam.questions.length} ta savol)`,
+      actor: { id: profile?.id || 'instructor', name: profile?.full_name || 'Instructor', role: profile?.role || 'teacher' },
+      data: { exam: newExam }
+    });
+
+    return newExam;
+  };
+
+  const deleteGrammarExam = async (examId: string): Promise<void> => {
+    setGrammarExams(prev => prev.filter(e => e.id !== examId));
+  };
+
+  const submitGrammarExam = async (submission: Omit<GrammarExamSubmission, 'id' | 'submittedAt'>): Promise<void> => {
+    const record: GrammarExamSubmission = {
+      ...submission,
+      id: `exsub-${Date.now()}`,
+      submittedAt: new Date().toISOString(),
+      studentId: submission.studentId || profile?.id || 'student',
+      studentName: submission.studentName || profile?.full_name || 'Student'
+    };
+
+    setExamSubmissions(prev => [record, ...prev]);
+
+    if (record.passed) {
+      addXP(150, `Passed Grammar Exam: ${record.examTitle}`);
+    } else {
+      addXP(30, `Completed Grammar Exam: ${record.examTitle}`);
+    }
+
+    realtime.publish({
+      type: 'EXAM_COMPLETED',
+      title: 'Grammatika Imtihoni Topshirildi',
+      message: `${record.studentName} "${record.examTitle}" imtihonini ${record.percentage}% bilan ${record.passed ? 'muvaffaqiyatli topshirdi' : 'yakunladi'}`,
+      actor: { id: record.studentId, name: record.studentName, role: 'student' },
+      data: { submission: record }
+    });
+  };
+
   const resetSeason = () => {
     setChampionshipScores(prev => prev.map(cs => ({ ...cs, xp: 0, lessons_attended: 0, homeworks_completed: 0 })));
   };
@@ -497,6 +564,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         championshipScores,
         badges,
         aiContents,
+        grammarExams,
+        examSubmissions,
         loading,
         addGroup,
         createGroup: addGroup,
@@ -510,6 +579,9 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         gradeSubmission: gradeHomework,
         addDailyWord,
         updateWordReview,
+        createGrammarExam,
+        deleteGrammarExam,
+        submitGrammarExam,
         addXP,
         awardXp: addXP,
         awardBadge,

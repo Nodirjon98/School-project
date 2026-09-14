@@ -131,6 +131,7 @@ export const AppRouter: React.FC = () => {
           <Route path="/placement-test" element={<PlacementTestPage />} />
           <Route path="/grammar" element={<GrammarPractice />} />
           <Route path="/essential-grammar" element={<EssentialGrammarPage />} />
+          <Route path="/student/grammar-exams" element={<GrammarExamTakePage />} />
           <Route path="/student/grammar-exam/:id" element={<GrammarExamTakePage />} />
           <Route path="/admin/grammar-exams" element={<GrammarExamBuilder />} />
           <Route path="/student/payments" element={<StudentPaymentsPage />} />

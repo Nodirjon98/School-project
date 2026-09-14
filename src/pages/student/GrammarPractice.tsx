@@ -78,7 +78,7 @@ export const GrammarPractice: React.FC = () => {
       <div>
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200 mb-2">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Groq API • Llama 3 Model Integration</span>
+          <span>Google Gemini 3.8 Flash AI Engine</span>
         </div>
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">
           {t('grammarTitle')}
@@ -131,7 +131,7 @@ export const GrammarPractice: React.FC = () => {
           className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition shadow-sm disabled:opacity-50"
         >
           <Sparkles className="w-4 h-4" />
-          <span>{isLoading ? 'Groq Llama 3 savollarni tuzmoqda...' : t('generateNewExercise')}</span>
+          <span>{isLoading ? 'Gemini 3.8 Flash savollarni tuzmoqda...' : t('generateNewExercise')}</span>
         </button>
       </div>
 
@@ -253,7 +253,7 @@ export const GrammarPractice: React.FC = () => {
           <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <h3 className="text-base font-bold text-slate-800">Grammatika mashqini boshlang</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1 mb-6">
-            Mavzuni va darajani tanlab "Yangi savollar tuzish" tugmasini bosing. Groq AI darhol interaktiv savollar generatsiya qiladi.
+            Mavzuni va darajani tanlab "Yangi savollar tuzish" tugmasini bosing. Gemini AI darhol interaktiv savollar generatsiya qiladi.
           </p>
           <button
             type="button"

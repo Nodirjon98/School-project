@@ -54,7 +54,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       items: [
         { label: 'Speaking w/ Mr. Safoyev', path: '/speaking', icon: <Mic className="w-4 h-4 text-emerald-400" />, badge: 'Live AI' },
         { label: 'IELTS Writing AI', path: '/ielts-writing', icon: <PenTool className="w-4 h-4 text-indigo-400" />, badge: 'Band 9' },
-        { label: 'Grammatika Imtihonlari', path: '/admin/grammar-exams', icon: <Sparkles className="w-4 h-4 text-indigo-400" />, badge: 'Exams' },
+        { label: 'Grammatika Imtihonlari', path: '/student/grammar-exams', icon: <Sparkles className="w-4 h-4 text-indigo-400" />, badge: 'Exams' },
         { label: 'CEFR Diagnostic', path: '/placement-test', icon: <Award className="w-4 h-4 text-amber-400" />, badge: 'Cert' },
       ]
     },

@@ -219,7 +219,46 @@ export type RealtimeEventType =
   | 'HOMEWORK_GRADED' 
   | 'NEW_HOMEWORK' 
   | 'DEADLINE_ALERT'
-  | 'XP_AWARDED';
+  | 'XP_AWARDED'
+  | 'EXAM_PUBLISHED'
+  | 'EXAM_COMPLETED';
+
+export interface GrammarExamQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  explanationUz: string;
+  points: number;
+}
+
+export interface GrammarExam {
+  id: string;
+  title: string;
+  description: string;
+  targetLevel: string;
+  durationMinutes: number;
+  passPercentage: number;
+  maxScore: number;
+  targetGroupId?: string;
+  questions: GrammarExamQuestion[];
+  createdAt: string;
+  createdBy?: string;
+}
+
+export interface GrammarExamSubmission {
+  id: string;
+  examId: string;
+  examTitle: string;
+  studentId: string;
+  studentName: string;
+  score: number;
+  maxScore: number;
+  percentage: number;
+  passed: boolean;
+  userAnswers: Record<string, string>;
+  submittedAt: string;
+}
 
 export interface RealtimeEventPayload {
   id: string;

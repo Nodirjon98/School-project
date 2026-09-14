@@ -32,62 +32,7 @@ export interface GrammarExam {
 export const GrammarExamBuilder: React.FC = () => {
   const { profile } = useAuth();
   const { t } = useLanguage();
-  const { groups } = useLMSData();
-
-  const [exams, setExams] = useState<GrammarExam[]>([
-    {
-      id: 'g-exam-1',
-      title: 'Beginner Grammar Midterm Exam (Units 1–5)',
-      description: 'am/is/are, Present Continuous, and Present Simple topic mastery test.',
-      targetLevel: 'A1 Beginner',
-      durationMinutes: 20,
-      passPercentage: 70,
-      maxScore: 100,
-      questions: [
-        {
-          id: 'q-m1',
-          question: 'Where ______ your brother living nowadays?',
-          options: ['is', 'are', 'am', 'do'],
-          correctAnswer: 'is',
-          explanationUz: 'Your brother (he) bo\'lgani uchun "is" ishlatiladi.',
-          points: 20
-        },
-        {
-          id: 'q-m2',
-          question: 'Listen! Somebody ______ the piano in the music room.',
-          options: ['plays', 'is playing', 'play', 'are playing'],
-          correctAnswer: 'is playing',
-          explanationUz: 'Hozir ayni paytda bo\'layotgani (Listen!) uchun Present Continuous.',
-          points: 20
-        },
-        {
-          id: 'q-m3',
-          question: 'Terry ______ in a bank in downtown Tashkent.',
-          options: ['works', 'work', 'is work', 'working'],
-          correctAnswer: 'works',
-          explanationUz: 'Terry (he) uchinchi shaxs birlikda Present Simple -s qo\'shimchasini oladi.',
-          points: 20
-        },
-        {
-          id: 'q-m4',
-          question: '______ your parents at home right now?',
-          options: ['Are', 'Is', 'Do', 'Have'],
-          correctAnswer: 'Are',
-          explanationUz: 'Parents ko\'plikda bo\'lgani uchun "Are" ishlatiladi.',
-          points: 20
-        },
-        {
-          id: 'q-m5',
-          question: 'It\'s 10:00 PM. I ______ hungry, but I\'m very tired.',
-          options: ['am not', 'isn\'t', 'aren\'t', 'don\'t'],
-          correctAnswer: 'am not',
-          explanationUz: 'I bilan inkor shakli "am not".',
-          points: 20
-        }
-      ],
-      createdAt: '2025-01-15T10:00:00Z'
-    }
-  ]);
+  const { groups, grammarExams, createGrammarExam, deleteGrammarExam } = useLMSData();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [examTitle, setExamTitle] = useState('');
@@ -117,23 +62,20 @@ export const GrammarExamBuilder: React.FC = () => {
     setSelectedQuestions(prev => prev.filter(q => q.id !== id));
   };
 
-  const handleCreateExam = (e: React.FormEvent) => {
+  const handleCreateExam = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!examTitle || selectedQuestions.length === 0) return;
 
-    const newExam: GrammarExam = {
-      id: `exam-${Date.now()}`,
+    await createGrammarExam({
       title: examTitle,
       description: examDesc,
       targetLevel: 'A1-A2 Elementary',
       durationMinutes: Number(duration),
       passPercentage: Number(passPercent),
       maxScore: selectedQuestions.reduce((acc, q) => acc + q.points, 0),
-      questions: selectedQuestions,
-      createdAt: new Date().toISOString()
-    };
+      questions: selectedQuestions
+    });
 
-    setExams(prev => [newExam, ...prev]);
     setPublishedMessage(`✅ "${examTitle}" imtihoni muvaffaqiyatli saqlandi va o'quvchilar uchun e'lon qilindi!`);
 
     setTimeout(() => {
@@ -175,16 +117,26 @@ export const GrammarExamBuilder: React.FC = () => {
 
       {/* Published Exams Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {exams.map(ex => (
+        {grammarExams.map(ex => (
           <div key={ex.id} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs space-y-4 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
                   {ex.targetLevel}
                 </span>
-                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
-                  O'tish bali: {ex.passPercentage}%
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+                    O'tish bali: {ex.passPercentage}%
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => deleteGrammarExam(ex.id)}
+                    className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                    title="Imtihonni o'chirish"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
 
               <h3 className="text-base font-bold text-slate-900">{ex.title}</h3>

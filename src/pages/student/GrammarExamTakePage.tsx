@@ -1,82 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useLMSData } from '../../contexts/LMSDataContext';
 import { 
   Clock, CheckCircle2, Award, RotateCcw, ArrowRight, 
-  ShieldCheck, AlertCircle, FileText 
+  ShieldCheck, AlertCircle, FileText, Sparkles, BookOpen, ChevronRight, Play
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
+import { GrammarExam, GrammarExamQuestion, GrammarExamSubmission } from '../../types';
+
 export const GrammarExamTakePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { profile } = useAuth();
   const { t } = useLanguage();
-  const { awardXp } = useLMSData();
+  const { grammarExams, examSubmissions, submitGrammarExam, awardXp } = useLMSData();
 
-  // Mock exam data matching GrammarExamBuilder
-  const mockExam = {
-    id: id || 'g-exam-1',
-    title: 'Beginner Grammar Midterm Exam (Units 1–5)',
-    description: 'am/is/are, Present Continuous, and Present Simple topic mastery test.',
-    targetLevel: 'A1 Beginner',
-    durationMinutes: 20,
-    passPercentage: 70,
-    questions: [
-      {
-        id: 'q-m1',
-        question: 'Where ______ your brother living nowadays?',
-        options: ['is', 'are', 'am', 'do'],
-        correctAnswer: 'is',
-        explanationUz: 'Your brother (he) bo\'lgani uchun "is" ishlatiladi.',
-        points: 20
-      },
-      {
-        id: 'q-m2',
-        question: 'Listen! Somebody ______ the piano in the music room.',
-        options: ['plays', 'is playing', 'play', 'are playing'],
-        correctAnswer: 'is playing',
-        explanationUz: 'Hozir ayni paytda bo\'layotgani (Listen!) uchun Present Continuous.',
-        points: 20
-      },
-      {
-        id: 'q-m3',
-        question: 'Terry ______ in a bank in downtown Tashkent.',
-        options: ['works', 'work', 'is work', 'working'],
-        correctAnswer: 'works',
-        explanationUz: 'Terry (he) uchinchi shaxs birlikda Present Simple -s qo\'shimchasini oladi.',
-        points: 20
-      },
-      {
-        id: 'q-m4',
-        question: '______ your parents at home right now?',
-        options: ['Are', 'Is', 'Do', 'Have'],
-        correctAnswer: 'Are',
-        explanationUz: 'Parents ko\'plikda bo\'lgani uchun "Are" ishlatiladi.',
-        points: 20
-      },
-      {
-        id: 'q-m5',
-        question: 'It\'s 10:00 PM. I ______ hungry, but I\'m very tired.',
-        options: ['am not', 'isn\'t', 'aren\'t', 'don\'t'],
-        correctAnswer: 'am not',
-        explanationUz: 'I bilan inkor shakli "am not".',
-        points: 20
-      }
-    ]
-  };
+  const [activeExam, setActiveExam] = useState<GrammarExam | null>(() => {
+    return grammarExams.find(e => e.id === id) || null;
+  });
 
   const [currentIdx, setCurrentIdx] = useState(0);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
-  const [timeLeft, setTimeLeft] = useState<number>(mockExam.durationMinutes * 60);
+  const [timeLeft, setTimeLeft] = useState<number>(0);
   const [isFinished, setIsFinished] = useState(false);
   const [score, setScore] = useState(0);
   const [passed, setPassed] = useState(false);
 
+  useEffect(() => {
+    if (id) {
+      const matched = grammarExams.find(e => e.id === id);
+      if (matched) {
+        setActiveExam(matched);
+        setTimeLeft(matched.durationMinutes * 60);
+        setIsFinished(false);
+        setUserAnswers({});
+        setCurrentIdx(0);
+      }
+    } else {
+      setActiveExam(null);
+    }
+  }, [id, grammarExams]);
+
   // Timer countdown
   useEffect(() => {
-    if (isFinished || timeLeft <= 0) return;
+    if (!activeExam || isFinished || timeLeft <= 0) return;
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -88,34 +58,59 @@ export const GrammarExamTakePage: React.FC = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [timeLeft, isFinished]);
+  }, [timeLeft, isFinished, activeExam]);
 
-  const currentQ = mockExam.questions[currentIdx];
+  const handleStartExam = (exam: GrammarExam) => {
+    setActiveExam(exam);
+    setTimeLeft(exam.durationMinutes * 60);
+    setIsFinished(false);
+    setUserAnswers({});
+    setCurrentIdx(0);
+    navigate(`/student/grammar-exam/${exam.id}`);
+  };
 
   const handleSelect = (opt: string) => {
+    if (!activeExam) return;
+    const currentQ = activeExam.questions[currentIdx];
     setUserAnswers(prev => ({ ...prev, [currentQ.id]: opt }));
   };
 
   const finishExam = () => {
+    if (!activeExam) return;
+
     let earned = 0;
-    mockExam.questions.forEach(q => {
+    activeExam.questions.forEach(q => {
       if ((userAnswers[q.id] || '').trim().toLowerCase() === q.correctAnswer.trim().toLowerCase()) {
         earned += q.points;
       }
     });
 
-    const maxScore = mockExam.questions.reduce((acc, q) => acc + q.points, 0);
+    const maxScore = activeExam.questions.reduce((acc, q) => acc + q.points, 0);
     const scorePct = Math.round((earned / maxScore) * 100);
-    const isPass = scorePct >= mockExam.passPercentage;
+    const isPass = scorePct >= activeExam.passPercentage;
 
     setScore(scorePct);
     setPassed(isPass);
     setIsFinished(true);
 
+    if (profile?.id) {
+      submitGrammarExam({
+        examId: activeExam.id,
+        examTitle: activeExam.title,
+        studentId: profile.id,
+        studentName: profile.full_name || 'Student',
+        score: earned,
+        maxScore,
+        percentage: scorePct,
+        passed: isPass,
+        userAnswers,
+      });
+    }
+
     if (isPass) {
-      awardXp(150, `Passed Grammar Exam: ${mockExam.title}`);
+      awardXp(150, `Passed Grammar Exam: ${activeExam.title}`);
       try {
-        confetti({ particleCount: 70, spread: 80, origin: { y: 0.6 } });
+        confetti({ particleCount: 75, spread: 80, origin: { y: 0.6 } });
       } catch {}
     }
   };
@@ -126,6 +121,159 @@ export const GrammarExamTakePage: React.FC = () => {
     return `${mins.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
+  // Student's past exam submissions
+  const mySubmissions = examSubmissions.filter(s => s.studentId === profile?.id);
+
+  // If no exam selected, show Exam Selection Hub
+  if (!activeExam) {
+    return (
+      <div className="space-y-6 max-w-4xl mx-auto pb-12">
+        {/* Header Banner */}
+        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-6 text-white border border-indigo-900/60 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold border border-indigo-500/30 mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Raymond Murphy Essential Grammar Examination Arena</span>
+            </div>
+            <h1 className="text-2xl font-black text-white tracking-tight">
+              O'quvchilar Uchun Grammatika Imtihonlari
+            </h1>
+            <p className="text-xs text-indigo-200/90 mt-1 max-w-xl">
+              Vaqtli va avtomatik tekshiriladigan imtihonlarni topshirib, o'z bilim darajangizni tasdiqlang hamda XP ballarini qo'lga kiriting.
+            </p>
+          </div>
+          <Link
+            to="/essential-grammar"
+            className="px-4 py-2.5 bg-indigo-600/80 hover:bg-indigo-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-2 border border-indigo-400/30"
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>114 Ta Darslik</span>
+          </Link>
+        </div>
+
+        {/* Exam Cards Grid */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
+              Mavjud Rasmiy Imtihonlar ({grammarExams.length})
+            </h3>
+          </div>
+
+          {grammarExams.length === 0 ? (
+            <div className="bg-white rounded-2xl p-8 border border-slate-200 text-center space-y-2">
+              <AlertCircle className="w-8 h-8 text-slate-400 mx-auto" />
+              <h4 className="text-sm font-bold text-slate-700">Hozircha imtihonlar e'lon qilinmagan</h4>
+              <p className="text-xs text-slate-500">O'qituvchi yoki administrator yangi test qo'shganida bu yerda paydo bo'ladi.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {grammarExams.map(exam => (
+                <div 
+                  key={exam.id}
+                  className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-indigo-300 transition flex flex-col justify-between space-y-4"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
+                        {exam.targetLevel}
+                      </span>
+                      <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+                        O'tish bali: {exam.passPercentage}%
+                      </span>
+                    </div>
+
+                    <h3 className="text-base font-bold text-slate-900">{exam.title}</h3>
+                    <p className="text-xs text-slate-500 line-clamp-2 mt-1 leading-relaxed">{exam.description}</p>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-100 space-y-3">
+                    <div className="flex items-center justify-between text-xs text-slate-500 font-semibold">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5 text-slate-400" /> {exam.durationMinutes} Daqiqa
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <FileText className="w-3.5 h-3.5 text-slate-400" /> {exam.questions.length} ta Savol
+                      </span>
+                      <span className="font-bold text-amber-600">
+                        +150 XP
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleStartExam(exam)}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition"
+                    >
+                      <Play className="w-4 h-4 fill-white" />
+                      <span>Imtihonni Boshlash</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Submissions History Section */}
+        {mySubmissions.length > 0 && (
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Award className="w-5 h-5 text-indigo-600" />
+                <h3 className="text-sm font-bold text-slate-800">
+                  Mening Imtihon Natijalarim ({mySubmissions.length})
+                </h3>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-slate-100 text-slate-400 font-semibold uppercase text-[10px]">
+                    <th className="pb-2">Imtihon Nomi</th>
+                    <th className="pb-2">Topshirilgan Vaqt</th>
+                    <th className="pb-2">Ball / Foiz</th>
+                    <th className="pb-2 text-right">Holat</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-medium">
+                  {mySubmissions.map((sub, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/50 transition">
+                      <td className="py-2.5 font-bold text-slate-800">{sub.examTitle}</td>
+                      <td className="py-2.5 text-slate-500">
+                        {new Date(sub.submittedAt).toLocaleDateString('uz-UZ', {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </td>
+                      <td className="py-2.5 font-mono text-slate-700">
+                        {sub.score}/{sub.maxScore} ({sub.percentage}%)
+                      </td>
+                      <td className="py-2.5 text-right">
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                          sub.passed 
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                            : 'bg-rose-50 text-rose-700 border border-rose-200'
+                        }`}>
+                          {sub.passed ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                          <span>{sub.passed ? 'O\'tdi' : 'O\'tmadi'}</span>
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const currentQ = activeExam.questions[currentIdx];
+
   return (
     <div className="space-y-6 max-w-3xl mx-auto pb-12">
       {!isFinished ? (
@@ -134,9 +282,9 @@ export const GrammarExamTakePage: React.FC = () => {
           <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
-                {mockExam.targetLevel}
+                {activeExam.targetLevel}
               </span>
-              <h2 className="text-lg font-black text-slate-900 mt-1">{mockExam.title}</h2>
+              <h2 className="text-lg font-black text-slate-900 mt-1">{activeExam.title}</h2>
             </div>
 
             <div className="flex items-center gap-2 bg-rose-50 px-3.5 py-1.5 rounded-xl border border-rose-200 text-rose-700 font-mono font-bold text-sm">
@@ -145,16 +293,16 @@ export const GrammarExamTakePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Progress */}
+          {/* Progress Bar */}
           <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-2">
             <div className="flex items-center justify-between text-xs font-bold text-slate-600">
-              <span>Savol {currentIdx + 1} / {mockExam.questions.length}</span>
-              <span>{Math.round(((currentIdx + 1) / mockExam.questions.length) * 100)}% Bajarildi</span>
+              <span>Savol {currentIdx + 1} / {activeExam.questions.length}</span>
+              <span>{Math.round(((currentIdx + 1) / activeExam.questions.length) * 100)}% Bajarildi</span>
             </div>
             <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
               <div 
                 className="bg-indigo-600 h-full rounded-full transition-all duration-300"
-                style={{ width: `${((currentIdx + 1) / mockExam.questions.length) * 100}%` }}
+                style={{ width: `${((currentIdx + 1) / activeExam.questions.length) * 100}%` }}
               />
             </div>
           </div>
@@ -196,7 +344,7 @@ export const GrammarExamTakePage: React.FC = () => {
                 Oldingisi
               </button>
 
-              {currentIdx < mockExam.questions.length - 1 ? (
+              {currentIdx < activeExam.questions.length - 1 ? (
                 <button
                   type="button"
                   disabled={!userAnswers[currentQ.id]}
@@ -233,7 +381,7 @@ export const GrammarExamTakePage: React.FC = () => {
               {passed ? 'Tabriklaymiz! Imtihon Muvaffaqiyatli Topshirildi' : 'Imtihon Yakunlandi'}
             </h2>
             <p className="text-xs text-slate-500 mt-1">
-              O'tish bali: {mockExam.passPercentage}% • Sizning natijangiz: <strong className={passed ? 'text-emerald-600' : 'text-rose-600'}>{score}%</strong>
+              O'tish bali: {activeExam.passPercentage}% • Sizning natijangiz: <strong className={passed ? 'text-emerald-600' : 'text-rose-600'}>{score}%</strong>
             </p>
           </div>
 
@@ -243,10 +391,47 @@ export const GrammarExamTakePage: React.FC = () => {
             </div>
           )}
 
+          {/* Breakdown */}
+          <div className="space-y-3 text-left max-w-xl mx-auto pt-2">
+            <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              Natijalar Tahlili & Tushuntirishlar:
+            </h4>
+            {activeExam.questions.map((q, idx) => {
+              const uAns = userAnswers[q.id] || '';
+              const isCorrect = uAns.trim().toLowerCase() === q.correctAnswer.trim().toLowerCase();
+              return (
+                <div key={q.id} className={`p-3 rounded-xl border text-xs space-y-1 ${
+                  isCorrect ? 'bg-emerald-50/70 border-emerald-200' : 'bg-rose-50/70 border-rose-200'
+                }`}>
+                  <div className="flex items-center justify-between font-bold">
+                    <span>{idx + 1}. {q.question}</span>
+                    <span className={isCorrect ? 'text-emerald-700' : 'text-rose-700'}>
+                      {isCorrect ? 'To\'g\'ri' : 'Noto\'g\'ri'}
+                    </span>
+                  </div>
+                  <div className="text-slate-600">
+                    Sizning javobingiz: <strong>{uAns || 'Belgilanmagan'}</strong> • To'g'ri javob: <strong>{q.correctAnswer}</strong>
+                  </div>
+                  <p className="text-[11px] text-slate-500 italic">💡 {q.explanationUz}</p>
+                </div>
+              );
+            })}
+          </div>
+
           <div className="pt-4 border-t border-slate-100 flex justify-center gap-3">
-            <Link
-              to="/grammar-curriculum"
+            <button
+              type="button"
+              onClick={() => {
+                setActiveExam(null);
+                navigate('/student/grammar-exams');
+              }}
               className="px-5 py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200 transition"
+            >
+              Imtihonlar Hubiga Qaytish
+            </button>
+            <Link
+              to="/essential-grammar"
+              className="px-5 py-2.5 bg-indigo-600 text-white font-bold text-xs rounded-xl hover:bg-indigo-700 transition shadow-xs"
             >
               Grammatika Darsligiga Qaytish
             </Link>

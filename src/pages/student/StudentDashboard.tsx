@@ -255,6 +255,47 @@ export const StudentDashboard: React.FC = () => {
             </div>
           </div>
 
+          {/* Raymond Murphy Essential Grammar (114 Units) & Examination Arena */}
+          <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 rounded-2xl p-5 sm:p-6 text-white border border-indigo-800/50 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden">
+            <div className="relative z-10 max-w-xl">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[11px] font-bold border border-indigo-500/30 mb-2">
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                <span>Raymond Murphy • Essential Grammar in Use (4th Edition)</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">
+                114 Ta Interaktiv Grammatika Darsi & Imtihonlar Arenasi
+              </h3>
+              <p className="text-xs text-indigo-100/80 mt-1 leading-relaxed">
+                Har bir mavzuning aniq formulalari, o'zbekcha qoidalari, real misollar va avtomatik tekshiriluvchi mashqlar hamda darajali testlar.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {['Present Simple', 'Past Simple', 'Present Perfect', 'Passive Voice', 'Conditionals', 'Phrasal Verbs'].map(topic => (
+                  <span key={topic} className="text-[10px] font-medium px-2 py-0.5 rounded bg-white/10 text-indigo-200 border border-white/10">
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative z-10 flex-shrink-0 flex flex-col sm:flex-row md:flex-col items-start md:items-end gap-2.5">
+              <Link
+                to="/essential-grammar"
+                className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition inline-flex items-center justify-center gap-2 shadow-xs"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>114 Ta Darslikni Ochish</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                to="/student/grammar-exams"
+                className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 px-4 py-2 rounded-xl text-xs font-bold transition inline-flex items-center justify-center gap-2"
+              >
+                <Award className="w-3.5 h-3.5 text-amber-400" />
+                <span>Imtihonlar Arenasi</span>
+              </Link>
+            </div>
+          </div>
+
           {/* New: Interactive Listening & Fun Activities Card */}
           <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">

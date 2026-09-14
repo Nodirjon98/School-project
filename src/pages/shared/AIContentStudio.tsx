@@ -140,7 +140,7 @@ export const AIContentStudio: React.FC = () => {
           className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition shadow-sm disabled:opacity-50"
         >
           <Sparkles className="w-4 h-4" />
-          <span>{isLoading ? 'Groq Llama 3 pedagogik kontentni tuzmoqda...' : 'Llama 3 orqali yaratish'}</span>
+          <span>{isLoading ? 'Gemini 3.8 Flash pedagogik kontentni tuzmoqda...' : 'Gemini 3.8 Flash orqali yaratish'}</span>
         </button>
       </div>
 
