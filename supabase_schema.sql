@@ -3,7 +3,7 @@
 -- Copy and paste this script into Supabase SQL Editor and click "Run"
 -- ============================================================================
 
--- Enable Row Level Security & Extensions
+-- Enable Extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. PROFILES TABLE (Students, Teachers, Admins)
@@ -122,12 +122,37 @@ VALUES
   ('usr-student-1', 'student@premier.uz', 'Jasur Rustamov (Student)', 'student', 'B2', true, 1450)
 ON CONFLICT (email) DO NOTHING;
 
--- Turn off RLS for initial simple connection or set open read/write rules
-ALTER TABLE public.profiles DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.groups DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.lessons DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.homeworks DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.homework_submissions DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.attendance DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.payments DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.daily_words DISABLE ROW LEVEL SECURITY;
+-- ENABLE RLS & CREATE OPEN ACCESS POLICIES FOR ALL TABLES
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.groups ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.homeworks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.homework_submissions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.attendance ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.daily_words ENABLE ROW LEVEL SECURITY;
+
+-- Allow full public read/write access for anon key
+DROP POLICY IF EXISTS "Allow public full access profiles" ON public.profiles;
+CREATE POLICY "Allow public full access profiles" ON public.profiles FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public full access groups" ON public.groups;
+CREATE POLICY "Allow public full access groups" ON public.groups FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public full access lessons" ON public.lessons;
+CREATE POLICY "Allow public full access lessons" ON public.lessons FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public full access homeworks" ON public.homeworks;
+CREATE POLICY "Allow public full access homeworks" ON public.homeworks FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public full access submissions" ON public.homework_submissions;
+CREATE POLICY "Allow public full access submissions" ON public.homework_submissions FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public full access attendance" ON public.attendance;
+CREATE POLICY "Allow public full access attendance" ON public.attendance FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public full access payments" ON public.payments;
+CREATE POLICY "Allow public full access payments" ON public.payments FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public full access daily_words" ON public.daily_words;
+CREATE POLICY "Allow public full access daily_words" ON public.daily_words FOR ALL USING (true) WITH CHECK (true);
