@@ -3047,6 +3047,3460 @@ export const STORIES_FOR_REPRODUCTION: StoryForReproduction[] = [
       }
 ]
   }
+,
+  {
+    id: 'story-12',
+    storyNumber: 12,
+    title: "The Stolen Roses",
+    titleUz: "O'g'irlangan atirgullar",
+    cefrLevel: 'A2',
+    wordCount: 147,
+    readingTimeMinutes: 1,
+    storyText: "Mrs Williams loved flowers and had a small but beautiful garden. In the summer, her roses were always the best in her street. One summer afternoon her bell rang, and when she went to the front door, she saw a small boy outside. He was about seven years old, and was holding a big bunch of beautiful roses in his hand.\n'I am selling roses,' he said. 'Do you want any? They are quite cheap. Five pence for a big bunch. They are fresh. I picked them this afternoon.'\n'My boy,' Mrs Williams answered, 'I pick roses whenever I want, and don't pay anything for them, because I have lots in my garden.'\n'Oh, no, you haven't,' said the small boy. 'There aren't any roses in your garden—because they are here in my hand!'",
+    paragraphs: [
+      "Mrs Williams loved flowers and had a small but beautiful garden. In the summer, her roses were always the best in her street. One summer afternoon her bell rang, and when she went to the front door, she saw a small boy outside. He was about seven years old, and was holding a big bunch of beautiful roses in his hand.",
+      "'I am selling roses,' he said. 'Do you want any? They are quite cheap. Five pence for a big bunch. They are fresh. I picked them this afternoon.'",
+      "'My boy,' Mrs Williams answered, 'I pick roses whenever I want, and don't pay anything for them, because I have lots in my garden.'",
+      "'Oh, no, you haven't,' said the small boy. 'There aren't any roses in your garden—because they are here in my hand!'"
+],
+    summaryUz: "Missis Uilyams gullarni yaxshi ko'rardi va uning atirgullari butun ko'chada eng chiroylisi edi. Bir kuni eshigi jiringlab, 7 yoshli bola unga atirgul sotmoqchi bo'ladi. Ayol o'zining bog'ida gullar ko'pligini aytganida, bola: 'Sizning bog'ingizda gul qolmagan, chunki ularning hammasi mening qo'limda!' deb javob beradi.",
+    vocabulary: [
+      {
+            "word": "bunch",
+            "pos": "n.",
+            "phonetic": "[bʌntʃ]",
+            "translationUz": "dasta, guldasta",
+            "definitionEn": "A number of things of the same kind held or tied together.",
+            "exampleSentence": "He was holding a big bunch of roses in his hand."
+      },
+      {
+            "word": "cheap",
+            "pos": "adj.",
+            "phonetic": "[tʃiːp]",
+            "translationUz": "arzon",
+            "definitionEn": "Costing little money; not expensive.",
+            "exampleSentence": "The roses were quite cheap, only five pence."
+      },
+      {
+            "word": "pick",
+            "pos": "v.",
+            "phonetic": "[pɪk]",
+            "translationUz": "uzmoq, termoq",
+            "definitionEn": "To detach and gather a flower, fruit, etc.",
+            "exampleSentence": "She picked fresh flowers from her garden."
+      },
+      {
+            "word": "whenever",
+            "pos": "conj.",
+            "phonetic": "[wenˈevə]",
+            "translationUz": "har gal ... qilganda, qachonki",
+            "definitionEn": "At whatever time, on any occasion that.",
+            "exampleSentence": "I can pick flowers whenever I want."
+      },
+      {
+            "word": "fresh",
+            "pos": "adj.",
+            "phonetic": "[freʃ]",
+            "translationUz": "yangi, uzilgan",
+            "definitionEn": "Recently made, gathered, or produced; not stale.",
+            "exampleSentence": "These roses are fresh because I picked them today."
+      },
+      {
+            "word": "lots of",
+            "pos": "determiner",
+            "phonetic": "[lɒts əv]",
+            "translationUz": "ko'plab",
+            "definitionEn": "A large number or amount.",
+            "exampleSentence": "She had lots of red roses in her garden."
+      }
+],
+    reproductionOutline: [
+      "Mrs Williams loved flowers and had a lovely garden with the best roses in town.",
+      "One summer afternoon, the front door bell rang and she saw a seven-year-old boy.",
+      "The boy offered to sell her a big bunch of fresh roses for five pence.",
+      "Mrs Williams declined, saying she already had plenty of free roses in her own garden.",
+      "The boy revealed the truth: her garden had no roses left because he had picked them all!"
+],
+    modelRetelling: "Mrs Williams took great pride in her garden, which grew the most beautiful roses on her street. One summer afternoon, a seven-year-old boy knocked on her door holding a large bunch of fresh roses and offered to sell them for five pence. Mrs Williams smiled and refused, explaining that she did not need to buy flowers because her garden was full of them. To her astonishment, the boy replied that there were no roses left in her garden because he had just picked all of them to sell back to her!",
+    questions: [
+      {
+            "id": "s12-q1",
+            "order": 1,
+            "question": "What did Mrs Williams love?",
+            "modelAnswer": "Mrs Williams loved flowers.",
+            "keywords": [
+                  "loved",
+                  "flowers"
+            ],
+            "options": [
+                  "Flowers",
+                  "Animals",
+                  "Cooking",
+                  "Travelling"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Matnning birinchi jumlasida: 'Mrs Williams loved flowers'."
+      },
+      {
+            "id": "s12-q2",
+            "order": 2,
+            "question": "What did she have?",
+            "modelAnswer": "She had a small but beautiful garden.",
+            "keywords": [
+                  "small",
+                  "beautiful garden"
+            ],
+            "options": [
+                  "A small but beautiful garden",
+                  "A large farm in the village",
+                  "A flower shop in town",
+                  "A pet dog"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Uning kichik, lekin chiroyli bog'i bor edi."
+      },
+      {
+            "id": "s12-q3",
+            "order": 3,
+            "question": "What were her roses like in the summer?",
+            "modelAnswer": "In the summer, her roses were always the best in her street.",
+            "keywords": [
+                  "best",
+                  "in her street",
+                  "summer"
+            ],
+            "options": [
+                  "They were always the best in her street",
+                  "They dried up and died",
+                  "They were yellow and small",
+                  "They were eaten by insects"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Yozda uning atirgullari ko'chadagi eng yaxshisi bo'lar edi."
+      },
+      {
+            "id": "s12-q4",
+            "order": 4,
+            "question": "What happened one summer afternoon?",
+            "modelAnswer": "Her bell rang one summer afternoon.",
+            "keywords": [
+                  "bell rang",
+                  "summer afternoon"
+            ],
+            "options": [
+                  "Her front bell rang",
+                  "A storm damaged her garden",
+                  "A neighbour visited her",
+                  "The postman brought a letter"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir yoz kuni tushdan keyin uning eshik qo'ng'irog'i jiringladi."
+      },
+      {
+            "id": "s12-q5",
+            "order": 5,
+            "question": "What did Mrs Williams do then?",
+            "modelAnswer": "She went to the front door.",
+            "keywords": [
+                  "went to the front door"
+            ],
+            "options": [
+                  "She went to the front door",
+                  "She stayed in the kitchen",
+                  "She looked out of the window",
+                  "She called the police"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U old eshik tomon bordi: 'she went to the front door'."
+      },
+      {
+            "id": "s12-q6",
+            "order": 6,
+            "question": "What did she see?",
+            "modelAnswer": "She saw a small boy holding a big bunch of beautiful roses.",
+            "keywords": [
+                  "small boy",
+                  "holding",
+                  "bunch of roses"
+            ],
+            "options": [
+                  "A small boy holding a big bunch of roses",
+                  "Her friend with a present",
+                  "A stray cat in the yard",
+                  "A delivery driver"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U qo'lida katta guldasta ushlab turgan kichkina bolani ko'rdi."
+      },
+      {
+            "id": "s12-q7",
+            "order": 7,
+            "question": "Where did she see this boy?",
+            "modelAnswer": "She saw him outside her front door.",
+            "keywords": [
+                  "outside",
+                  "front door"
+            ],
+            "options": [
+                  "Outside her front door",
+                  "In the park down the road",
+                  "Inside her living room",
+                  "Near the supermarket"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U bolani eshigi tashqarisida ko'rdi: 'outside'."
+      },
+      {
+            "id": "s12-q8",
+            "order": 8,
+            "question": "How old was he?",
+            "modelAnswer": "He was about seven years old.",
+            "keywords": [
+                  "about seven years old"
+            ],
+            "options": [
+                  "About seven years old",
+                  "Ten years old",
+                  "About five years old",
+                  "Twelve years old"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bola taxminan 7 yoshda edi: 'He was about seven years old'."
+      },
+      {
+            "id": "s12-q9",
+            "order": 9,
+            "question": "What was he holding?",
+            "modelAnswer": "He was holding a big bunch of beautiful roses in his hand.",
+            "keywords": [
+                  "big bunch",
+                  "beautiful roses",
+                  "in his hand"
+            ],
+            "options": [
+                  "A big bunch of beautiful roses",
+                  "A basket of apples",
+                  "A pair of garden scissors",
+                  "A school bag"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U qo'lida katta dasta chiroyli atirgullarni ushlab turgan edi."
+      },
+      {
+            "id": "s12-q10",
+            "order": 10,
+            "question": "What did he say to Mrs Williams?",
+            "modelAnswer": "He said that he was selling roses, asked if she wanted any for five pence, and said they were fresh.",
+            "keywords": [
+                  "selling roses",
+                  "cheap",
+                  "five pence",
+                  "fresh"
+            ],
+            "options": [
+                  "He offered to sell her fresh roses for five pence a bunch",
+                  "He asked for a glass of cold water",
+                  "He asked for directions to the market",
+                  "He said he was giving away free flowers"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bola atirgul sotayotganini va ular yangi uzilgan hamda atigi 5 pens ekanini aytdi."
+      },
+      {
+            "id": "s12-q11",
+            "order": 11,
+            "question": "What did Mrs Williams answer?",
+            "modelAnswer": "She answered that she could pick roses whenever she wanted without paying because she had lots in her garden.",
+            "keywords": [
+                  "pick roses whenever I want",
+                  "lots in my garden"
+            ],
+            "options": [
+                  "She said she picks roses whenever she wants because she has lots in her garden",
+                  "She said she had no money to buy flowers",
+                  "She bought the roses immediately",
+                  "She told the boy to go to another street"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U o'z bog'ida gullar ko'pligini va xohlagan paytida bepul uzib olishini aytdi."
+      },
+      {
+            "id": "s12-q12",
+            "order": 12,
+            "question": "What did the small boy say then?",
+            "modelAnswer": "He said, 'Oh, no, you haven't. There aren't any roses in your garden—because they are here in my hand!'",
+            "keywords": [
+                  "no you haven't",
+                  "aren't any roses in your garden",
+                  "here in my hand"
+            ],
+            "options": [
+                  "'There aren't any roses in your garden—because they are here in my hand!'",
+                  "'I will give you a discount if you buy two bunches'",
+                  "'My mother picked them in our backyard'",
+                  "'I will come back tomorrow with fresh tulips'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bola: 'Sizning bog'ingizda atirgullar yo'q, chunki ularning hammasi mening qo'limda!' dedi."
+      },
+      {
+            "id": "s12-q13",
+            "order": 13,
+            "question": "Why weren't there any roses in Mrs Williams's garden?",
+            "modelAnswer": "Because the small boy had picked all of them to sell to her.",
+            "keywords": [
+                  "small boy",
+                  "picked all of them",
+                  "garden"
+            ],
+            "options": [
+                  "Because the boy had picked all of them to sell",
+                  "Because a bad wind blew them away",
+                  "Because someone had sprayed poison on them",
+                  "Because summer had already ended"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Chunki bola ayolning bog'iga kirib, barcha atirgullarni uzib olgan edi."
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s12-tf1",
+            "order": 1,
+            "statement": "Mrs Williams was well known on her street for having beautiful roses.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'her roses were always the best in her street'."
+      },
+      {
+            "id": "s12-tf2",
+            "order": 2,
+            "statement": "The boy selling flowers was a teenager in high school.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U taxminan yetti yoshli bola edi ('He was about seven years old')."
+      },
+      {
+            "id": "s12-tf3",
+            "order": 3,
+            "statement": "The boy asked for ten shillings for the bouquet.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U atigi 5 pens so'ragan edi ('Five pence for a big bunch')."
+      },
+      {
+            "id": "s12-tf4",
+            "order": 4,
+            "statement": "The roses held by the boy had been stolen from Mrs Williams's own garden.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: Bola uning bog'idagi barcha atirgullarni o'zi uzib olgan edi."
+      },
+      {
+            "id": "s12-tf5",
+            "order": 5,
+            "statement": "Mrs Williams called the police to arrest the seven-year-old child.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda ayolning politsiya chaqirgani yoki nima qilgani haqida aytilmagan."
+      },
+      {
+            "id": "s12-tf6",
+            "order": 6,
+            "statement": "Mrs Williams refused to buy the flowers before she knew where they came from.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: U gullar o'z bog'idan ekanini bilishidan oldin rad javobini bergan edi."
+      }
+]
+  },
+  {
+    id: 'story-13',
+    storyNumber: 13,
+    title: "The Doctor and the Woman's Age",
+    titleUz: "Shifokor va ayolning yoshi",
+    cefrLevel: 'A2',
+    wordCount: 104,
+    readingTimeMinutes: 1,
+    storyText: "A woman was having some trouble with her heart, so she went to see the doctor. He was a new doctor, and did not know her, so he first asked some questions, and one of them was, 'How old are you?'\n'Well,' she answered, 'I don't remember, doctor, but I will try to think.' She thought for a minute and then said, 'Yes, I remember now, doctor! When I married, I was eighteen years old, and my husband was thirty. Now my husband is sixty, I know; and that is twice thirty. So I am twice eighteen. That is thirty-six, isn't it?'",
+    paragraphs: [
+      "A woman was having some trouble with her heart, so she went to see the doctor. He was a new doctor, and did not know her, so he first asked some questions, and one of them was, 'How old are you?'",
+      "'Well,' she answered, 'I don't remember, doctor, but I will try to think.' She thought for a minute and then said, 'Yes, I remember now, doctor! When I married, I was eighteen years old, and my husband was thirty. Now my husband is sixty, I know; and that is twice thirty. So I am twice eighteen. That is thirty-six, isn't it?'"
+],
+    summaryUz: "Yuragi bezovta qilgan ayol yangi shifokorga boradi. Shifokor yoshini so'raganida, ayol yoshini eslolmay qolib g'alati hisob-kitob qiladi: 'Turmushga chiqqanimda men 18 da, erim 30 da edi. Hozir erim 60 da — ya'ni 30 ning ikki barobari. Demak men ham 18 ning ikki barobari, ya'ni 36 yoshdaman!' (Aslida esa u 48 yoshda edi).",
+    vocabulary: [
+      {
+            "word": "trouble",
+            "pos": "n.",
+            "phonetic": "[ˈtrʌbl]",
+            "translationUz": "muammo, bezovtalik, xastalik",
+            "definitionEn": "Difficulty or physical problems.",
+            "exampleSentence": "She was having trouble with her heart."
+      },
+      {
+            "word": "heart",
+            "pos": "n.",
+            "phonetic": "[hɑːt]",
+            "translationUz": "yurak",
+            "definitionEn": "The organ in the chest that pumps blood.",
+            "exampleSentence": "The doctor listened to her heart."
+      },
+      {
+            "word": "marry",
+            "pos": "v.",
+            "phonetic": "[ˈmæri]",
+            "translationUz": "turmush qurmoq",
+            "definitionEn": "To join in marriage.",
+            "exampleSentence": "She was eighteen when she married."
+      },
+      {
+            "word": "twice",
+            "pos": "adv.",
+            "phonetic": "[twaɪs]",
+            "translationUz": "ikki marta, ikki barobar",
+            "definitionEn": "Two times; double in degree or quantity.",
+            "exampleSentence": "Sixty is twice thirty."
+      },
+      {
+            "word": "remember",
+            "pos": "v.",
+            "phonetic": "[rɪˈmembə]",
+            "translationUz": "eslamoq, yodda tutmoq",
+            "definitionEn": "To bring to mind or think of again.",
+            "exampleSentence": "I don't remember my exact age, doctor."
+      },
+      {
+            "word": "think",
+            "pos": "v.",
+            "phonetic": "[θɪŋk]",
+            "translationUz": "o'ylamoq",
+            "definitionEn": "To use one's mind actively to reflect or deliberate.",
+            "exampleSentence": "She thought for a minute before answering."
+      }
+],
+    reproductionOutline: [
+      "A woman visited a new doctor because of heart problems.",
+      "The doctor did not know her and asked for her age.",
+      "The woman admitted she could not remember, but tried to calculate it.",
+      "She reasoned: when married she was 18 and her husband was 30.",
+      "Since her husband was now 60 (twice 30), she mistakenly concluded she was 36 (twice 18) instead of 48!"
+],
+    modelRetelling: "A woman experiencing heart trouble consulted a new doctor who was unfamiliar with her medical history. When the doctor asked for her age, she confessed that she had forgotten it, but offered to work it out. She recalled that on their wedding day, she was eighteen and her husband was thirty. Knowing that her husband was now sixty, she reasoned that since sixty is double thirty, her own age must be double eighteen, proudly concluding that she was thirty-six, completely missing that she was actually forty-eight!",
+    questions: [
+      {
+            "id": "s13-q1",
+            "order": 1,
+            "question": "Where did the woman in this story go?",
+            "modelAnswer": "She went to see the doctor.",
+            "keywords": [
+                  "see the doctor"
+            ],
+            "options": [
+                  "To see the doctor",
+                  "To a pharmacy",
+                  "To her husband's office",
+                  "To the hospital registry"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U shifokor qabuliga bordi: 'so she went to see the doctor'."
+      },
+      {
+            "id": "s13-q2",
+            "order": 2,
+            "question": "Why did she go there?",
+            "modelAnswer": "Because she was having some trouble with her heart.",
+            "keywords": [
+                  "trouble with her heart"
+            ],
+            "options": [
+                  "Because she was having some trouble with her heart",
+                  "Because she needed a routine health certificate",
+                  "Because she was feeling dizzy after work",
+                  "Because her husband felt ill"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Uning yuragida muammo bor edi: 'trouble with her heart'."
+      },
+      {
+            "id": "s13-q3",
+            "order": 3,
+            "question": "Why did the doctor not know her?",
+            "modelAnswer": "Because he was a new doctor.",
+            "keywords": [
+                  "new doctor"
+            ],
+            "options": [
+                  "Because he was a new doctor",
+                  "Because she wore a disguise",
+                  "Because she had moved from another country",
+                  "Because the doctor was very old"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Chunki u yangi shifokor edi: 'He was a new doctor'."
+      },
+      {
+            "id": "s13-q4",
+            "order": 4,
+            "question": "What did he do first?",
+            "modelAnswer": "First he asked some questions.",
+            "keywords": [
+                  "asked some questions"
+            ],
+            "options": [
+                  "He asked some questions",
+                  "He gave her pills",
+                  "He checked her blood pressure",
+                  "He asked her husband to enter"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U avvaliga ba'zi savollarni so'radi."
+      },
+      {
+            "id": "s13-q5",
+            "order": 5,
+            "question": "What was one of his questions?",
+            "modelAnswer": "One of his questions was, 'How old are you?'",
+            "keywords": [
+                  "How old are you"
+            ],
+            "options": [
+                  "'How old are you?'",
+                  "'What is your name?'",
+                  "'Where do you live?'",
+                  "'Do you take any medication?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Savollardan biri: 'Yoshingiz nechada?' edi."
+      },
+      {
+            "id": "s13-q6",
+            "order": 6,
+            "question": "What did the woman answer?",
+            "modelAnswer": "She answered that she didn't remember, but would try to think.",
+            "keywords": [
+                  "don't remember",
+                  "try to think"
+            ],
+            "options": [
+                  "She said she did not remember, but would try to think",
+                  "She immediately said thirty-six",
+                  "She said she was forty-eight",
+                  "She said she was sixty years old"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U yoshini eslay olmasligini, lekin o'ylab ko'rishini aytdi."
+      },
+      {
+            "id": "s13-q7",
+            "order": 7,
+            "question": "What did she do then?",
+            "modelAnswer": "She thought for a minute.",
+            "keywords": [
+                  "thought for a minute"
+            ],
+            "options": [
+                  "She thought for a minute",
+                  "She phoned her husband",
+                  "She looked in her handbag",
+                  "She checked her identity card"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U bir daqiqa o'ylab ko'rdi: 'She thought for a minute'."
+      },
+      {
+            "id": "s13-q8",
+            "order": 8,
+            "question": "What did she say after that?",
+            "modelAnswer": "She said when she married she was eighteen and her husband was thirty, and since her husband was now sixty (twice thirty), she was twice eighteen, which was thirty-six.",
+            "keywords": [
+                  "married at 18",
+                  "husband was thirty",
+                  "now sixty",
+                  "twice thirty",
+                  "twice eighteen",
+                  "thirty-six"
+            ],
+            "options": [
+                  "She calculated that she must be thirty-six because sixty is twice thirty",
+                  "She realized she was fifty years old",
+                  "She said her husband was thirty-six",
+                  "She admitted she was unable to do the maths"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U erining yoshi 2 barobar oshgani kabi, o'zining yoshi ham 18 dan 36 ga chiqqanini iddao qildi."
+      },
+      {
+            "id": "s13-q9",
+            "order": 9,
+            "question": "How old was the woman really?",
+            "modelAnswer": "She was really 48 years old.",
+            "keywords": [
+                  "48 years old",
+                  "forty-eight"
+            ],
+            "options": [
+                  "48 years old",
+                  "36 years old",
+                  "54 years old",
+                  "60 years old"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Eri 30 dan 60 ga yetguncha 30 yil o'tgan. 18 + 30 = 48 yosh bo'ladi!"
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s13-tf1",
+            "order": 1,
+            "statement": "The woman visited the clinic because of a stomach complaint.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U oshqozon emas, yurak xastaligi tufayli borgan ('trouble with her heart')."
+      },
+      {
+            "id": "s13-tf2",
+            "order": 2,
+            "statement": "The doctor had treated the woman several times before.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U yangi shifokor bo'lib, ayolni tanimas edi ('He was a new doctor, and did not know her')."
+      },
+      {
+            "id": "s13-tf3",
+            "order": 3,
+            "statement": "When they got married, the husband was twelve years older than the woman.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: Ayol 18 da, eri 30 da bo'lgan (30 - 18 = 12 yil farq)."
+      },
+      {
+            "id": "s13-tf4",
+            "order": 4,
+            "statement": "The woman's husband was sixty years old at the time of the story.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'Now my husband is sixty, I know'."
+      },
+      {
+            "id": "s13-tf5",
+            "order": 5,
+            "statement": "The woman's mathematical reasoning about her age was completely correct.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Uning mantiqiy hisobi xato bo'lib, u aslida 48 yoshda edi."
+      },
+      {
+            "id": "s13-tf6",
+            "order": 6,
+            "statement": "The doctor laughed out loud at the woman's funny answer.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda shifokorning bu javobga qanday munosabat bildirgani aytilmagan."
+      }
+]
+  },
+  {
+    id: 'story-14',
+    storyNumber: 14,
+    title: "The Cotton Dress",
+    titleUz: "Paxta Ko'ylak",
+    cefrLevel: 'A2',
+    wordCount: 167,
+    readingTimeMinutes: 1,
+    storyText: "One day Mrs Jones went shopping. When her husband came home in the evening, she began to tell him about a beautiful cotton dress. 'I saw it in a shop this morning,' she said, 'and ... '\n'And you want to buy it,' said her husband. 'How much does it cost?'\n'Fifteen pounds.'\n'Fifteen pounds for a cotton dress? That is too much!'\nBut every evening, when Mr Jones came back from work, his wife continued to speak only about the dress, and at last, after a week, he said, 'Oh, buy the dress! Here is the money!' She was very happy.\nBut the next evening, when Mr Jones came home and asked, 'Have you got the famous dress?' she said, 'No.'\n'Why not?' he said.\n'Well, it was still in the window of the shop after a week so I thought, \"Nobody else wants this dress, so I don't want it either\".'",
+    paragraphs: [
+      "One day Mrs Jones went shopping. When her husband came home in the evening, she began to tell him about a beautiful cotton dress. 'I saw it in a shop this morning,' she said, 'and ... '",
+      "'And you want to buy it,' said her husband. 'How much does it cost?'\n'Fifteen pounds.'\n'Fifteen pounds for a cotton dress? That is too much!'",
+      "But every evening, when Mr Jones came back from work, his wife continued to speak only about the dress, and at last, after a week, he said, 'Oh, buy the dress! Here is the money!' She was very happy.",
+      "But the next evening, when Mr Jones came home and asked, 'Have you got the famous dress?' she said, 'No.'\n'Why not?' he said.\n'Well, it was still in the window of the shop after a week so I thought, \"Nobody else wants this dress, so I don't want it either\".'"
+],
+    summaryUz: "Xonim Jons do'konda 15 funtlik paxta ko'ylakni ko'rib, bir hafta davomida har kecha eriga faqat shu haqda gapiradi. Oxiri eri joniqib unga 15 funt beradi. Ertasi kuni eri ko'ylakni so'raganida, ayol ko'ylakni olmaganini aytadi: 'Bir hafta o'tsa ham vitrinada turibdi, demak hech kimga yoqmabdi, shuning uchun menga ham kerak emas!'",
+    vocabulary: [
+      {
+            "word": "cotton",
+            "pos": "n. / adj.",
+            "phonetic": "[ˈkɒtn]",
+            "translationUz": "paxta, paxtali",
+            "definitionEn": "A soft white fibrous substance used to make textile fabric.",
+            "exampleSentence": "She fell in love with a lightweight cotton dress."
+      },
+      {
+            "word": "too much",
+            "pos": "adv. phr.",
+            "phonetic": "[tuː mʌtʃ]",
+            "translationUz": "juda qimmat, me'yordan ortiq",
+            "definitionEn": "An excessive amount or price.",
+            "exampleSentence": "Fifteen pounds for a simple dress is too much!"
+      },
+      {
+            "word": "continue",
+            "pos": "v.",
+            "phonetic": "[kənˈtɪnjuː]",
+            "translationUz": "davom etmoq",
+            "definitionEn": "To keep doing or discussing something without stopping.",
+            "exampleSentence": "She continued to speak about the dress every evening."
+      },
+      {
+            "word": "at last",
+            "pos": "adv. phr.",
+            "phonetic": "[æt lɑːst]",
+            "translationUz": "nihoyat, oxir-oqibat",
+            "definitionEn": "Finally, after much delay or effort.",
+            "exampleSentence": "At last, after a whole week, he agreed."
+      },
+      {
+            "word": "famous",
+            "pos": "adj.",
+            "phonetic": "[ˈfeɪməs]",
+            "translationUz": "mashhur (bu yerda kinoyali: \"o'sha tilga tushgan\")",
+            "definitionEn": "Known by many; here used humorously for something discussed repeatedly.",
+            "exampleSentence": "Did you buy that famous dress today?"
+      },
+      {
+            "word": "either",
+            "pos": "adv.",
+            "phonetic": "[ˈaɪðə]",
+            "translationUz": "ham (inkor gaplarda)",
+            "definitionEn": "Used to indicate a similar negative circumstance.",
+            "exampleSentence": "Nobody wants it, so I do not want it either."
+      }
+],
+    reproductionOutline: [
+      "Mrs Jones saw a fifteen-pound cotton dress in a shop window while shopping.",
+      "Her husband thought 15 pounds was far too expensive for a cotton dress.",
+      "For a whole week, Mrs Jones talked about nothing else every single evening.",
+      "Exhausted by her persistence, Mr Jones finally gave her the money.",
+      "However, she decided not to buy it because if no one else bought it in a week, she no longer wanted it!"
+],
+    modelRetelling: "After spotting a beautiful cotton dress in a shop window, Mrs Jones spent every single evening begging her husband for it. Although Mr Jones initially balked at the fifteen-pound price tag, after seven straight days of relentless pleading he finally gave in and handed her the cash. To his amazement, the next evening Mrs Jones revealed that she had not purchased the dress after all. Since the dress was still sitting untouched in the shop window after a full week, she reasoned that nobody else wanted it, so she had lost interest as well!",
+    questions: [
+      {
+            "id": "s14-q1",
+            "order": 1,
+            "question": "What did Mrs Jones do one day?",
+            "modelAnswer": "One day Mrs Jones went shopping.",
+            "keywords": [
+                  "went shopping"
+            ],
+            "options": [
+                  "She went shopping",
+                  "She visited a museum",
+                  "She made a new dress",
+                  "She cleaned the house"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir kuni xonim Jons xarid qilishga bordi: 'One day Mrs Jones went shopping'."
+      },
+      {
+            "id": "s14-q2",
+            "order": 2,
+            "question": "When did her husband come home?",
+            "modelAnswer": "Her husband came home in the evening.",
+            "keywords": [
+                  "came home",
+                  "evening"
+            ],
+            "options": [
+                  "In the evening",
+                  "At lunchtime",
+                  "Late at night",
+                  "Early in the morning"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Eri kechqurun uyga qaytdi: 'came home in the evening'."
+      },
+      {
+            "id": "s14-q3",
+            "order": 3,
+            "question": "What did Mrs Jones do when he came home?",
+            "modelAnswer": "She began to tell him about a beautiful cotton dress.",
+            "keywords": [
+                  "tell him about",
+                  "beautiful cotton dress"
+            ],
+            "options": [
+                  "She began to tell him about a beautiful cotton dress",
+                  "She served dinner silently",
+                  "She complained about the weather",
+                  "She asked him for a holiday in Spain"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U eriga chiroyli paxta ko'ylak haqida so'zlay boshladi."
+      },
+      {
+            "id": "s14-q4",
+            "order": 4,
+            "question": "What did she say to him?",
+            "modelAnswer": "She said, 'I saw it in a shop this morning, and ...'",
+            "keywords": [
+                  "saw it in a shop this morning"
+            ],
+            "options": [
+                  "'I saw it in a shop this morning, and ...'",
+                  "'I bought a wonderful hat for myself'",
+                  "'The shops were all closed today'",
+                  "'Could you lend money to my sister?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U ertalab do'konda bu ko'ylakni ko'rganini aytdi."
+      },
+      {
+            "id": "s14-q5",
+            "order": 5,
+            "question": "What did he answer?",
+            "modelAnswer": "He answered, 'And you want to buy it. How much does it cost?'",
+            "keywords": [
+                  "want to buy it",
+                  "how much does it cost"
+            ],
+            "options": [
+                  "'And you want to buy it. How much does it cost?'",
+                  "'You already have too many clothes.'",
+                  "'Let us go and see it together right now.'",
+                  "'Do not bother me with dresses tonight.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Eri: 'Va sen uni sotib olmoqchisan. Narxi qancha?' deb so'radi."
+      },
+      {
+            "id": "s14-q6",
+            "order": 6,
+            "question": "What did she say?",
+            "modelAnswer": "She said, 'Fifteen pounds.'",
+            "keywords": [
+                  "Fifteen pounds"
+            ],
+            "options": [
+                  "Fifteen pounds",
+                  "Fifty pounds",
+                  "Five pounds",
+                  "Twenty pounds"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ko'ylak narxi 15 funt edi: 'Fifteen pounds'."
+      },
+      {
+            "id": "s14-q7",
+            "order": 7,
+            "question": "What did Mr Jones say then?",
+            "modelAnswer": "Mr Jones said, 'Fifteen pounds for a cotton dress? That is too much!'",
+            "keywords": [
+                  "Fifteen pounds for a cotton dress",
+                  "too much"
+            ],
+            "options": [
+                  "'Fifteen pounds for a cotton dress? That is too much!'",
+                  "'That sounds very reasonable, buy two!'",
+                  "'Ask the shopkeeper for a lower price.'",
+                  "'We will check my bank account tomorrow.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Eri 15 funt paxta ko'ylak uchun juda qimmat ekanini aytdi."
+      },
+      {
+            "id": "s14-q8",
+            "order": 8,
+            "question": "What happened every evening after that?",
+            "modelAnswer": "Every evening his wife continued to speak only about the dress.",
+            "keywords": [
+                  "continued to speak only about the dress"
+            ],
+            "options": [
+                  "His wife continued to speak only about the dress",
+                  "They went out to restaurants for dinner",
+                  "They did not speak to each other at all",
+                  "Mr Jones worked late at the office"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Har oqshom xotini faqat shu ko'ylak haqida gapirishni davom ettirdi."
+      },
+      {
+            "id": "s14-q9",
+            "order": 9,
+            "question": "What happened after a week?",
+            "modelAnswer": "After a week, Mr Jones gave her the money and told her to buy the dress.",
+            "keywords": [
+                  "buy the dress",
+                  "Here is the money"
+            ],
+            "options": [
+                  "Mr Jones gave her the money and told her to buy the dress",
+                  "Mrs Jones gave up and forgot about it",
+                  "The shopkeeper reduced the price to ten pounds",
+                  "Mr Jones bought the dress himself as a surprise"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir haftadan so'ng eri pulni berib, borib sotib olishini aytdi."
+      },
+      {
+            "id": "s14-q10",
+            "order": 10,
+            "question": "What did Mr Jones ask the next evening?",
+            "modelAnswer": "He asked, 'Have you got the famous dress?'",
+            "keywords": [
+                  "Have you got the famous dress"
+            ],
+            "options": [
+                  "'Have you got the famous dress?'",
+                  "'What is for dinner tonight?'",
+                  "'Where is my change from the fifteen pounds?'",
+                  "'Did your friends like the dress?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ertasi kechqurun u: 'O'sha mashhur ko'ylakni oldingmi?' deb so'radi."
+      },
+      {
+            "id": "s14-q11",
+            "order": 11,
+            "question": "What did Mrs Jones answer?",
+            "modelAnswer": "She answered, 'No.'",
+            "keywords": [
+                  "No"
+            ],
+            "options": [
+                  "No",
+                  "Yes",
+                  "Not yet, tomorrow",
+                  "I returned it"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Xonim Jons 'Yo'q' deb javob berdi."
+      },
+      {
+            "id": "s14-q12",
+            "order": 12,
+            "question": "What did her husband say then?",
+            "modelAnswer": "He said, 'Why not?'",
+            "keywords": [
+                  "Why not"
+            ],
+            "options": [
+                  "'Why not?'",
+                  "'Where is my money?'",
+                  "'Did someone steal it?'",
+                  "'Was the shop closed?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Eri hayron bo'lib: 'Nega olmading?' dedi."
+      },
+      {
+            "id": "s14-q13",
+            "order": 13,
+            "question": "What was her answer?",
+            "modelAnswer": "She answered that after a week the dress was still in the shop window, so she thought nobody else wanted it, and she didn't want it either.",
+            "keywords": [
+                  "still in the window",
+                  "nobody else wants this dress",
+                  "don't want it either"
+            ],
+            "options": [
+                  "She said nobody else wanted the dress after a week, so she didn't want it either",
+                  "She said the shop had already sold it to another woman",
+                  "She had lost the fifteen pounds on the bus",
+                  "She decided she preferred a woolen coat instead"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir hafta o'tsa ham vitrinada turgani uchun, boshqalar xohlamagan ko'ylakni o'zi ham xohlamasligini aytdi."
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s14-tf1",
+            "order": 1,
+            "statement": "Mrs Jones discovered the cotton dress while shopping in the morning.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'I saw it in a shop this morning'."
+      },
+      {
+            "id": "s14-tf2",
+            "order": 2,
+            "statement": "Mr Jones immediately agreed that fifteen pounds was a great bargain.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U buni juda qimmat deb hisobladi ('That is too much!')."
+      },
+      {
+            "id": "s14-tf3",
+            "order": 3,
+            "statement": "Mrs Jones talked about the dress every evening for an entire week.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'every evening... his wife continued to speak only about the dress... after a week'."
+      },
+      {
+            "id": "s14-tf4",
+            "order": 4,
+            "statement": "Mr Jones bought the dress himself and wrapped it as a birthday gift.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U o'zi sotib olmadi, balki xotiniga pul berdi ('Here is the money!')."
+      },
+      {
+            "id": "s14-tf5",
+            "order": 5,
+            "statement": "The dress was sold to another customer before Mrs Jones reached the shop.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Ko'ylak hanuz vitrinada turgan edi ('it was still in the window of the shop')."
+      },
+      {
+            "id": "s14-tf6",
+            "order": 6,
+            "statement": "Mrs Jones decided against buying the dress because it seemed unpopular.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: Agar hech kimga kerak bo'lmagan bo'lsa, menga ham kerak emas deb o'yladi."
+      }
+]
+  },
+  {
+    id: 'story-15',
+    storyNumber: 15,
+    title: "The Ugly Hat",
+    titleUz: "Xunuk Shlyapa",
+    cefrLevel: 'A2',
+    wordCount: 149,
+    readingTimeMinutes: 1,
+    storyText: "One day a lady walked into a hat shop. The shopkeeper smiled and said, 'Good afternoon, madam.'\n'Good afternoon,' the lady answered. 'There is a green hat with red flowers and blue leaves on it in your window. Will you please take it out of there.'\n'Yes, madam,' the shopkeeper said. 'I will be very pleased to do that for you.' Usually ladies looked at a lot of hats before they chose one, and the shopkeeper got very tired. 'Good', he thought, 'I will sell this hat very quickly—and it has been in my window for a very long time.'\n'Do you want it in a box, madam,' he asked, 'or will you wear it?'\n'Oh, I don't want it,' she answered. 'I only wanted you to take it out of your window. I pass your shop every day, and I hate to see the ugly thing there!'",
+    paragraphs: [
+      "One day a lady walked into a hat shop. The shopkeeper smiled and said, 'Good afternoon, madam.'",
+      "'Good afternoon,' the lady answered. 'There is a green hat with red flowers and blue leaves on it in your window. Will you please take it out of there.'",
+      "'Yes, madam,' the shopkeeper said. 'I will be very pleased to do that for you.' Usually ladies looked at a lot of hats before they chose one, and the shopkeeper got very tired. 'Good', he thought, 'I will sell this hat very quickly—and it has been in my window for a very long time.'",
+      "'Do you want it in a box, madam,' he asked, 'or will you wear it?'",
+      "'Oh, I don't want it,' she answered. 'I only wanted you to take it out of your window. I pass your shop every day, and I hate to see the ugly thing there!'"
+],
+    summaryUz: "Bir ayol shlyapa do'koniga kirib, sotuvchidan vitrinadagi qizil gulli va ko'k bargli yashil shlyapani olib tashlashni iltimos qiladi. Sotuvchi uzoq vaqt sotilmay yotgan bu shlyapa nihoyat sotiladi deb xursand bo'ladi va uni qutiga solib berishni so'raydi. Biroq ayol: 'Menga bu shlyapa kerak emas! Men har kuni bu yerdan o'taman va vitrinada bu xunuk narsani ko'rishdan nafratlanaman!' deydi.",
+    vocabulary: [
+      {
+            "word": "shopkeeper",
+            "pos": "n.",
+            "phonetic": "[ˈʃɒpkiːpə]",
+            "translationUz": "do'kondor, sotuvchi",
+            "definitionEn": "An owner or manager of a small retail store.",
+            "exampleSentence": "The shopkeeper smiled warmly at the customer."
+      },
+      {
+            "word": "window",
+            "pos": "n.",
+            "phonetic": "[ˈwɪndəʊ]",
+            "translationUz": "vitrina",
+            "definitionEn": "A display area behind glass at the front of a store.",
+            "exampleSentence": "The green hat had been in the window for a long time."
+      },
+      {
+            "word": "choose",
+            "pos": "v.",
+            "phonetic": "[tʃuːz]",
+            "translationUz": "tanlamoq",
+            "definitionEn": "To select or pick out from a number of alternatives.",
+            "exampleSentence": "Customers usually looked at ten hats before they chose one."
+      },
+      {
+            "word": "pass",
+            "pos": "v.",
+            "phonetic": "[pɑːs]",
+            "translationUz": "yonidan o'tmoq",
+            "definitionEn": "To move past or go by something.",
+            "exampleSentence": "I pass your shop on my way to work every morning."
+      },
+      {
+            "word": "hate",
+            "pos": "v.",
+            "phonetic": "[heɪt]",
+            "translationUz": "nafratlanmoq, yoqtirmaslik",
+            "definitionEn": "To feel intense dislike or aversion towards.",
+            "exampleSentence": "She hates seeing that ugly colour combination."
+      },
+      {
+            "word": "ugly",
+            "pos": "adj.",
+            "phonetic": "[ˈʌɡli]",
+            "translationUz": "xunuk, badbashara",
+            "definitionEn": "Unpleasant or repulsive in appearance.",
+            "exampleSentence": "The hat was so ugly that she could not bear to look at it."
+      }
+],
+    reproductionOutline: [
+      "A lady entered a hat shop and politely greeted the shopkeeper.",
+      "She asked him to take down a specific green hat with red flowers from the shop window.",
+      "Delighted, the shopkeeper thought he had finally made a quick sale of an old stock item.",
+      "He asked whether she preferred the hat packed in a box or to wear it out.",
+      "The woman bluntly stated she had no desire to buy it—she just hated seeing the ugly thing on display every day!"
+],
+    modelRetelling: "A lady visited a hat shop and pointed out a green hat decorated with red flowers and blue leaves displayed in the window, asking the shopkeeper to take it out. Overjoyed, the shopkeeper gladly complied, thrilled at the prospect of instantly selling a hat that had lingered in his window for months without the usual exhausting browsing. When he politely asked whether she wanted it boxed or would wear it, she shocked him by answering that she had no intention of purchasing it; she simply walked past his shop daily and could no longer stand looking at that hideous creation!",
+    questions: [
+      {
+            "id": "s15-q1",
+            "order": 1,
+            "question": "What happened one day?",
+            "modelAnswer": "One day a lady walked into a hat shop.",
+            "keywords": [
+                  "lady walked into a hat shop"
+            ],
+            "options": [
+                  "A lady walked into a hat shop",
+                  "A man bought a new suit",
+                  "A window broke in a shop",
+                  "A hat was stolen"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir kuni bir ayol shlyapa do'koniga kirdi."
+      },
+      {
+            "id": "s15-q2",
+            "order": 2,
+            "question": "What did the shopkeeper do?",
+            "modelAnswer": "The shopkeeper smiled.",
+            "keywords": [
+                  "smiled"
+            ],
+            "options": [
+                  "He smiled",
+                  "He frowned",
+                  "He hid behind the counter",
+                  "He closed the door"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Sotuvchi jilmaydi: 'The shopkeeper smiled'."
+      },
+      {
+            "id": "s15-q3",
+            "order": 3,
+            "question": "What did he say?",
+            "modelAnswer": "He said, 'Good afternoon, madam.'",
+            "keywords": [
+                  "Good afternoon, madam"
+            ],
+            "options": [
+                  "'Good afternoon, madam.'",
+                  "'Can I help you, miss?'",
+                  "'We are closing soon.'",
+                  "'Hats are half price today.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U: 'Xayrli kun, xonim' dedi."
+      },
+      {
+            "id": "s15-q4",
+            "order": 4,
+            "question": "What did the lady answer?",
+            "modelAnswer": "She answered, 'Good afternoon. There is a green hat with red flowers and blue leaves on it in your window. Will you please take it out of there.'",
+            "keywords": [
+                  "green hat with red flowers",
+                  "take it out of there"
+            ],
+            "options": [
+                  "She asked him to take the green hat with red flowers and blue leaves out of the window",
+                  "She asked to see the most expensive hat in the shop",
+                  "She complained about the high prices",
+                  "She asked for a pair of matching gloves"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U vitrinadagi qizil gulli, ko'k bargli yashil shlyapani olib tashlashni so'radi."
+      },
+      {
+            "id": "s15-q5",
+            "order": 5,
+            "question": "What did the shopkeeper say then?",
+            "modelAnswer": "He said, 'Yes, madam. I will be very pleased to do that for you.'",
+            "keywords": [
+                  "very pleased to do that for you"
+            ],
+            "options": [
+                  "'Yes, madam. I will be very pleased to do that for you.'",
+                  "'I am sorry, but that hat is not for sale.'",
+                  "'You must pay first before I touch it.'",
+                  "'That window is locked today.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Sotuvchi mamnuniyat bilan bu ishni bajarishini aytdi."
+      },
+      {
+            "id": "s15-q6",
+            "order": 6,
+            "question": "What usually happened in the shop?",
+            "modelAnswer": "Usually ladies looked at a lot of hats before they chose one, and the shopkeeper got very tired.",
+            "keywords": [
+                  "looked at a lot of hats",
+                  "before they chose one",
+                  "got very tired"
+            ],
+            "options": [
+                  "Usually ladies looked at a lot of hats before choosing one, making the shopkeeper very tired",
+                  "Customers bought hats without even looking at them",
+                  "Only gentlemen came into the shop",
+                  "The hats were always sold out by noon"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Odatda ayollar bitta tanlashdan oldin juda ko'p shlyapalarni ko'rib sotuvchini charchatishardi."
+      },
+      {
+            "id": "s15-q7",
+            "order": 7,
+            "question": "What did the shopkeeper think?",
+            "modelAnswer": "He thought, 'Good, I will sell this hat very quickly—and it has been in my window for a very long time.'",
+            "keywords": [
+                  "sell this hat very quickly",
+                  "in my window for a very long time"
+            ],
+            "options": [
+                  "He thought he would sell this old hat very quickly without getting tired",
+                  "He thought the lady was going to rob his shop",
+                  "He thought the lady was a famous fashion designer",
+                  "He regretted displaying the hat in the window"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U bu eski shlyapani tezda sotishini va nihoyat qutulishini o'yladi."
+      },
+      {
+            "id": "s15-q8",
+            "order": 8,
+            "question": "What did he say to the lady?",
+            "modelAnswer": "He asked, 'Do you want it in a box, madam, or will you wear it?'",
+            "keywords": [
+                  "in a box",
+                  "wear it"
+            ],
+            "options": [
+                  "'Do you want it in a box, madam, or will you wear it?'",
+                  "'How much money do you have?'",
+                  "'Would you like to try another hat as well?'",
+                  "'Shall I deliver it to your house?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U shlyapani qutiga solib berishni yoki kiyib ketishini so'radi."
+      },
+      {
+            "id": "s15-q9",
+            "order": 9,
+            "question": "What was her answer?",
+            "modelAnswer": "She answered that she didn't want it, but only wanted him to remove it because she passed his shop every day and hated to see the ugly thing there.",
+            "keywords": [
+                  "don't want it",
+                  "pass your shop every day",
+                  "hate to see the ugly thing"
+            ],
+            "options": [
+                  "She said she didn't want it; she passed every day and hated to see the ugly thing there",
+                  "She said she wanted it in a golden gift box",
+                  "She said she would wear it to church on Sunday",
+                  "She said the hat was too expensive for her"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U shlyapani sotib olmasligini, har kuni o'tib bu xunuk narsani ko'rishdan charchaganini aytdi."
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s15-tf1",
+            "order": 1,
+            "statement": "The hat had green fabric, red flowers, and blue leaves.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'a green hat with red flowers and blue leaves on it'."
+      },
+      {
+            "id": "s15-tf2",
+            "order": 2,
+            "statement": "The shopkeeper had placed the hat in the window that very morning.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Shlyapa juda uzoq vaqtdan beri vitrinada turgan edi ('it has been in my window for a very long time')."
+      },
+      {
+            "id": "s15-tf3",
+            "order": 3,
+            "statement": "Most female customers made up their minds immediately upon entering the shop.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Ayollar odatda ko'plab shlyapalarni sinab ko'rib sotuvchini charchatishardi ('Usually ladies looked at a lot of hats before they chose one')."
+      },
+      {
+            "id": "s15-tf4",
+            "order": 4,
+            "statement": "The lady was looking for a matching hat to wear to an afternoon tea party.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda ayolning qayerga borayotgani yoki nima maqsadda yurgani aytilmagan."
+      },
+      {
+            "id": "s15-tf5",
+            "order": 5,
+            "statement": "The lady walked past the shopkeeper's window on a daily basis.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'I pass your shop every day'."
+      },
+      {
+            "id": "s15-tf6",
+            "order": 6,
+            "statement": "The lady purchased the hat for a discounted clearance price.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U shlyapani umuman sotib olmadi ('Oh, I don't want it')."
+      }
+]
+  },
+  {
+    id: 'story-16',
+    storyNumber: 16,
+    title: "Nasreddin and the Lost Ring",
+    titleUz: "Nasriddin va Yo'qolgan Uzuk",
+    cefrLevel: 'A2',
+    wordCount: 153,
+    readingTimeMinutes: 1,
+    storyText: "Nasreddin had a shed behind his house. It had no lights in it. One night he went out to the shed to get his ladder, and lost his ring there. He left the ladder, went out into the street and began to look around.\nOne of his friends saw him in the street outside his house, and said to him, 'Hullo, Nasreddin. What are you looking for?'\n'My ring,' answered Nasreddin. 'It fell off my finger. It is a silver ring with a red stone in it.'\n'Oh, yes,' said his friend. 'I remember it. I will help you to look for it. Where did you lose it?'\n'In my shed.'\n'But why don't you look for it there?'\n'Don't be stupid! It is quite dark in my shed, so how will I find my ring there? Here there is light from the lamps in the street.'",
+    paragraphs: [
+      "Nasreddin had a shed behind his house. It had no lights in it. One night he went out to the shed to get his ladder, and lost his ring there. He left the ladder, went out into the street and began to look around.",
+      "One of his friends saw him in the street outside his house, and said to him, 'Hullo, Nasreddin. What are you looking for?'",
+      "'My ring,' answered Nasreddin. 'It fell off my finger. It is a silver ring with a red stone in it.'",
+      "'Oh, yes,' said his friend. 'I remember it. I will help you to look for it. Where did you lose it?'\n'In my shed.'\n'But why don't you look for it there?'",
+      "'Don't be stupid! It is quite dark in my shed, so how will I find my ring there? Here there is light from the lamps in the street.'"
+],
+    summaryUz: "Nasriddin orqa hovlidagi qorong'i bostirmasida narvon olayotib qizil ko'zli kumush uzugini tushirib qo'yadi. So'ng ko'chaga chiqib uzuk qidiradi. Do'sti unga yordam bermoqchi bo'lib: 'Qayerda yo'qotding?' deb so'raganida, Nasriddin: 'Bostirmamda! Lekin bostirma qorong'iku, u yerda qanday topaman? Bu yerda esa ko'cha chiroqlari yorug'!' deb javob beradi.",
+    vocabulary: [
+      {
+            "word": "shed",
+            "pos": "n.",
+            "phonetic": "[ʃed]",
+            "translationUz": "bostirma, omborxona",
+            "definitionEn": "A small outbuilding used for storage.",
+            "exampleSentence": "He kept his garden tools in a wooden shed."
+      },
+      {
+            "word": "ladder",
+            "pos": "n.",
+            "phonetic": "[ˈlædə]",
+            "translationUz": "narvon",
+            "definitionEn": "A piece of equipment consisting of two vertical sides with rungs used for climbing.",
+            "exampleSentence": "He went to get his ladder to paint the roof."
+      },
+      {
+            "word": "ring",
+            "pos": "n.",
+            "phonetic": "[rɪŋ]",
+            "translationUz": "uzuk",
+            "definitionEn": "A circular band of precious metal worn on a finger.",
+            "exampleSentence": "It was a silver ring with a sparkling red stone."
+      },
+      {
+            "word": "fall off",
+            "pos": "phr. v.",
+            "phonetic": "[fɔːl ɒf]",
+            "translationUz": "tushib ketmoq (barmoqdan)",
+            "definitionEn": "To drop or become detached from.",
+            "exampleSentence": "The ring fell off his finger in the dark."
+      },
+      {
+            "word": "silver",
+            "pos": "n. / adj.",
+            "phonetic": "[ˈsɪlvə]",
+            "translationUz": "kumush, kumushdan yasalgan",
+            "definitionEn": "A precious shiny grayish-white metal.",
+            "exampleSentence": "He wore a valuable silver ring."
+      },
+      {
+            "word": "stupid",
+            "pos": "adj.",
+            "phonetic": "[ˈstjuːpɪd]",
+            "translationUz": "ahmoq, nodon",
+            "definitionEn": "Lacking intelligence or common sense.",
+            "exampleSentence": "Don't be stupid, look where the light is!"
+      }
+],
+    reproductionOutline: [
+      "Nasreddin had an unlit storage shed behind his house.",
+      "While fetching a ladder one night, his red-stoned silver ring slipped off his finger in the shed.",
+      "Instead of looking inside, Nasreddin went out onto the public street to search.",
+      "A passing friend offered help and asked where the ring was dropped.",
+      "When Nasreddin said \"in the shed\", the astonished friend asked why he searched the street; Nasreddin retorted that the street had lamplight!"
+],
+    modelRetelling: "One dark night, Nasreddin went to fetch a ladder from the unlit shed behind his house and accidentally lost his silver ring with a red stone. Leaving the ladder behind, he immediately went outside and began scouring the street. A passing friend offered to assist him in the search and inquired where the ring had slipped off. When Nasreddin stated that it was lost inside the shed, the bewildered friend asked why he was searching out on the road. Nasreddin snapped back that it was pitch dark in the shed, so he was looking on the street where the streetlamps provided plenty of light!",
+    questions: [
+      {
+            "id": "s16-q1",
+            "order": 1,
+            "question": "What did Nasreddin have behind his house?",
+            "modelAnswer": "Nasreddin had a shed behind his house.",
+            "keywords": [
+                  "shed behind his house"
+            ],
+            "options": [
+                  "A shed behind his house",
+                  "A large flower garden",
+                  "A swimming pool",
+                  "A donkey stable"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Uning uyi orqasida bostirmasi bor edi: 'Nasreddin had a shed behind his house'."
+      },
+      {
+            "id": "s16-q2",
+            "order": 2,
+            "question": "What was his shed like?",
+            "modelAnswer": "It had no lights in it.",
+            "keywords": [
+                  "no lights in it"
+            ],
+            "options": [
+                  "It had no lights in it",
+                  "It was brightly lit",
+                  "It had big glass windows",
+                  "It was painted yellow"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bostirmada umuman chiroq yo'q edi: 'It had no lights in it'."
+      },
+      {
+            "id": "s16-q3",
+            "order": 3,
+            "question": "What did he do one night?",
+            "modelAnswer": "One night he went out to the shed to get his ladder.",
+            "keywords": [
+                  "went out to the shed",
+                  "get his ladder"
+            ],
+            "options": [
+                  "He went out to the shed to get his ladder",
+                  "He slept in the shed",
+                  "He repaired the roof with his friend",
+                  "He locked the shed door"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir kecha u narvonini olish uchun bostirmasiga bordi."
+      },
+      {
+            "id": "s16-q4",
+            "order": 4,
+            "question": "Why did he do this?",
+            "modelAnswer": "He did this to get his ladder.",
+            "keywords": [
+                  "to get his ladder"
+            ],
+            "options": [
+                  "To get his ladder",
+                  "To find his lost money",
+                  "To feed his animals",
+                  "To escape the heat"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U narvonini olish uchun borgan edi."
+      },
+      {
+            "id": "s16-q5",
+            "order": 5,
+            "question": "What happened?",
+            "modelAnswer": "He lost his ring there.",
+            "keywords": [
+                  "lost his ring"
+            ],
+            "options": [
+                  "He lost his ring there",
+                  "The ladder broke",
+                  "He hurt his foot",
+                  "A thief entered the shed"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U yerda uzugini tushirib yo'qotib qo'ydi."
+      },
+      {
+            "id": "s16-q6",
+            "order": 6,
+            "question": "What did Nasreddin do then?",
+            "modelAnswer": "He left the ladder, went out into the street and began to look around.",
+            "keywords": [
+                  "left the ladder",
+                  "went out into the street",
+                  "began to look around"
+            ],
+            "options": [
+                  "He left the ladder, went out into the street and began to look around",
+                  "He brought a candle into the shed",
+                  "He gave up and went to sleep",
+                  "He shouted for his wife to help"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U narvonni qoldirib, ko'chaga chiqdi va ko'chada uzuk qidira boshladi."
+      },
+      {
+            "id": "s16-q7",
+            "order": 7,
+            "question": "Who saw him in the street?",
+            "modelAnswer": "One of his friends saw him in the street outside his house.",
+            "keywords": [
+                  "one of his friends"
+            ],
+            "options": [
+                  "One of his friends",
+                  "A police officer",
+                  "His wife",
+                  "The town mayor"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ko'chada uning do'stlaridan biri ko'rib qoldi."
+      },
+      {
+            "id": "s16-q8",
+            "order": 8,
+            "question": "What did this person say?",
+            "modelAnswer": "He said, 'Hullo, Nasreddin. What are you looking for?'",
+            "keywords": [
+                  "What are you looking for"
+            ],
+            "options": [
+                  "'Hullo, Nasreddin. What are you looking for?'",
+                  "'Why are you shouting in the middle of the night?'",
+                  "'Can you lend me your ladder?'",
+                  "'Where are your donkeys?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Do'sti salom berib, nima qidirayotganini so'radi."
+      },
+      {
+            "id": "s16-q9",
+            "order": 9,
+            "question": "What was Nasreddin's answer?",
+            "modelAnswer": "Nasreddin answered, 'My ring. It fell off my finger. It is a silver ring with a red stone in it.'",
+            "keywords": [
+                  "silver ring with a red stone",
+                  "fell off my finger"
+            ],
+            "options": [
+                  "'My ring. It fell off my finger. It is a silver ring with a red stone in it.'",
+                  "'I dropped my purse full of gold.'",
+                  "'I lost the keys to my house.'",
+                  "'I am searching for my eyeglasses.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U barmog'idan tushib ketgan qizil toshli kumush uzugini qidirayotganini aytdi."
+      },
+      {
+            "id": "s16-q10",
+            "order": 10,
+            "question": "What did his friend say then?",
+            "modelAnswer": "His friend said, 'Oh, yes. I remember it. I will help you to look for it. Where did you lose it?'",
+            "keywords": [
+                  "help you to look for it",
+                  "Where did you lose it"
+            ],
+            "options": [
+                  "'I remember it. I will help you to look for it. Where did you lose it?'",
+                  "'You should buy a new ring tomorrow.'",
+                  "'It is too dark to find anything now.'",
+                  "'Why don't you ask your wife?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Do'sti uzukni eslashini, yordam berishini aytib, qayerda yo'qotganini so'radi."
+      },
+      {
+            "id": "s16-q11",
+            "order": 11,
+            "question": "What did Nasreddin answer?",
+            "modelAnswer": "Nasreddin answered, 'In my shed.'",
+            "keywords": [
+                  "In my shed"
+            ],
+            "options": [
+                  "'In my shed.'",
+                  "'Here in the street.'",
+                  "'At the market.'",
+                  "'Near the river.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin: 'Bostirmamda' deb javob berdi."
+      },
+      {
+            "id": "s16-q12",
+            "order": 12,
+            "question": "What did his friend say now?",
+            "modelAnswer": "His friend asked, 'But why don't you look for it there?'",
+            "keywords": [
+                  "why don't you look for it there"
+            ],
+            "options": [
+                  "'But why don't you look for it there?'",
+                  "'Who locked the shed?'",
+                  "'Did you bring a torch?'",
+                  "'Let us go to sleep.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Do'sti: 'Unda nega u yerda qidirmayapsan?' deb so'radi."
+      },
+      {
+            "id": "s16-q13",
+            "order": 13,
+            "question": "What did Nasreddin say to him?",
+            "modelAnswer": "Nasreddin said, 'Don't be stupid! It is quite dark in my shed, so how will I find my ring there? Here there is light from the lamps in the street.'",
+            "keywords": [
+                  "quite dark in my shed",
+                  "how will I find my ring there",
+                  "light from the lamps in the street"
+            ],
+            "options": [
+                  "'Don't be stupid! It is quite dark in my shed... Here there is light from the street lamps.'",
+                  "'The shed is locked and I lost the key.'",
+                  "'A big dog is sleeping in the shed.'",
+                  "'I was told rings always roll onto the road.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin: 'Axmoq bo'lma, bostirmada qorong'iku! Bu yerda esa ko'cha chiroqlari yorug'!' dedi."
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s16-tf1",
+            "order": 1,
+            "statement": "Nasreddin's storage shed was equipped with modern electric lights.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Bostirmada hech qanday chiroq yo'q edi ('It had no lights in it')."
+      },
+      {
+            "id": "s16-tf2",
+            "order": 2,
+            "statement": "The lost ring was made of gold and decorated with a shiny blue diamond.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Uzuk qizil toshli kumush uzuk edi ('a silver ring with a red stone in it')."
+      },
+      {
+            "id": "s16-tf3",
+            "order": 3,
+            "statement": "Nasreddin lost the ring while trying to retrieve his ladder from the shed.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'One night he went out to the shed to get his ladder, and lost his ring there'."
+      },
+      {
+            "id": "s16-tf4",
+            "order": 4,
+            "statement": "The passing friend recognized the ring from having seen it before.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'Oh, yes... I remember it'."
+      },
+      {
+            "id": "s16-tf5",
+            "order": 5,
+            "statement": "Nasreddin successfully recovered the ring under a street lamp.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda uzuk topilgan yoki topilmagani aytilmagan."
+      },
+      {
+            "id": "s16-tf6",
+            "order": 6,
+            "statement": "Nasreddin searched the street simply because it was illuminated by streetlamps.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: Nasriddin ko'cha yorug' bo'lgani uchungina u yerdan qidirgan edi."
+      }
+]
+  }
+,
+  {
+    id: 'story-17',
+    storyNumber: 17,
+    title: "Mrs Andrews and Her Clever Cat",
+    titleUz: "Missis Endryus va uning aqlli mushugi",
+    cefrLevel: 'A2',
+    wordCount: 135,
+    readingTimeMinutes: 1,
+    storyText: "Mrs Andrews had a young cat, and it was the cat's first winter. One evening it was outside when it began to snow heavily. Mrs Andrews looked everywhere and shouted its name, but she did not find it, so she telephoned the police and said, 'I have lost a small black cat. Has anybody found one?'\n'No, madam,' said the policeman at the other end. 'But cats are really very strong animals. They sometimes live for days in the snow, and when it melts or somebody finds them, they are quite all right.'\nMrs Andrews felt happier when she heard this. 'And', she said, 'our cat is very clever. She almost talks.'\nThe policeman was getting rather tired. 'Well then,' he said, 'why don't you put your telephone down? Perhaps she is trying to telephone you now.'",
+    paragraphs: [
+      "Mrs Andrews had a young cat, and it was the cat's first winter. One evening it was outside when it began to snow heavily. Mrs Andrews looked everywhere and shouted its name, but she did not find it, so she telephoned the police and said, 'I have lost a small black cat. Has anybody found one?'",
+      "'No, madam,' said the policeman at the other end. 'But cats are really very strong animals. They sometimes live for days in the snow, and when it melts or somebody finds them, they are quite all right.'",
+      "Mrs Andrews felt happier when she heard this. 'And', she said, 'our cat is very clever. She almost talks.'",
+      "The policeman was getting rather tired. 'Well then,' he said, 'why don't you put your telephone down? Perhaps she is trying to telephone you now.'"
+],
+    summaryUz: "Missis Endryus qishda qalin qor yoqqanda yo'qolib qolgan qora mushugini qidirib topolmay, politsiyaga qo'ng'iroq qiladi. Politsiyachi mushuklar qorda ham bir necha kun chidab yashay olishini aytib ovutadi. Ayol: 'Bizning mushuk juda aqlli, deyarli gapiradi ham!' deb maqtanaverganidan zerikkan politsiyachi unga: 'Unda telefonni qo'ying, ehtimol mushugingiz sizga telefon qilishga urinayotgandir!' deydi.",
+    vocabulary: [
+      {
+            "word": "snow heavily",
+            "pos": "v. phr.",
+            "phonetic": "[snəʊ ˈhevɪli]",
+            "translationUz": "qalin qor yog'moq",
+            "definitionEn": "To fall from the sky in large dense flakes.",
+            "exampleSentence": "It began to snow heavily as evening fell."
+      },
+      {
+            "word": "look everywhere",
+            "pos": "v. phr.",
+            "phonetic": "[lʊk ˈevrɪweə]",
+            "translationUz": "hamma yoqdan qidirmoq",
+            "definitionEn": "To search in all possible directions and places.",
+            "exampleSentence": "She looked everywhere in the garden for her pet."
+      },
+      {
+            "word": "melt",
+            "pos": "v.",
+            "phonetic": "[melt]",
+            "translationUz": "erimoq",
+            "definitionEn": "To change from a solid to a liquid state by heat.",
+            "exampleSentence": "When the deep snow melts, cats return home."
+      },
+      {
+            "word": "clever",
+            "pos": "adj.",
+            "phonetic": "[ˈklevə]",
+            "translationUz": "aqlli, ziyrak",
+            "definitionEn": "Quick to understand, learn, and devise ideas.",
+            "exampleSentence": "Her cat was clever and learned many tricks."
+      },
+      {
+            "word": "put down",
+            "pos": "phr. v.",
+            "phonetic": "[pʊt daʊn]",
+            "translationUz": "go'shakni qo'ymoq (telefonda)",
+            "definitionEn": "To terminate a telephone call by replacing the receiver.",
+            "exampleSentence": "Why don't you put your telephone down?"
+      },
+      {
+            "word": "perhaps",
+            "pos": "adv.",
+            "phonetic": "[pəˈhæps]",
+            "translationUz": "ehtimol, balki",
+            "definitionEn": "Maybe; used to express uncertainty or possibility.",
+            "exampleSentence": "Perhaps she is trying to telephone you right now."
+      }
+],
+    reproductionOutline: [
+      "Mrs Andrews had a young black cat facing its first winter.",
+      "During heavy snowfall one evening, the cat disappeared outside.",
+      "Unable to find it, she phoned the police station to ask if anyone reported a black cat.",
+      "The policeman reassured her that cats are tough creatures that survive days under snow.",
+      "When the woman boasted that her cat was so clever it almost spoke, the tired officer joked that she should hang up because the cat might be calling her!"
+],
+    modelRetelling: "During a heavy snowstorm one winter evening, Mrs Andrews's young black cat went missing outside. Unable to find her pet after shouting and searching everywhere, she called the local police station in distress. The officer calmed her down by explaining that cats are remarkably resilient creatures capable of enduring days in snow until it melts. Relieved, Mrs Andrews began exaggerating her pet's intelligence, claiming the cat was so smart it could almost talk. Growing weary of the conversation, the policeman dryly advised her to hang up the phone because her genius cat might be trying to call her!",
+    questions: [
+      {
+            "id": "s17-q1",
+            "order": 1,
+            "question": "What had Mrs Andrews got?",
+            "modelAnswer": "Mrs Andrews had a young cat.",
+            "keywords": [
+                  "young cat"
+            ],
+            "options": [
+                  "A young cat",
+                  "An old dog",
+                  "A talking parrot",
+                  "A white rabbit"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Missis Endryusning yosh mushugi bor edi: 'Mrs Andrews had a young cat'."
+      },
+      {
+            "id": "s17-q2",
+            "order": 2,
+            "question": "Was it the cat's first, second, or third winter?",
+            "modelAnswer": "It was the cat's first winter.",
+            "keywords": [
+                  "first winter"
+            ],
+            "options": [
+                  "First winter",
+                  "Second winter",
+                  "Third winter",
+                  "Fourth winter"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bu mushukning ilk (birinchi) qishi edi: 'it was the cat's first winter'."
+      },
+      {
+            "id": "s17-q3",
+            "order": 3,
+            "question": "What happened one evening?",
+            "modelAnswer": "It began to snow heavily one evening.",
+            "keywords": [
+                  "began to snow heavily"
+            ],
+            "options": [
+                  "It began to snow heavily",
+                  "A thunderstorm broke out",
+                  "The electricity went out",
+                  "The front gate blew open"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir oqshom qalin qor yoqa boshladi: 'it began to snow heavily'."
+      },
+      {
+            "id": "s17-q4",
+            "order": 4,
+            "question": "Where was the cat when this happened?",
+            "modelAnswer": "The cat was outside when this happened.",
+            "keywords": [
+                  "outside"
+            ],
+            "options": [
+                  "Outside",
+                  "Asleep on the sofa",
+                  "Under the kitchen table",
+                  "In the neighbour's attic"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Mushuk tashqarida edi: 'it was outside'."
+      },
+      {
+            "id": "s17-q5",
+            "order": 5,
+            "question": "What did Mrs Andrews do?",
+            "modelAnswer": "She looked everywhere and shouted its name.",
+            "keywords": [
+                  "looked everywhere",
+                  "shouted its name"
+            ],
+            "options": [
+                  "She looked everywhere and shouted its name",
+                  "She put out a bowl of milk and waited",
+                  "She went straight to bed",
+                  "She drove around town in her car"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U hamma yerni qidirdi va mushugining nomini aytib chaqirdi."
+      },
+      {
+            "id": "s17-q6",
+            "order": 6,
+            "question": "Did she find the cat?",
+            "modelAnswer": "No, she did not find it.",
+            "keywords": [
+                  "did not find it"
+            ],
+            "options": [
+                  "No, she did not find it",
+                  "Yes, under the car",
+                  "Yes, up a tall tree",
+                  "Yes, in the porch"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Yo'q, u mushugini topa olmadi: 'she did not find it'."
+      },
+      {
+            "id": "s17-q7",
+            "order": 7,
+            "question": "What did she do then?",
+            "modelAnswer": "She telephoned the police.",
+            "keywords": [
+                  "telephoned the police"
+            ],
+            "options": [
+                  "She telephoned the police",
+                  "She called the fire brigade",
+                  "She posted leaflets",
+                  "She phoned her sister"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U politsiyaga telefon qildi: 'she telephoned the police'."
+      },
+      {
+            "id": "s17-q8",
+            "order": 8,
+            "question": "What did she say?",
+            "modelAnswer": "She said, 'I have lost a small black cat. Has anybody found one?'",
+            "keywords": [
+                  "lost a small black cat",
+                  "Has anybody found one"
+            ],
+            "options": [
+                  "'I have lost a small black cat. Has anybody found one?'",
+                  "'A thief stole my precious jewellery.'",
+                  "'My telephone lines are down.'",
+                  "'Send an officer with a searchlight immediately.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U kichkina qora mushugini yo'qotganini va biror kim topgan-topmaganini so'radi."
+      },
+      {
+            "id": "s17-q9",
+            "order": 9,
+            "question": "What was the policeman's answer?",
+            "modelAnswer": "The policeman said that nobody had found one, but reassured her that cats are strong animals and can live for days in the snow.",
+            "keywords": [
+                  "strong animals",
+                  "live for days in the snow",
+                  "quite all right"
+            ],
+            "options": [
+                  "He said cats are very strong and can live for days in the snow until it melts",
+                  "He promised to send a search team into the snow",
+                  "He told her that cats never survive freezing weather",
+                  "He advised her to buy a new pet tomorrow"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Politsiyachi hech kim topmaganini, biroq mushuklar kuchli bo'lib, qorda bir necha kun tirik yura olishini aytdi."
+      },
+      {
+            "id": "s17-q10",
+            "order": 10,
+            "question": "How did Mrs Andrews feel after that?",
+            "modelAnswer": "Mrs Andrews felt happier when she heard this.",
+            "keywords": [
+                  "felt happier"
+            ],
+            "options": [
+                  "She felt happier",
+                  "She felt even more worried",
+                  "She felt furious",
+                  "She was indifferent"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Buni eshitgach u o'zini ancha xotirjam va yaxshiroq his qildi."
+      },
+      {
+            "id": "s17-q11",
+            "order": 11,
+            "question": "What did she say?",
+            "modelAnswer": "She said, 'And our cat is very clever. She almost talks.'",
+            "keywords": [
+                  "very clever",
+                  "almost talks"
+            ],
+            "options": [
+                  "'And our cat is very clever. She almost talks.'",
+                  "'Can you search my garden with dogs?'",
+                  "'My cat is worth a thousand pounds.'",
+                  "'I will wait up all night by the door.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U mushugi juda aqlli ekanini, deyarli gapirishi ham mumkinligini aytdi."
+      },
+      {
+            "id": "s17-q12",
+            "order": 12,
+            "question": "How was the policeman feeling now?",
+            "modelAnswer": "The policeman was getting rather tired.",
+            "keywords": [
+                  "getting rather tired"
+            ],
+            "options": [
+                  "He was getting rather tired",
+                  "He was fascinated",
+                  "He was laughing hysterically",
+                  "He was angry"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Politsiyachi bu gaplardan zerika va charchay boshladi: 'getting rather tired'."
+      },
+      {
+            "id": "s17-q13",
+            "order": 13,
+            "question": "What did he say to Mrs Andrews?",
+            "modelAnswer": "He said, 'Well then, why don't you put your telephone down? Perhaps she is trying to telephone you now.'",
+            "keywords": [
+                  "put your telephone down",
+                  "trying to telephone you now"
+            ],
+            "options": [
+                  "'Why don't you put your telephone down? Perhaps she is trying to telephone you now.'",
+                  "'I will file a formal missing cat report.'",
+                  "'Please do not call emergency services again.'",
+                  "'Bring a photo of the cat to the station tomorrow.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Politsiyachi unga go'shakni qo'yishni, ehtimol mushugi unga telefon qilmoqchi bo'layotganini aytdi!"
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s17-tf1",
+            "order": 1,
+            "statement": "Mrs Andrews owned a young black cat that went missing.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'Mrs Andrews had a young cat... small black cat'."
+      },
+      {
+            "id": "s17-tf2",
+            "order": 2,
+            "statement": "The cat disappeared during the summer season.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Hodisa qishda, qalin qor yoqqanda sodir bo'lgan ('cat's first winter... began to snow heavily')."
+      },
+      {
+            "id": "s17-tf3",
+            "order": 3,
+            "statement": "The police officer sent two patrol cars to search the neighbourhood.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda politsiyachining mashina yuborgani haqida ma'lumot yo'q."
+      },
+      {
+            "id": "s17-tf4",
+            "order": 4,
+            "statement": "The policeman believed cats are resilient and can survive in snow for days.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'cats are really very strong animals. They sometimes live for days in the snow'."
+      },
+      {
+            "id": "s17-tf5",
+            "order": 5,
+            "statement": "Mrs Andrews believed her cat was exceptionally intelligent.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'our cat is very clever. She almost talks'."
+      },
+      {
+            "id": "s17-tf6",
+            "order": 6,
+            "statement": "The policeman seriously expected the cat to call the station on the telephone.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Politsiyachi suhbatdan zerikkani uchun kinoyali hazil qilgan edi ('getting rather tired... Perhaps she is trying to telephone you now')."
+      }
+]
+  },
+  {
+    id: 'story-18',
+    storyNumber: 18,
+    title: "Nasreddin and the Six Donkeys",
+    titleUz: "Nasriddin va Oltita Eshak",
+    cefrLevel: 'A2',
+    wordCount: 161,
+    readingTimeMinutes: 1,
+    storyText: "One morning Nasreddin left his house with six donkeys to go to the market. After a time, he got tired and got on to one of them. He counted the donkeys, and there were only five, so he got off and went to look for the sixth. He looked and looked but did not find it, so he went back to the donkeys and counted them again. This time there were six, so he got on to one of them again and they all started.\nAfter a few minutes he counted the donkeys again, and again there were only five! While he was counting again a friend of his passed, and Nasreddin said to him, 'I left my house with six donkeys; then I had five; then I had six again; and now I have only five! Look! One, two, three, four, five.'\n'But, Nasreddin,' said his friend, 'You are sitting on a donkey too! That is the sixth! And you are the seventh!'",
+    paragraphs: [
+      "One morning Nasreddin left his house with six donkeys to go to the market. After a time, he got tired and got on to one of them. He counted the donkeys, and there were only five, so he got off and went to look for the sixth. He looked and looked but did not find it, so he went back to the donkeys and counted them again. This time there were six, so he got on to one of them again and they all started.",
+      "After a few minutes he counted the donkeys again, and again there were only five! While he was counting again a friend of his passed, and Nasreddin said to him, 'I left my house with six donkeys; then I had five; then I had six again; and now I have only five! Look! One, two, three, four, five.'",
+      "'But, Nasreddin,' said his friend, 'You are sitting on a donkey too! That is the sixth! And you are the seventh!'"
+],
+    summaryUz: "Nasriddin 6 ta eshak bilan bozorga yo'l oladi. Charchab biriga mingach, sanasa 5 ta chiqadi. Tushib qidiradi, topolmay qaytib sanasa 6 ta bo'ladi. Yana eshakka minsa, yana 5 ta qoladi! Do'sti kelib qolib, sababini tushuntiradi: 'Nasriddin, axir sen o'zing ham bitta eshakning ustida o'tiribsan-ku! O'sha oltinchisi, sen esa yettinchisisan!'",
+    vocabulary: [
+      {
+            "word": "donkey",
+            "pos": "n.",
+            "phonetic": "[ˈdɒŋki]",
+            "translationUz": "eshak",
+            "definitionEn": "A domesticated hoofed mammal related to horses with long ears.",
+            "exampleSentence": "He rode to town on his trusty grey donkey."
+      },
+      {
+            "word": "market",
+            "pos": "n.",
+            "phonetic": "[ˈmɑːkɪt]",
+            "translationUz": "bozor",
+            "definitionEn": "A regular gathering of people for the purchase and sale of provisions.",
+            "exampleSentence": "He went to the bustling livestock market."
+      },
+      {
+            "word": "get on to",
+            "pos": "phr. v.",
+            "phonetic": "[ɡet ɒn tuː]",
+            "translationUz": "ustiga minmoq",
+            "definitionEn": "To mount or climb onto an animal or vehicle.",
+            "exampleSentence": "He got tired and got on to one of the donkeys."
+      },
+      {
+            "word": "get off",
+            "pos": "phr. v.",
+            "phonetic": "[ɡet ɒf]",
+            "translationUz": "tushmoq",
+            "definitionEn": "To dismount or step down from an animal or vehicle.",
+            "exampleSentence": "He got off the donkey to look for the missing one."
+      },
+      {
+            "word": "count",
+            "pos": "v.",
+            "phonetic": "[kaʊnt]",
+            "translationUz": "sanamoq, hisoblamoq",
+            "definitionEn": "To determine the total number of items in a set.",
+            "exampleSentence": "He counted them carefully: one, two, three, four, five."
+      },
+      {
+            "word": "pass",
+            "pos": "v.",
+            "phonetic": "[pɑːs]",
+            "translationUz": "o'tib qolmoq, yonidan o'tmoq",
+            "definitionEn": "To move past or travel by someone.",
+            "exampleSentence": "A friend passed by while he was counting."
+      }
+],
+    reproductionOutline: [
+      "Nasreddin left home with six donkeys bound for the market.",
+      "Tired of walking, he mounted one donkey and counted only five remaining ahead.",
+      "He dismounted, searched around, found nothing, and recounted: all six were present.",
+      "Mounted again, he counted only five once more in total bewilderment.",
+      "A passerby pointed out the obvious blunder: the donkey he was riding was the sixth, and Nasreddin was the seventh!"
+],
+    modelRetelling: "Heading to the market with six donkeys one morning, Nasreddin grew weary and climbed onto one of them. Looking ahead, he counted the donkeys and was alarmed to count only five. He hopped off and searched everywhere for the missing sixth donkey. Finding nothing, he recounted from the ground and discovered all six were there! Satisfied, he remounted, only to count five again. A passing acquaintance saw his confusion as Nasreddin demonstrated his bizarre tally. The friend laughed and pointed out that Nasreddin had forgotten the donkey beneath him—making it the sixth, while cheekily crowning Nasreddin the seventh donkey!",
+    questions: [
+      {
+            "id": "s18-q1",
+            "order": 1,
+            "question": "What did Nasreddin do one morning?",
+            "modelAnswer": "One morning Nasreddin left his house with six donkeys to go to the market.",
+            "keywords": [
+                  "left his house with six donkeys",
+                  "go to the market"
+            ],
+            "options": [
+                  "He left his house with six donkeys to go to the market",
+                  "He bought six horses at an auction",
+                  "He lost his way in the desert",
+                  "He traded his donkeys for a camel"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U oltita eshagi bilan bozorga yo'l oldi."
+      },
+      {
+            "id": "s18-q2",
+            "order": 2,
+            "question": "How many donkeys did he have with him?",
+            "modelAnswer": "He had six donkeys with him.",
+            "keywords": [
+                  "six donkeys"
+            ],
+            "options": [
+                  "Six donkeys",
+                  "Five donkeys",
+                  "Seven donkeys",
+                  "Ten donkeys"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Uning yonida 6 ta eshak bor edi: 'six donkeys'."
+      },
+      {
+            "id": "s18-q3",
+            "order": 3,
+            "question": "What happened after a time?",
+            "modelAnswer": "After a time, he got tired.",
+            "keywords": [
+                  "got tired"
+            ],
+            "options": [
+                  "He got tired",
+                  "A rainstorm started",
+                  "One donkey ran away",
+                  "He met a bandit"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Biroz vaqt o'tgach u charchab qoldi: 'he got tired'."
+      },
+      {
+            "id": "s18-q4",
+            "order": 4,
+            "question": "What did Nasreddin do then?",
+            "modelAnswer": "He got on to one of them.",
+            "keywords": [
+                  "got on to one of them"
+            ],
+            "options": [
+                  "He got on to one of them",
+                  "He sat under a tree to rest",
+                  "He tied them to a fence",
+                  "He ate his lunch"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U eshaklardan birining ustiga mindi: 'got on to one of them'."
+      },
+      {
+            "id": "s18-q5",
+            "order": 5,
+            "question": "How many donkeys did he count?",
+            "modelAnswer": "He counted only five donkeys.",
+            "keywords": [
+                  "only five"
+            ],
+            "options": [
+                  "Only five",
+                  "Six",
+                  "Seven",
+                  "Four"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U sanaganida bor-yo'g'i 5 ta eshak chiqdi: 'there were only five'."
+      },
+      {
+            "id": "s18-q6",
+            "order": 6,
+            "question": "What did he do then?",
+            "modelAnswer": "He got off and went to look for the sixth donkey.",
+            "keywords": [
+                  "got off",
+                  "look for the sixth"
+            ],
+            "options": [
+                  "He got off and went to look for the sixth",
+                  "He sold the five donkeys to a farmer",
+                  "He started crying on the road",
+                  "He rode quickly to the police station"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U eshakdan tushib, oltinchisini qidirishga ketdi."
+      },
+      {
+            "id": "s18-q7",
+            "order": 7,
+            "question": "Did he find the donkey?",
+            "modelAnswer": "No, he looked and looked but did not find it.",
+            "keywords": [
+                  "did not find it"
+            ],
+            "options": [
+                  "No, he did not find it",
+                  "Yes, hiding in the bushes",
+                  "Yes, eating grass by the river",
+                  "Yes, at the neighbour's barn"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Yo'q, u qancha qidirmasin topa olmadi: 'did not find it'."
+      },
+      {
+            "id": "s18-q8",
+            "order": 8,
+            "question": "What did he do then?",
+            "modelAnswer": "He went back to the donkeys and counted them again.",
+            "keywords": [
+                  "went back",
+                  "counted them again"
+            ],
+            "options": [
+                  "He went back to the donkeys and counted them again",
+                  "He continued walking on foot alone",
+                  "He sat down and went to sleep",
+                  "He phoned his friend"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U eshaklar yoniga qaytib, ularni qaytadan sanadi."
+      },
+      {
+            "id": "s18-q9",
+            "order": 9,
+            "question": "How many donkeys were there this time?",
+            "modelAnswer": "This time there were six donkeys.",
+            "keywords": [
+                  "six"
+            ],
+            "options": [
+                  "Six donkeys",
+                  "Five donkeys",
+                  "Four donkeys",
+                  "Seven donkeys"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bu safar eshaklar yana 6 ta chiqdi: 'This time there were six'."
+      },
+      {
+            "id": "s18-q10",
+            "order": 10,
+            "question": "What happened then?",
+            "modelAnswer": "He got on to one of them again and they all started.",
+            "keywords": [
+                  "got on to one of them again",
+                  "all started"
+            ],
+            "options": [
+                  "He got on to one of them again and they all started",
+                  "The donkeys refused to move",
+                  "He tied them together with ropes",
+                  "He decided to return home"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U yana bitta eshakka mindi va hammalari yo'lga tushdilar."
+      },
+      {
+            "id": "s18-q11",
+            "order": 11,
+            "question": "What did Nasreddin do after a few minutes?",
+            "modelAnswer": "After a few minutes he counted the donkeys again.",
+            "keywords": [
+                  "counted the donkeys again"
+            ],
+            "options": [
+                  "He counted the donkeys again",
+                  "He fed the donkeys some hay",
+                  "He stopped to drink water",
+                  "He sang a song"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir necha daqiqadan so'ng u eshaklarni yana sanadi."
+      },
+      {
+            "id": "s18-q12",
+            "order": 12,
+            "question": "How many donkeys did he count this time?",
+            "modelAnswer": "Again there were only five!",
+            "keywords": [
+                  "only five"
+            ],
+            "options": [
+                  "Only five",
+                  "Six",
+                  "Seven",
+                  "Eight"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Yana bor-yo'g'i 5 ta eshak chiqdi!"
+      },
+      {
+            "id": "s18-q13",
+            "order": 13,
+            "question": "Who passed just then?",
+            "modelAnswer": "A friend of his passed.",
+            "keywords": [
+                  "friend of his passed"
+            ],
+            "options": [
+                  "A friend of his",
+                  "A police officer",
+                  "A caravan of merchants",
+                  "His wife"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Shu payt uning do'stlaridan biri o'tib qoldi."
+      },
+      {
+            "id": "s18-q14",
+            "order": 14,
+            "question": "What did Nasreddin say to him?",
+            "modelAnswer": "Nasreddin said that he had left with six donkeys, then had five, then six, and now only five, and counted one to five for him.",
+            "keywords": [
+                  "left my house with six",
+                  "now I have only five"
+            ],
+            "options": [
+                  "He explained the magical count and counted 'one, two, three, four, five' for him",
+                  "He asked him to buy the fifth donkey",
+                  "He accused him of stealing his donkey",
+                  "He asked him for directions to the market"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin uyidan 6 ta eshak bilan chiqqanini, endi esa 5 ta qolganini aytib, birma-bir sanab ko'rsatdi."
+      },
+      {
+            "id": "s18-q15",
+            "order": 15,
+            "question": "What did his friend answer?",
+            "modelAnswer": "His friend said, 'You are sitting on a donkey too! That is the sixth! And you are the seventh!'",
+            "keywords": [
+                  "sitting on a donkey",
+                  "That is the sixth",
+                  "you are the seventh"
+            ],
+            "options": [
+                  "'You are sitting on a donkey too! That is the sixth! And you are the seventh!'",
+                  "'You should go home and rest, you are seeing things.'",
+                  "'A wolf must have eaten the sixth donkey.'",
+                  "'I will sell you one of mine so you have six again.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Do'sti: 'Sen o'zing ham bitta eshakning ustida o'tiribsan, o'sha oltinchisi! Sen esa yettinchisisan!' deb javob berdi."
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s18-tf1",
+            "order": 1,
+            "statement": "Nasreddin originally departed for the market with six donkeys.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'Nasreddin left his house with six donkeys to go to the market'."
+      },
+      {
+            "id": "s18-tf2",
+            "order": 2,
+            "statement": "Nasreddin became tired after walking and mounted one of the animals.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'he got tired and got on to one of them'."
+      },
+      {
+            "id": "s18-tf3",
+            "order": 3,
+            "statement": "Whenever Nasreddin counted from the saddle, he forgot to include the donkey he was riding.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: U faqat oldindagi eshaklarni sanab, ostidagi eshakni hisobga qo'shmasdi."
+      },
+      {
+            "id": "s18-tf4",
+            "order": 4,
+            "statement": "A robber hid behind a rock and repeatedly stole a donkey.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Hech kim o'g'irlamagan, barcha 6 ta eshak joyida edi."
+      },
+      {
+            "id": "s18-tf5",
+            "order": 5,
+            "statement": "Nasreddin's friend offered to buy all the donkeys on the spot.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda do'stining eshaklarni sotib olish niyati haqida hech narsa deyilmagan."
+      },
+      {
+            "id": "s18-tf6",
+            "order": 6,
+            "statement": "Nasreddin's friend jokingly teased him by calling him the seventh donkey.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'That is the sixth! And you are the seventh!'."
+      }
+]
+  },
+  {
+    id: 'story-19',
+    storyNumber: 19,
+    title: "Nasreddin and the Rich Man",
+    titleUz: "Nasriddin va Boy Odam",
+    cefrLevel: 'A2',
+    wordCount: 153,
+    readingTimeMinutes: 1,
+    storyText: "One of Nasreddin's friends loved money very much, and never gave anything to anybody. Soon he became rich.\nOne day, he was walking near the river with his friends when he slipped and fell in. His friends ran to help him and one of them knelt on the ground, held out his hand and said, 'Give me your hand, and I will pull you out!' The rich man's head went under the water and then came up again, but he did not give his friend his hand. Again another of his friends tried, but again the same thing happened.\nThen Nasreddin said, 'Take my hand and I will pull you out!' The rich man took his hand, and Nasreddin pulled him out of the water.\n'You don't know our friend very well,' he said to the others. 'When you say \"Give\" to him, he does nothing; but when you say \"Take\", he takes!'",
+    paragraphs: [
+      "One of Nasreddin's friends loved money very much, and never gave anything to anybody. Soon he became rich.",
+      "One day, he was walking near the river with his friends when he slipped and fell in. His friends ran to help him and one of them knelt on the ground, held out his hand and said, 'Give me your hand, and I will pull you out!' The rich man's head went under the water and then came up again, but he did not give his friend his hand. Again another of his friends tried, but again the same thing happened.",
+      "Then Nasreddin said, 'Take my hand and I will pull you out!' The rich man took his hand, and Nasreddin pulled him out of the water.",
+      "'You don't know our friend very well,' he said to the others. 'When you say \"Give\" to him, he does nothing; but when you say \"Take\", he takes!'"
+],
+    summaryUz: "Nasriddinning hech kimga hech narsa bermaydigan o'ta xasis boy do'sti daryoga yiqilib tushadi. Do'stlari: 'Qo'lingni ber (Give), tortib olaman!' deyishsa ham suvga cho'kib, qo'lini bermaydi. Shunda Nasriddin: 'Qo'limni ol (Take)!' deydi va boy darhol uning qo'lidan tutadi. Nasriddin boshqalarga: 'Sizlar uni bilmaysizlar, unga \"Ber\" desang hech narsa qilmaydi, lekin \"Ol\" desang, darhol oladi!' deydi.",
+    vocabulary: [
+      {
+            "word": "rich",
+            "pos": "adj.",
+            "phonetic": "[rɪtʃ]",
+            "translationUz": "boy, badavlat",
+            "definitionEn": "Having a great deal of money or assets; wealthy.",
+            "exampleSentence": "He saved every penny and soon became very rich."
+      },
+      {
+            "word": "slip",
+            "pos": "v.",
+            "phonetic": "[slɪp]",
+            "translationUz": "sirg'anib ketmoq",
+            "definitionEn": "To slide accidentally causing one to lose one's footing.",
+            "exampleSentence": "He slipped on the wet riverbank and fell into the water."
+      },
+      {
+            "word": "kneel",
+            "pos": "v.",
+            "phonetic": "[niːl]",
+            "translationUz": "tiz cho'kmoq",
+            "definitionEn": "To fall or rest on one's knees.",
+            "exampleSentence": "His friend knelt on the grass to reach into the river."
+      },
+      {
+            "word": "hold out",
+            "pos": "phr. v.",
+            "phonetic": "[həʊld aʊt]",
+            "translationUz": "cho'zmoq (qo'lni)",
+            "definitionEn": "To extend one's hand or arm towards someone.",
+            "exampleSentence": "He held out his hand to pull the drowning man out."
+      },
+      {
+            "word": "pull out",
+            "pos": "phr. v.",
+            "phonetic": "[pʊl aʊt]",
+            "translationUz": "tortib olmoq, chiqarib olmoq",
+            "definitionEn": "To drag or extract someone or something from an enclosed area or water.",
+            "exampleSentence": "Nasreddin grabbed him firmly and pulled him out."
+      },
+      {
+            "word": "drown / sink",
+            "pos": "v.",
+            "phonetic": "[draʊn] / [sɪŋk]",
+            "translationUz": "suv ostiga cho'kmoq",
+            "definitionEn": "To go beneath the surface of the water.",
+            "exampleSentence": "The man went under the water twice."
+      }
+],
+    reproductionOutline: [
+      "A notoriously greedy friend of Nasreddin loved money and never gave anything away.",
+      "While strolling along a river with companions, the wealthy miser slipped into deep water.",
+      "Friends knelt down shouting \"Give me your hand\", but the miser stubbornly refused to \"give\" anything.",
+      "Understanding the man's stingy psyche, Nasreddin shouted \"Take my hand!\" instead.",
+      "The miser grabbed it immediately, prompting Nasreddin's witty explanation: he refuses to \"give\", but eagerly \"takes\"!"
+],
+    modelRetelling: "Nasreddin had a notoriously greedy acquaintance who grew immensely wealthy by never parting with a single penny. One afternoon, while walking alongside a river, the wealthy miser lost his balance and fell into the rushing water. Rushing to the rescue, one friend knelt on the bank, reached out and shouted: 'Give me your hand!' But true to his selfish instincts, the man submerged and resurfaced without extending his hand. Another friend tried the exact same plea with no luck. Finally, Nasreddin stepped forward and shouted: 'Take my hand!' Instantly, the man grasped Nasreddin's arm and was pulled to safety. Nasreddin turned to the others and chuckled: 'When you say \"Give\", he freezes; but when you say \"Take\", he never misses a chance!'",
+    questions: [
+      {
+            "id": "s19-q1",
+            "order": 1,
+            "question": "What was Nasreddin's friend like?",
+            "modelAnswer": "He loved money very much, and never gave anything to anybody.",
+            "keywords": [
+                  "loved money very much",
+                  "never gave anything to anybody"
+            ],
+            "options": [
+                  "He loved money very much, and never gave anything to anybody",
+                  "He was a generous merchant who helped orphans",
+                  "He was an experienced swimmer and sailor",
+                  "He was an elderly doctor in town"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U pulni juda sevar va hech kimga hech narsa bermasdi."
+      },
+      {
+            "id": "s19-q2",
+            "order": 2,
+            "question": "What happened to him soon?",
+            "modelAnswer": "Soon he became rich.",
+            "keywords": [
+                  "became rich"
+            ],
+            "options": [
+                  "Soon he became rich",
+                  "He lost all his savings",
+                  "He moved to another city",
+                  "He bought a ship"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Tez orada u boyib ketdi: 'Soon he became rich'."
+      },
+      {
+            "id": "s19-q3",
+            "order": 3,
+            "question": "What happened one day?",
+            "modelAnswer": "One day he slipped and fell into the river.",
+            "keywords": [
+                  "slipped",
+                  "fell in"
+            ],
+            "options": [
+                  "He slipped and fell into the river",
+                  "A thief stole his gold coins",
+                  "He won a lottery",
+                  "He fell from a horse"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir kuni u sirpanib daryoga tushib ketdi."
+      },
+      {
+            "id": "s19-q4",
+            "order": 4,
+            "question": "What was Nasreddin's friend doing when this happened?",
+            "modelAnswer": "He was walking near the river with his friends.",
+            "keywords": [
+                  "walking near the river with his friends"
+            ],
+            "options": [
+                  "He was walking near the river with his friends",
+                  "He was washing his clothes in the water",
+                  "He was fishing with a rod",
+                  "He was crossing a wooden bridge"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U do'stlari bilan daryo yoqasida sayr qilib yurgan edi."
+      },
+      {
+            "id": "s19-q5",
+            "order": 5,
+            "question": "What did the rich man's friends do?",
+            "modelAnswer": "His friends ran to help him.",
+            "keywords": [
+                  "ran to help him"
+            ],
+            "options": [
+                  "His friends ran to help him",
+                  "They laughed and walked away",
+                  "They ran into town to call the police",
+                  "They jumped into the water with all their clothes on"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Do'stlari unga yordam berish uchun yugurib kelishdi."
+      },
+      {
+            "id": "s19-q6",
+            "order": 6,
+            "question": "What did one of them do?",
+            "modelAnswer": "One of them knelt on the ground and held out his hand.",
+            "keywords": [
+                  "knelt on the ground",
+                  "held out his hand"
+            ],
+            "options": [
+                  "One of them knelt on the ground and held out his hand",
+                  "He threw a long rope into the current",
+                  "He took off his coat to swim",
+                  "He threw a heavy stone"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ulardan biri yerga tiz cho'kib, qo'lini cho'zdi."
+      },
+      {
+            "id": "s19-q7",
+            "order": 7,
+            "question": "What did he say?",
+            "modelAnswer": "He said, 'Give me your hand, and I will pull you out!'",
+            "keywords": [
+                  "Give me your hand",
+                  "pull you out"
+            ],
+            "options": [
+                  "'Give me your hand, and I will pull you out!'",
+                  "'Swim to the other side!'",
+                  "'How much will you pay if I save you?'",
+                  "'Hold your breath and float!'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U: 'Qo'lingni ber, seni tortib olaman!' dedi."
+      },
+      {
+            "id": "s19-q8",
+            "order": 8,
+            "question": "What happened then?",
+            "modelAnswer": "The rich man's head went under the water and came up again, but he did not give his friend his hand.",
+            "keywords": [
+                  "went under the water",
+                  "did not give his friend his hand"
+            ],
+            "options": [
+                  "The rich man went under and came up, but refused to give his hand",
+                  "He grabbed his friend and pulled him into the river too",
+                  "He floated safely to the riverbank",
+                  "He shouted for a doctor"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Boy suvga botib yana chiqdi, ammo do'stiga qo'lini bermadi ('berish'ni yoqtirmagani uchun)."
+      },
+      {
+            "id": "s19-q9",
+            "order": 9,
+            "question": "What did another friend do?",
+            "modelAnswer": "Another of his friends tried the same thing.",
+            "keywords": [
+                  "another of his friends tried"
+            ],
+            "options": [
+                  "Another of his friends tried the same thing",
+                  "He went to find a long wooden branch",
+                  "He jumped in to carry him out",
+                  "He started praying aloud"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Boshqa bir do'sti ham xuddi shunday qilib ko'rdi."
+      },
+      {
+            "id": "s19-q10",
+            "order": 10,
+            "question": "What happened?",
+            "modelAnswer": "Again the same thing happened.",
+            "keywords": [
+                  "same thing happened"
+            ],
+            "options": [
+                  "Again the same thing happened",
+                  "The rich man drowned completely",
+                  "The second friend fell into the river",
+                  "The river dried up suddenly"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Yana o'sha holat takrorlandi: boy qo'lini bermadi."
+      },
+      {
+            "id": "s19-q11",
+            "order": 11,
+            "question": "What did Nasreddin say then?",
+            "modelAnswer": "Nasreddin said, 'Take my hand and I will pull you out!'",
+            "keywords": [
+                  "Take my hand",
+                  "pull you out"
+            ],
+            "options": [
+                  "'Take my hand and I will pull you out!'",
+                  "'Give me five gold coins first!'",
+                  "'Let us leave him to his fate.'",
+                  "'Try to stand on the river bottom.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin unga: 'Qo'limni ol (ushla), seni tortib olaman!' dedi."
+      },
+      {
+            "id": "s19-q12",
+            "order": 12,
+            "question": "What did the rich man do?",
+            "modelAnswer": "The rich man took his hand.",
+            "keywords": [
+                  "took his hand"
+            ],
+            "options": [
+                  "The rich man took his hand",
+                  "He pushed Nasreddin away",
+                  "He swam away",
+                  "He refused to touch him"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Boy darhol uning qo'lini ushladi: 'The rich man took his hand'."
+      },
+      {
+            "id": "s19-q13",
+            "order": 13,
+            "question": "What did Nasreddin do?",
+            "modelAnswer": "Nasreddin pulled him out of the water.",
+            "keywords": [
+                  "pulled him out of the water"
+            ],
+            "options": [
+                  "Nasreddin pulled him out of the water",
+                  "Nasreddin jumped into the river too",
+                  "Nasreddin asked for a bag of money",
+                  "Nasreddin called an ambulance"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin uni suvdan tortib quruqlikka chiqardi."
+      },
+      {
+            "id": "s19-q14",
+            "order": 14,
+            "question": "What did he say?",
+            "modelAnswer": "He said, 'You don't know our friend very well. When you say \"Give\" to him, he does nothing; but when you say \"Take\", he takes!'",
+            "keywords": [
+                  "don't know our friend",
+                  "When you say Give",
+                  "when you say Take"
+            ],
+            "options": [
+                  "'When you say \"Give\" to him, he does nothing; but when you say \"Take\", he takes!'",
+                  "'He owes me fifty gold coins for saving his life.'",
+                  "'Next time he should learn how to swim before walking near rivers.'",
+                  "'We must take him to the doctor immediately.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin: 'Unga \"Ber\" desang hech narsa qilmaydi, lekin \"Ol\" desang, darhol oladi!' dedi."
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s19-tf1",
+            "order": 1,
+            "statement": "Nasreddin's friend accumulated wealth because he was exceptionally stingy.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'loved money very much, and never gave anything to anybody. Soon he became rich'."
+      },
+      {
+            "id": "s19-tf2",
+            "order": 2,
+            "statement": "The rich man fell into the river while attempting to rescue a drowning child.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U shunchaki daryo yoqasida yurganida oyog'i toyib yiqilib tushgan edi ('he slipped and fell in')."
+      },
+      {
+            "id": "s19-tf3",
+            "order": 3,
+            "statement": "The rich man could swim like a fish and enjoyed being in the river.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U cho'kayotgan va boshi suv ostiga kirib-chiqib turgan edi."
+      },
+      {
+            "id": "s19-tf4",
+            "order": 4,
+            "statement": "The miser ignored offers of help whenever people used the word \"Give\".",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'When you say \"Give\" to him, he does nothing'."
+      },
+      {
+            "id": "s19-tf5",
+            "order": 5,
+            "statement": "Nasreddin dove into the deep river to haul the man out.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U suvga sakramadi, balki qirg'oqdan qo'lini tutqazib tortib oldi ('Take my hand... pulled him out')."
+      },
+      {
+            "id": "s19-tf6",
+            "order": 6,
+            "statement": "The rich man gave Nasreddin a bag of gold coins to thank him.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda boyning qutqargani uchun mukofot bergani haqida hech narsa deyilmagan."
+      }
+]
+  },
+  {
+    id: 'story-20',
+    storyNumber: 20,
+    title: "Nasreddin and the Clever Thieves",
+    titleUz: "Nasriddin va Ayyor O'g'rilar",
+    cefrLevel: 'A2',
+    wordCount: 168,
+    readingTimeMinutes: 1,
+    storyText: "One day Nasreddin bought a donkey in the market; but while he was taking it home, two thieves followed him. One of them took the rope from the donkey's neck and tied it round his friend's neck. Then he went away with the donkey.\nWhen Nasreddin got home, he turned and saw the young man. He was very surprised. 'Where is my donkey?' he said angrily.\n'I am very sorry,' said the thief, 'but once I said some very bad things to my mother, and she changed me into a donkey. But because a good man bought me, I am now a man again! Thank you!'\nNasreddin untied the man and said, 'Go! And never say bad things to your mother again!'\nThe next day, Nasreddin saw the same donkey in the market again! The other thief was selling it.\nNasreddin went to it and said into its ear, 'Young man, some people will never learn!'",
+    paragraphs: [
+      "One day Nasreddin bought a donkey in the market; but while he was taking it home, two thieves followed him. One of them took the rope from the donkey's neck and tied it round his friend's neck. Then he went away with the donkey.",
+      "When Nasreddin got home, he turned and saw the young man. He was very surprised. 'Where is my donkey?' he said angrily.",
+      "'I am very sorry,' said the thief, 'but once I said some very bad things to my mother, and she changed me into a donkey. But because a good man bought me, I am now a man again! Thank you!'",
+      "Nasreddin untied the man and said, 'Go! And never say bad things to your mother again!'",
+      "The next day, Nasreddin saw the same donkey in the market again! The other thief was selling it.",
+      "Nasreddin went to it and said into its ear, 'Young man, some people will never learn!'"
+],
+    summaryUz: "Nasriddin bozordan eshak sotib olib ketayotganda, ikki o'g'ri eshakning bo'ynidagi arqonni yechib, sherigining bo'yniga bog'lashadi. Uyga borgach Nasriddin yigitni ko'rib qoladi. O'g'ri: 'Onamni xafa qilganim uchun eshakka aylanib qolgandim, sizday yaxshi odam sotib olgani uchun yana odam bo'ldim!' deb aldaydi. Nasriddin unga rahm qilib bo'shatib yuboradi. Ertasi kuni o'sha eshakni bozorda yana ko'rib, qulog'iga: 'Ey yigit, ba'zi odamlar hech qachon o'rganmas ekanda (yana onangni xafa qilib eshak bo'lib qolibsan)!' deb pichirlaydi.",
+    vocabulary: [
+      {
+            "word": "thief (thieves)",
+            "pos": "n.",
+            "phonetic": "[θiːf] ([θiːvz])",
+            "translationUz": "o'g'ri (o'g'rilar)",
+            "definitionEn": "A person who steals another person's property.",
+            "exampleSentence": "Two clever thieves followed Nasreddin from the market."
+      },
+      {
+            "word": "rope",
+            "pos": "n.",
+            "phonetic": "[rəʊp]",
+            "translationUz": "arqon, ip",
+            "definitionEn": "A length of thick strong cord.",
+            "exampleSentence": "He slipped the rope off the donkey's neck."
+      },
+      {
+            "word": "tie round",
+            "pos": "phr. v.",
+            "phonetic": "[taɪ raʊnd]",
+            "translationUz": "atrofiga bog'lamoq",
+            "definitionEn": "To attach or fasten securely around something.",
+            "exampleSentence": "He tied the rope around his companion's neck."
+      },
+      {
+            "word": "change into",
+            "pos": "phr. v.",
+            "phonetic": "[tʃeɪndʒ ˈɪntuː]",
+            "translationUz": "aylanmoq, o'zgarmoq",
+            "definitionEn": "To transform into another form.",
+            "exampleSentence": "My mother cursed me and changed me into a donkey!"
+      },
+      {
+            "word": "untie",
+            "pos": "v.",
+            "phonetic": "[ʌnˈtaɪ]",
+            "translationUz": "yechmoq (tugun yoki arqonni)",
+            "definitionEn": "To undo or loosen a knot or binding.",
+            "exampleSentence": "Nasreddin felt pity and untied the young man."
+      },
+      {
+            "word": "whisper / say into ear",
+            "pos": "v. phr.",
+            "phonetic": "[seɪ ˈɪntuː ɪə]",
+            "translationUz": "qulog'iga aytmoq / shivirlamoq",
+            "definitionEn": "To speak softly directly into someone's ear.",
+            "exampleSentence": "He walked up to the animal and whispered into its ear."
+      }
+],
+    reproductionOutline: [
+      "Nasreddin bought a donkey at the market and began leading it home.",
+      "Two thieves followed: one made off with the donkey while the other tied the halter round his own neck.",
+      "Upon reaching home, Nasreddin was shocked to find a human being instead of his donkey.",
+      "The thief fabricated an excuse: his mother had magically cursed him into a donkey until a kind man bought him.",
+      "Nasreddin freed him, but seeing the same donkey for sale next day, whispered into its ear: \"Some people never learn!\""
+],
+    modelRetelling: "After purchasing a donkey at the market, Nasreddin led it homeward, unaware that two clever thieves were tailing him. One thief slipped the halter off the beast and fastened it around his partner's neck before walking away with the prize. Reaching his house, Nasreddin turned around and was stunned to find a young man in place of the donkey. The cunning trickster apologized, concocting a tall tale about how his furious mother had magically transformed him into a beast of burden until a righteous man purchased him. Believing the tale, Nasreddin released him with a stern warning. The very next day, noticing the exact same donkey being auctioned at the market by the other thief, Nasreddin leaned toward its ear and sighed: 'Young man, some people truly never learn!'",
+    questions: [
+      {
+            "id": "s20-q1",
+            "order": 1,
+            "question": "What did Nasreddin do one day?",
+            "modelAnswer": "One day Nasreddin bought a donkey in the market.",
+            "keywords": [
+                  "bought a donkey in the market"
+            ],
+            "options": [
+                  "He bought a donkey in the market",
+                  "He sold his house in the village",
+                  "He caught two thieves in his shed",
+                  "He lost his wallet in town"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir kuni Nasriddin bozordan eshak sotib oldi."
+      },
+      {
+            "id": "s20-q2",
+            "order": 2,
+            "question": "Who followed him?",
+            "modelAnswer": "Two thieves followed him.",
+            "keywords": [
+                  "two thieves followed him"
+            ],
+            "options": [
+                  "Two thieves",
+                  "A police officer",
+                  "His wife and son",
+                  "A pack of wild dogs"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Uning orqasidan ikki o'g'ri ergashdi: 'two thieves followed him'."
+      },
+      {
+            "id": "s20-q3",
+            "order": 3,
+            "question": "When did they do this?",
+            "modelAnswer": "While he was taking the donkey home.",
+            "keywords": [
+                  "taking it home"
+            ],
+            "options": [
+                  "While he was taking the donkey home",
+                  "Early in the morning before sunrise",
+                  "After he fell asleep at home",
+                  "At the market auction"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U eshakni uyiga olib ketayotgan vaqtda: 'while he was taking it home'."
+      },
+      {
+            "id": "s20-q4",
+            "order": 4,
+            "question": "What did one of the men do?",
+            "modelAnswer": "One of them took the rope from the donkey's neck and tied it round his friend's neck.",
+            "keywords": [
+                  "took the rope",
+                  "tied it round his friend's neck"
+            ],
+            "options": [
+                  "He took the rope from the donkey and tied it round his friend's neck",
+                  "He attacked Nasreddin from behind",
+                  "He offered to carry Nasreddin's bags",
+                  "He cut the rope and ran away alone"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "O'g'rilardan biri arqonni eshakdan yechib, sherigining bo'yniga bog'ladi."
+      },
+      {
+            "id": "s20-q5",
+            "order": 5,
+            "question": "What did he do then?",
+            "modelAnswer": "Then he went away with the donkey.",
+            "keywords": [
+                  "went away with the donkey"
+            ],
+            "options": [
+                  "He went away with the donkey",
+                  "He hid in the bushes",
+                  "He followed Nasreddin into the kitchen",
+                  "He sold the rope to a passing farmer"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "So'ng u eshakni yetaklab ketib qoldi: 'went away with the donkey'."
+      },
+      {
+            "id": "s20-q6",
+            "order": 6,
+            "question": "What did Nasreddin do when he got home?",
+            "modelAnswer": "When he got home, he turned and saw the young man.",
+            "keywords": [
+                  "turned and saw the young man"
+            ],
+            "options": [
+                  "He turned around and saw the young man",
+                  "He immediately tied the rope to a tree",
+                  "He offered hay to the donkey",
+                  "He went inside to call his wife"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Uyga yetgach, orqasiga o'girilib yosh yigitni ko'rdi."
+      },
+      {
+            "id": "s20-q7",
+            "order": 7,
+            "question": "How did he feel?",
+            "modelAnswer": "He was very surprised and angry.",
+            "keywords": [
+                  "very surprised",
+                  "angrily"
+            ],
+            "options": [
+                  "He was very surprised and angry",
+                  "He was delighted and laughed",
+                  "He was terrified and ran inside",
+                  "He was bored and tired"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U juda hayron qoldi va jahli chiqdi: 'very surprised... angrily'."
+      },
+      {
+            "id": "s20-q8",
+            "order": 8,
+            "question": "What did he say?",
+            "modelAnswer": "He said, 'Where is my donkey?'",
+            "keywords": [
+                  "Where is my donkey"
+            ],
+            "options": [
+                  "'Where is my donkey?'",
+                  "'Who are you and why are you following me?'",
+                  "'Did you bring the feed for my animal?'",
+                  "'Call the village guard immediately!'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U: 'Eshagim qani?' deb so'radi."
+      },
+      {
+            "id": "s20-q9",
+            "order": 9,
+            "question": "How did he say this?",
+            "modelAnswer": "He said this angrily.",
+            "keywords": [
+                  "angrily"
+            ],
+            "options": [
+                  "Angrily",
+                  "Happily",
+                  "Whispering quietly",
+                  "In tears"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U buni jahli chiqqan holda aytdi: 'angrily'."
+      },
+      {
+            "id": "s20-q10",
+            "order": 10,
+            "question": "What did the thief answer?",
+            "modelAnswer": "The thief said that once he said bad things to his mother and she changed him into a donkey, but because a good man bought him, he became a man again.",
+            "keywords": [
+                  "changed me into a donkey",
+                  "good man bought me",
+                  "man again"
+            ],
+            "options": [
+                  "He claimed his mother cursed him into a donkey, and Nasreddin's purchase turned him human again",
+                  "He admitted he had stolen the donkey and begged for mercy",
+                  "He claimed the donkey ran away near the village well",
+                  "He offered to buy the rope for five copper coins"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "O'g'ri onasini xafa qilgani uchun eshakka aylanganini, yaxshi odam sotib olgani tufayli yana odam bo'lganini aytdi."
+      },
+      {
+            "id": "s20-q11",
+            "order": 11,
+            "question": "What did Nasreddin do then?",
+            "modelAnswer": "Nasreddin untied the man.",
+            "keywords": [
+                  "untied the man"
+            ],
+            "options": [
+                  "Nasreddin untied the man",
+                  "Nasreddin took him to court",
+                  "Nasreddin made him plow the field",
+                  "Nasreddin locked him in the shed"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin yigitning bo'ynidagi arqonni yechib yubordi."
+      },
+      {
+            "id": "s20-q12",
+            "order": 12,
+            "question": "What did he say?",
+            "modelAnswer": "He said, 'Go! And never say bad things to your mother again!'",
+            "keywords": [
+                  "Go",
+                  "never say bad things to your mother again"
+            ],
+            "options": [
+                  "'Go! And never say bad things to your mother again!'",
+                  "'Pay me back the price of my donkey!'",
+                  "'Stay here and work as my servant.'",
+                  "'Take this bread for your journey.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U: 'Bor, boshqa hech qachon onangga yomon gap aytma!' dedi."
+      },
+      {
+            "id": "s20-q13",
+            "order": 13,
+            "question": "What happened the next day?",
+            "modelAnswer": "The next day, Nasreddin saw the same donkey in the market again.",
+            "keywords": [
+                  "saw the same donkey in the market again"
+            ],
+            "options": [
+                  "He saw the same donkey in the market again",
+                  "The young man returned with a bag of gold",
+                  "The police arrested the two thieves",
+                  "Nasreddin bought a horse instead"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ertasi kuni Nasriddin xuddi o'sha eshakni bozorda yana ko'rdi."
+      },
+      {
+            "id": "s20-q14",
+            "order": 14,
+            "question": "Why was the donkey in the market?",
+            "modelAnswer": "Because the other thief was selling it.",
+            "keywords": [
+                  "other thief was selling it"
+            ],
+            "options": [
+                  "Because the other thief was selling it",
+                  "Because it had escaped and walked back",
+                  "Because Nasreddin had brought it for sale",
+                  "Because the village chief put it on show"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Chunki ikkinchi o'g'ri uni bozorda sotayotgan edi."
+      },
+      {
+            "id": "s20-q15",
+            "order": 15,
+            "question": "What did Nasreddin do then?",
+            "modelAnswer": "Nasreddin went to it and spoke into its ear.",
+            "keywords": [
+                  "went to it",
+                  "said into its ear"
+            ],
+            "options": [
+                  "He went to it and spoke into its ear",
+                  "He shouted for the police to arrest the seller",
+                  "He bought the donkey a second time",
+                  "He hit the donkey with a stick"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin eshakning yoniga borib, uning qulog'iga gapirdi."
+      },
+      {
+            "id": "s20-q16",
+            "order": 16,
+            "question": "What did he say?",
+            "modelAnswer": "He said, 'Young man, some people will never learn!'",
+            "keywords": [
+                  "Young man",
+                  "some people will never learn"
+            ],
+            "options": [
+                  "'Young man, some people will never learn!'",
+                  "'How much are you worth today?'",
+                  "'Did you escape from your mother again?'",
+                  "'I will not buy you this time!'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U eshakka qarab: 'Ey yigit, ba'zi odamlar hech qachon saboq olmas ekanda!' dedi."
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s20-tf1",
+            "order": 1,
+            "statement": "Two thieves conspired to steal Nasreddin's newly bought donkey.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'two thieves followed him. One of them took the rope from the donkey's neck...'."
+      },
+      {
+            "id": "s20-tf2",
+            "order": 2,
+            "statement": "The thieves used physical violence and knocked Nasreddin unconscious.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Ular zo'ravonlik ishlatishmadi, balki bildirmasdan almashtirib qo'yishdi."
+      },
+      {
+            "id": "s20-tf3",
+            "order": 3,
+            "statement": "The thief told a fable that his mother had turned him into an animal.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'once I said some very bad things to my mother, and she changed me into a donkey'."
+      },
+      {
+            "id": "s20-tf4",
+            "order": 4,
+            "statement": "Nasreddin made the young man sign a written promise before releasing him.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda hech qanday yozma tilxat haqida so'z bormagan."
+      },
+      {
+            "id": "s20-tf5",
+            "order": 5,
+            "statement": "The donkey at the market the next day was being sold by the same young man who had the rope round his neck.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Uni ikkinchi o'g'ri sotayotgan edi ('The other thief was selling it')."
+      },
+      {
+            "id": "s20-tf6",
+            "order": 6,
+            "statement": "Nasreddin genuinely believed the donkey had misbehaved towards its mother again.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: Nasriddin eshakning qulog'iga 'ba'zi odamlar hech qachon o'rganmaydi' deb aytganidan uning ishonganini ko'rish mumkin."
+      }
+]
+  },
+  {
+    id: 'story-21',
+    storyNumber: 21,
+    title: "Nasreddin and the Coat",
+    titleUz: "Nasriddin va Palto",
+    cefrLevel: 'A2',
+    wordCount: 147,
+    readingTimeMinutes: 1,
+    storyText: "Nasreddin wanted to buy some new clothes, so he went to a shop. First he asked for some trousers and put them on, but then he took them off and gave them back to the shopkeeper and said, 'No, give me a coat instead of these.'\nThe man gave him a coat, and said, 'This one costs the same as the trousers.' Nasreddin took the coat and walked out of the shop with it. The shopkeeper ran after him and said, 'You have not paid for that coat!'\n'But I gave you the trousers for the coat,' said Nasreddin. 'They cost the same as the coat, didn't they?'\n'Yes,' said the shopkeeper, 'But you didn't pay for the trousers either!'\n'Of course I didn't!' answered Nasreddin. 'I did not take them. I am not stupid! Nobody gives things back and then pays for them!'",
+    paragraphs: [
+      "Nasreddin wanted to buy some new clothes, so he went to a shop. First he asked for some trousers and put them on, but then he took them off and gave them back to the shopkeeper and said, 'No, give me a coat instead of these.'",
+      "The man gave him a coat, and said, 'This one costs the same as the trousers.' Nasreddin took the coat and walked out of the shop with it. The shopkeeper ran after him and said, 'You have not paid for that coat!'",
+      "'But I gave you the trousers for the coat,' said Nasreddin. 'They cost the same as the coat, didn't they?'",
+      "'Yes,' said the shopkeeper, 'But you didn't pay for the trousers either!'",
+      "'Of course I didn't!' answered Nasreddin. 'I did not take them. I am not stupid! Nobody gives things back and then pays for them!'"
+],
+    summaryUz: "Nasriddin kiyim do'koniga borib, avval shim kiyib ko'radi, so'ng uni qaytarib berib, o'rniga narxi teng bo'lgan palto so'raydi. Paltoni olib to'lamasdan chiqib ketayotganda sotuvchi yugurib chiqadi: 'Palto uchun to'lamadingiz!' Nasriddin: 'Palto o'rniga shimdi berdim-ku!' deydi. Sotuvchi: 'Lekin shim uchun ham to'lamagan edingiz!' deganida, Nasriddin kulib: 'Albatta to'lamaganman, axir shimni olib ketmadimku! Odam qaytarib bergan narsasiga ham pul to'laydimi?!' deydi.",
+    vocabulary: [
+      {
+            "word": "trousers",
+            "pos": "n.",
+            "phonetic": "[ˈtraʊzəz]",
+            "translationUz": "shim",
+            "definitionEn": "An outer garment covering the body from the waist to the ankles with a separate part for each leg.",
+            "exampleSentence": "First he tried on a pair of woollen trousers."
+      },
+      {
+            "word": "coat",
+            "pos": "n.",
+            "phonetic": "[kəʊt]",
+            "translationUz": "palto, ustki kiyim",
+            "definitionEn": "An outer garment with sleeves worn outdoors.",
+            "exampleSentence": "Give me a warm coat instead of these trousers."
+      },
+      {
+            "word": "instead of",
+            "pos": "prep.",
+            "phonetic": "[ɪnˈsted əv]",
+            "translationUz": "o'rniga",
+            "definitionEn": "In place of; as a substitute or alternative to.",
+            "exampleSentence": "He chose a coat instead of trousers."
+      },
+      {
+            "word": "costs the same as",
+            "pos": "v. phr.",
+            "phonetic": "[kɒsts ðə seɪm æz]",
+            "translationUz": "... bilan narxi bir xil bo'lmoq",
+            "definitionEn": "To be equal in price or value to something else.",
+            "exampleSentence": "This warm coat costs the same as the trousers."
+      },
+      {
+            "word": "run after",
+            "pos": "phr. v.",
+            "phonetic": "[rʌn ˈɑːftə]",
+            "translationUz": "orqasidan yugurib quvmoq",
+            "definitionEn": "To chase or pursue someone on foot.",
+            "exampleSentence": "The shopkeeper ran after him into the street."
+      },
+      {
+            "word": "give back",
+            "pos": "phr. v.",
+            "phonetic": "[ɡɪv bæk]",
+            "translationUz": "qaytarib bermoq",
+            "definitionEn": "To return something to its owner.",
+            "exampleSentence": "Nobody gives things back and then pays for them!"
+      }
+],
+    reproductionOutline: [
+      "Nasreddin entered a clothes store desiring new garments.",
+      "He tried on a pair of trousers, but returned them requesting a coat of equal price instead.",
+      "Receiving the coat, Nasreddin calmly strolled out of the store without paying.",
+      "The outraged merchant chased him, complaining that the coat had not been paid for.",
+      "Nasreddin baffled the merchant with absurd logic: he gave trousers for the coat, and obviously nobody pays for trousers they returned!"
+],
+    modelRetelling: "In need of fresh attire, Nasreddin went to a clothing shop and initially asked to try on a pair of trousers. After putting them on, he changed his mind, handed them back, and asked for a coat of equal value instead. The shopkeeper handed him a coat, confirming that it carried the identical price tag. Nasreddin put on the coat and casually walked out the door. Panicked, the merchant sprinted after him, yelling that he had not paid for the coat. Nasreddin smoothly argued that he had traded the trousers for the coat. When the merchant objected that Nasreddin had never paid for the trousers in the first place, Nasreddin scoffed: 'Of course I didn't! I didn't take them! Only a fool would pay for something he gave back!'",
+    questions: [
+      {
+            "id": "s21-q1",
+            "order": 1,
+            "question": "What did Nasreddin want to do?",
+            "modelAnswer": "Nasreddin wanted to buy some new clothes.",
+            "keywords": [
+                  "buy some new clothes"
+            ],
+            "options": [
+                  "To buy some new clothes",
+                  "To sell his old donkey",
+                  "To complain about a tailor",
+                  "To borrow some money from a friend"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U yangi kiyimlar sotib olmoqchi edi: 'Nasreddin wanted to buy some new clothes'."
+      },
+      {
+            "id": "s21-q2",
+            "order": 2,
+            "question": "Where did he go?",
+            "modelAnswer": "He went to a shop.",
+            "keywords": [
+                  "went to a shop"
+            ],
+            "options": [
+                  "To a shop",
+                  "To the open market",
+                  "To a bazaar square",
+                  "To a friend's house"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U do'konga bordi: 'so he went to a shop'."
+      },
+      {
+            "id": "s21-q3",
+            "order": 3,
+            "question": "What did he do there first?",
+            "modelAnswer": "First he asked for some trousers and put them on.",
+            "keywords": [
+                  "asked for some trousers",
+                  "put them on"
+            ],
+            "options": [
+                  "He asked for some trousers and put them on",
+                  "He tried on a heavy fur hat",
+                  "He negotiated the price of a coat",
+                  "He greeted the shopkeeper warmly"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Avval u shim so'radi va uni kiyib ko'rdi."
+      },
+      {
+            "id": "s21-q4",
+            "order": 4,
+            "question": "What did he do then?",
+            "modelAnswer": "He took them off and gave them back to the shopkeeper.",
+            "keywords": [
+                  "took them off",
+                  "gave them back"
+            ],
+            "options": [
+                  "He took them off and gave them back to the shopkeeper",
+                  "He paid fifteen pence for the trousers",
+                  "He tore a hole in the pocket",
+                  "He hid the trousers under his arm"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "So'ng shimni yechib, do'kondorga qaytarib berdi."
+      },
+      {
+            "id": "s21-q5",
+            "order": 5,
+            "question": "What did he say?",
+            "modelAnswer": "He said, 'No, give me a coat instead of these.'",
+            "keywords": [
+                  "give me a coat instead of these"
+            ],
+            "options": [
+                  "'No, give me a coat instead of these.'",
+                  "'These trousers are too tight for me.'",
+                  "'I will return tomorrow with my money.'",
+                  "'Do you have silk shirts in stock?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U: 'Yo'q, bularning o'rniga menga palto ber' dedi."
+      },
+      {
+            "id": "s21-q6",
+            "order": 6,
+            "question": "What did Nasreddin do then?",
+            "modelAnswer": "Nasreddin took the coat and walked out of the shop with it.",
+            "keywords": [
+                  "took the coat",
+                  "walked out of the shop"
+            ],
+            "options": [
+                  "He took the coat and walked out of the shop with it",
+                  "He paid for the coat with gold coins",
+                  "He examined the buttons carefully",
+                  "He asked for a gift box"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U paltoni oldi va u bilan do'kondan chiqib ketdi."
+      },
+      {
+            "id": "s21-q7",
+            "order": 7,
+            "question": "What did the shopkeeper do?",
+            "modelAnswer": "The shopkeeper ran after him.",
+            "keywords": [
+                  "ran after him"
+            ],
+            "options": [
+                  "The shopkeeper ran after him",
+                  "He called the city guards",
+                  "He counted his money in the cash drawer",
+                  "He locked the front door"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Sotuvchi uning orqasidan yugurib chiqdi: 'The shopkeeper ran after him'."
+      },
+      {
+            "id": "s21-q8",
+            "order": 8,
+            "question": "What did he say?",
+            "modelAnswer": "He said, 'You have not paid for that coat!'",
+            "keywords": [
+                  "not paid for that coat"
+            ],
+            "options": [
+                  "'You have not paid for that coat!'",
+                  "'You forgot your old clothes inside!'",
+                  "'Please come back and try the trousers again!'",
+                  "'Have a wonderful evening, sir!'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U: 'Siz bu palto uchun to'lamadingiz!' dedi."
+      },
+      {
+            "id": "s21-q9",
+            "order": 9,
+            "question": "What was Nasreddin's answer?",
+            "modelAnswer": "Nasreddin answered, 'But I gave you the trousers for the coat. They cost the same as the coat, didn't they?'",
+            "keywords": [
+                  "gave you the trousers for the coat",
+                  "cost the same as the coat"
+            ],
+            "options": [
+                  "'But I gave you the trousers for the coat. They cost the same, didn't they?'",
+                  "'I will pay you at the end of the month.'",
+                  "'My brother paid you five minutes ago.'",
+                  "'I thought coats were free today.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin palto o'rniga shimni berganini, ularning narxi tengligini aytdi."
+      },
+      {
+            "id": "s21-q10",
+            "order": 10,
+            "question": "What did the shopkeeper say?",
+            "modelAnswer": "The shopkeeper said, 'Yes, but you didn't pay for the trousers either!'",
+            "keywords": [
+                  "didn't pay for the trousers either"
+            ],
+            "options": [
+                  "'Yes, but you didn't pay for the trousers either!'",
+                  "'The coat is actually more expensive than the trousers.'",
+                  "'I do not accept trades in my shop.'",
+                  "'Show me the receipt for the trousers.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Sotuvchi: 'To'g'ri, lekin siz shim uchun ham pul to'lamagan edingiz-ku!' dedi."
+      },
+      {
+            "id": "s21-q11",
+            "order": 11,
+            "question": "What did the shopkeeper do?",
+            "modelAnswer": "The shopkeeper stopped him and demanded payment for the clothes.",
+            "keywords": [
+                  "demanded payment",
+                  "stopped him"
+            ],
+            "options": [
+                  "He challenged Nasreddin's absurd logic and demanded payment",
+                  "He took the coat back by force",
+                  "He agreed that Nasreddin was right and returned inside",
+                  "He offered him a free pair of shoes"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Sotuvchi shim uchun ham to'lamaganini aytib e'tiroz bildirdi."
+      },
+      {
+            "id": "s21-q12",
+            "order": 12,
+            "question": "What did Nasreddin say then?",
+            "modelAnswer": "Nasreddin said, 'Of course I didn't! I did not take them. I am not stupid! Nobody gives things back and then pays for them!'",
+            "keywords": [
+                  "Of course I didn't",
+                  "did not take them",
+                  "Nobody gives things back and then pays for them"
+            ],
+            "options": [
+                  "'Of course I didn't! I did not take them... Nobody gives things back and then pays for them!'",
+                  "'Take your coat back, I do not want anything from your shop.'",
+                  "'Call the judge, we will see who is right.'",
+                  "'Here is your money, I was only joking.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin: 'Albatta to'lamaganman! Axir ularni olmadimku! Hech kim qaytarib bergan narsasiga pul to'lamaydi!' dedi."
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s21-tf1",
+            "order": 1,
+            "statement": "Nasreddin went to the shop because he needed new clothing.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'Nasreddin wanted to buy some new clothes, so he went to a shop'."
+      },
+      {
+            "id": "s21-tf2",
+            "order": 2,
+            "statement": "The coat cost significantly more than the trousers.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Ikkalasining narxi bir xil edi ('This one costs the same as the trousers')."
+      },
+      {
+            "id": "s21-tf3",
+            "order": 3,
+            "statement": "Nasreddin paid the full price of the trousers before trying them on.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U shim uchun ham hech qanday pul to'lamagan edi."
+      },
+      {
+            "id": "s21-tf4",
+            "order": 4,
+            "statement": "The shopkeeper immediately called a policeman to arrest Nasreddin.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda do'kondor politsiya chaqirgani haqida gap yo'q, faqat o'zi quvib chiqqani aytilgan."
+      },
+      {
+            "id": "s21-tf5",
+            "order": 5,
+            "statement": "Nasreddin argued that returning an item exempts a customer from paying for it.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'Nobody gives things back and then pays for them!'."
+      },
+      {
+            "id": "s21-tf6",
+            "order": 6,
+            "statement": "Nasreddin ended up keeping both the trousers and the coat.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Shimni do'konda qoldirgan edi ('I did not take them')."
+      }
+]
+  }
 ];
 
 export function getStoryById(id: string): StoryForReproduction | undefined {
