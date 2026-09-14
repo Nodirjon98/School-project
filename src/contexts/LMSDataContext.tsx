@@ -371,6 +371,24 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return s;
     }));
 
+    // Automatically reward target student with Championship XP upon teacher grading
+    if (existing?.student_id) {
+      const earnedXp = Math.round(score * 0.8);
+      setChampionshipScores(prev => {
+        const studentScore = prev.find(cs => cs.student_id === existing.student_id);
+        if (studentScore) {
+          return prev.map(cs => cs.student_id === existing.student_id ? { 
+            ...cs, 
+            xp: cs.xp + earnedXp, 
+            homeworks_completed: (cs.homeworks_completed || 0) + 1 
+          } : cs)
+          .sort((a, b) => b.xp - a.xp)
+          .map((item, idx) => ({ ...item, rank: idx + 1 }));
+        }
+        return prev;
+      });
+    }
+
     if (isSupabaseConfigured && supabase) {
       try {
         await supabase.from('homework_submissions').update({
