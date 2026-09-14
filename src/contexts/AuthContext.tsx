@@ -19,10 +19,19 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const ADMIN_EMAILS = [
+  'admin@premier.uz',
+  'nodirjon98@gmail.com',
+  'safoyevnodirjon@gmail.com'
+];
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<any | null>(null);
   const [profile, setProfile] = useState<Profile | null>(() => {
-    return getStorageItem<Profile | null>('premier_lms_profile', SEED_PROFILES[2]); // default to student Jasur
+    return getStorageItem<Profile | null>('premier_lms_profile', null);
+  });
+  const [user, setUser] = useState<any | null>(() => {
+    const stored = getStorageItem<Profile | null>('premier_lms_profile', null);
+    return stored ? { id: stored.id, email: stored.email } : null;
   });
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -37,29 +46,72 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    // Initialize active profile from storage or fallback to Jasur Rustamov
     const stored = getStorageItem<Profile | null>('premier_lms_profile', null);
     if (stored) {
       setProfile(stored);
       setUser({ id: stored.id, email: stored.email });
     } else {
-      saveProfile(SEED_PROFILES[2]);
-      setUser({ id: SEED_PROFILES[2].id, email: SEED_PROFILES[2].email });
+      setProfile(null);
+      setUser(null);
     }
     setLoading(false);
   }, [saveProfile]);
 
-  const signIn = async (email: string, _password?: string): Promise<{ error: string | null }> => {
+  const signIn = async (email: string, password?: string): Promise<{ error: string | null }> => {
     setLoading(true);
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPass = password?.trim() || '';
+
     try {
+      const isAdminEmail = ADMIN_EMAILS.includes(cleanEmail);
+
+      // 1. STRICT ADMIN AUTHENTICATION
+      if (isAdminEmail) {
+        const validAdminPasswords = [
+          'premier2026!',
+          'admin2026!',
+          'premier2026',
+          'admin2026',
+          'nodirjon2026',
+          'nodirjon98',
+          'safoyev2026',
+          'demo12345'
+        ];
+
+        if (!cleanPass || !validAdminPasswords.includes(cleanPass)) {
+          setLoading(false);
+          return { error: "Xatolik: Bosh administrator paroli noto'g'ri! Admin panel faqat tizim rahbari kirishi uchun himoyalangan." };
+        }
+
+        const adminProfile = SEED_PROFILES.find(p => p.email.toLowerCase() === cleanEmail) || SEED_PROFILES[0];
+        setUser({ id: adminProfile.id, email: adminProfile.email });
+        saveProfile(adminProfile);
+        setLoading(false);
+        return { error: null };
+      }
+
+      // 2. Official premier students check
+      const officialMatched = PREMIER_OFFICIAL_STUDENTS.find(p => p.email.toLowerCase() === cleanEmail);
+      if (officialMatched) {
+        if (officialMatched.password && cleanPass && officialMatched.password !== cleanPass) {
+          setLoading(false);
+          return { error: "Parol noto'g'ri kiritildi!" };
+        }
+        setUser({ id: officialMatched.id, email: officialMatched.email });
+        saveProfile(officialMatched);
+        setLoading(false);
+        return { error: null };
+      }
+
+      // 3. Supabase profiles check
       if (isSupabaseConfigured && supabase) {
         const { data, error } = await supabase
           .from('profiles')
           .select('*')
-          .eq('email', email.toLowerCase())
+          .eq('email', cleanEmail)
           .maybeSingle();
 
-        if (data && !error) {
+        if (data && !error && data.role !== 'admin') {
           setUser({ id: data.id, email: data.email });
           saveProfile(data as Profile);
           setLoading(false);
@@ -67,40 +119,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
 
-      // Look up in known seed profiles
-      const matched = SEED_PROFILES.find(p => p.email.toLowerCase() === email.toLowerCase());
+      // 4. Seed profiles (teachers & students)
+      const matched = SEED_PROFILES.find(p => p.email.toLowerCase() === cleanEmail);
       if (matched) {
+        if (matched.role === 'admin') {
+          setLoading(false);
+          return { error: "Admin panelga faqat rasmiy administrator paroli bilan kirish mumkin!" };
+        }
         setUser({ id: matched.id, email: matched.email });
         saveProfile(matched);
         setLoading(false);
         return { error: null };
       }
 
-      // Look up in official premier students
-      const officialMatched = PREMIER_OFFICIAL_STUDENTS.find(p => p.email.toLowerCase() === email.toLowerCase());
-      if (officialMatched) {
-        setUser({ id: officialMatched.id, email: officialMatched.email });
-        saveProfile(officialMatched);
-        setLoading(false);
-        return { error: null };
-      }
-
-      // Check previously registered users stored in localStorage
+      // 5. Check previously registered users stored in localStorage
       const customUsers = getStorageItem<Profile[]>('premier_registered_users', []);
-      const customMatched = customUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+      const customMatched = customUsers.find(u => u.email.toLowerCase() === cleanEmail);
       if (customMatched) {
-        setUser({ id: customMatched.id, email: customMatched.email });
-        saveProfile(customMatched);
+        // Guarantee no custom user can ever be admin
+        const safeProfile: Profile = { ...customMatched, role: (customMatched.role === 'admin' ? 'student' : customMatched.role) as UserRole };
+        setUser({ id: safeProfile.id, email: safeProfile.email });
+        saveProfile(safeProfile);
         setLoading(false);
         return { error: null };
       }
 
-      // Otherwise create active profile on the fly
+      // 6. Otherwise create active student profile on the fly
       const newCustomProfile: Profile = {
         id: `user-${Date.now()}`,
-        email,
-        full_name: email.split('@')[0].replace('.', ' '),
-        role: 'student',
+        email: cleanEmail,
+        full_name: cleanEmail.split('@')[0].replace('.', ' '),
+        role: 'student', // ALWAYS student
         level: 'B1',
         onboarding_completed: true,
         xp: 150,
@@ -114,7 +163,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { error: null };
     } catch (err: any) {
       setLoading(false);
-      return { error: err.message || 'Login failed' };
+      return { error: err.message || 'Kirishda xatolik yuz berdi' };
     }
   };
 
@@ -122,17 +171,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     email: string, 
     _password: string, 
     fullName: string, 
-    role: UserRole = 'student',
+    _role: UserRole = 'student',
     phone?: string,
     level?: CEFRLevel
   ): Promise<{ error: string | null }> => {
     setLoading(true);
     try {
+      const cleanEmail = email.trim().toLowerCase();
+      if (ADMIN_EMAILS.includes(cleanEmail)) {
+        setLoading(false);
+        return { error: "Ushbu email bosh administratorga tegishli. Iltimos, Tizimga Kirish sahifasidan foydalaning." };
+      }
+
       const newProf: Profile = {
         id: `usr-${Date.now()}`,
-        email,
+        email: cleanEmail,
         full_name: fullName,
-        role,
+        role: 'student', // ALWAYS student
         phone: phone || '',
         level: level || 'B1',
         onboarding_completed: true,
@@ -169,6 +224,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signOut = async (): Promise<void> => {
     setUser(null);
     saveProfile(null);
+    removeStorageItem('premier_lms_profile');
   };
 
   const updateProfile = async (updates: Partial<Profile>): Promise<{ error: string | null }> => {
@@ -187,10 +243,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error: null };
   };
 
-  const switchDemoRole = (targetRole: UserRole) => {
-    const target = SEED_PROFILES.find(p => p.role === targetRole) || SEED_PROFILES[0];
-    saveProfile(target);
-    setUser({ id: target.id, email: target.email });
+  const switchDemoRole = (_targetRole: UserRole) => {
+    // Disabled for production security: Admin is strictly restricted to authenticated login
   };
 
   const role = profile?.role || 'student';

@@ -2,16 +2,12 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from '../common/Navbar';
 import { Sidebar } from '../common/Sidebar';
-import { RoleSwitcher } from '../common/RoleSwitcher';
 
 export const AppLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="flex flex-col h-screen w-full bg-slate-50 font-sans text-slate-900 overflow-hidden">
-      {/* Top Demo Role Switcher */}
-      <RoleSwitcher />
-
       {/* Main Shell: Sidebar + Content Area */}
       <div className="flex-1 flex w-full overflow-hidden relative">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />

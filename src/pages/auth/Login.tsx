@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { Mail, Lock, LogIn, ArrowRight, Shield, BookOpen, GraduationCap } from 'lucide-react';
+import { Mail, Lock, LogIn } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const { signIn, role } = useAuth();
@@ -31,17 +31,6 @@ export const Login: React.FC = () => {
     if (result.error) {
       setError(result.error);
     } else {
-      navigate(from, { replace: true });
-    }
-  };
-
-  const handleQuickDemo = async (demoEmail: string) => {
-    setEmail(demoEmail);
-    setPassword('demo12345');
-    setLoading(true);
-    const result = await signIn(demoEmail, 'demo12345');
-    setLoading(false);
-    if (!result.error) {
       navigate(from, { replace: true });
     }
   };
@@ -121,44 +110,6 @@ export const Login: React.FC = () => {
               <span>{loading ? 'Kirilmoqda...' : t('loginBtn')}</span>
             </button>
           </form>
-
-          {/* Quick Demo Logins */}
-          <div className="mt-6 pt-6 border-t border-slate-100">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-2.5 text-center">
-              {t('demoLoginTip')}
-            </span>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('student@premierschool.uz')}
-                className="flex flex-col items-center justify-center p-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 hover:bg-emerald-100 transition"
-              >
-                <GraduationCap className="w-4 h-4 mb-0.5 text-emerald-600" />
-                <span className="text-xs font-bold">O'quvchi</span>
-                <span className="text-[10px] text-emerald-600">Jasur</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('teacher@premierschool.uz')}
-                className="flex flex-col items-center justify-center p-2 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-800 hover:bg-indigo-100 transition"
-              >
-                <BookOpen className="w-4 h-4 mb-0.5 text-indigo-600" />
-                <span className="text-xs font-bold">O'qituvchi</span>
-                <span className="text-[10px] text-indigo-600">Malika</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('admin@premierschool.uz')}
-                className="flex flex-col items-center justify-center p-2 rounded-xl bg-purple-50 border border-purple-200 text-purple-800 hover:bg-purple-100 transition"
-              >
-                <Shield className="w-4 h-4 mb-0.5 text-purple-600" />
-                <span className="text-xs font-bold">Admin</span>
-                <span className="text-[10px] text-purple-600">Azamat</span>
-              </button>
-            </div>
-          </div>
 
           <div className="mt-6 text-center text-xs text-slate-500">
             {t('dontHaveAccount')}{' '}

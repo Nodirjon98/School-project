@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { UserRole } from '../../types';
 import { Mail, Lock, User, UserPlus, Phone } from 'lucide-react';
 
 export const Signup: React.FC = () => {
@@ -14,7 +13,6 @@ export const Signup: React.FC = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('+998 ');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<UserRole>('student');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,19 +22,13 @@ export const Signup: React.FC = () => {
 
     setLoading(true);
     setError(null);
-    const result = await signUp(email, password, fullName, role, phone);
+    const result = await signUp(email, password, fullName, 'student', phone);
     setLoading(false);
 
     if (result.error) {
       setError(result.error);
     } else {
-      if (role === 'student') {
-        navigate('/onboarding');
-      } else if (role === 'teacher') {
-        navigate('/teacher/dashboard');
-      } else {
-        navigate('/admin/dashboard');
-      }
+      navigate('/onboarding');
     }
   };
 
@@ -131,21 +123,6 @@ export const Signup: React.FC = () => {
                   className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-hidden focus:border-blue-500 transition"
                 />
               </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Rolni tanlang
-              </label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value as UserRole)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-hidden focus:border-blue-500 transition"
-              >
-                <option value="student">O'quvchi (Student)</option>
-                <option value="teacher">O'qituvchi (Teacher)</option>
-                <option value="admin">Administrator</option>
-              </select>
             </div>
 
             <button
