@@ -16,7 +16,7 @@ import {
 export const StoriesForReproductionPage: React.FC = () => {
   const { role, profile } = useAuth();
   const { t } = useLanguage();
-  const { groups, createHomework, addXP, addDailyWord } = useLMSData();
+  const { groups, createHomework, addXP, addDailyWord, logStudentAction } = useLMSData();
 
   // Active Story state
   const [activeStoryId, setActiveStoryId] = useState<string>('story-1');
@@ -124,6 +124,18 @@ export const StoriesForReproductionPage: React.FC = () => {
       stopSpeech();
     } else {
       speakText(activeStory.storyText, playbackSpeed);
+      if (profile?.id) {
+        logStudentAction({
+          student_id: profile.id,
+          student_name: profile.full_name || "O'quvchi",
+          action_type: 'LISTENING_PLAY',
+          module: 'stories',
+          details: {
+            title: `Story ${activeStory.storyNumber} audiosini tinglamoqda`,
+            is_verified_productive: true
+          }
+        });
+      }
     }
   };
 
@@ -151,6 +163,19 @@ export const StoriesForReproductionPage: React.FC = () => {
     if (optionIdx === correctIdx) {
       playSound('pop');
       addXP(10, `Correct Answer in Story ${activeStory.storyNumber}`);
+      if (profile?.id) {
+        logStudentAction({
+          student_id: profile.id,
+          student_name: profile.full_name || "O'quvchi",
+          action_type: 'STORY_QUIZ_COMPLETED',
+          module: 'stories',
+          details: {
+            title: `Story ${activeStory.storyNumber} savoliga to'g'ri javob berdi`,
+            score: 10,
+            is_verified_productive: true
+          }
+        });
+      }
     } else {
       playSound('tap');
     }
@@ -165,6 +190,21 @@ export const StoriesForReproductionPage: React.FC = () => {
       addXP(10, `Correct T/F/NG in Story ${activeStory.storyNumber}`);
     } else {
       playSound('tap');
+    }
+
+    if (profile?.id) {
+      logStudentAction({
+        student_id: profile.id,
+        student_name: profile.full_name || "O'quvchi",
+        action_type: 'STORY_TF_COMPLETED',
+        module: 'stories',
+        details: {
+          title: `Story ${activeStory.storyNumber} T/F/NG topshirdi`,
+          score: answer === correctAns ? 10 : 0,
+          is_verified_productive: true,
+          extra_info: answer === correctAns ? "To'g'ri" : "Xato"
+        }
+      });
     }
   };
 
@@ -184,6 +224,19 @@ export const StoriesForReproductionPage: React.FC = () => {
 
     setReproductionSubmitted(true);
     addXP(50, `Completed Reproduction for Story ${activeStory.storyNumber}`);
+    if (profile?.id) {
+      logStudentAction({
+        student_id: profile.id,
+        student_name: profile.full_name || "O'quvchi",
+        action_type: 'STORY_READ',
+        module: 'stories',
+        details: {
+          title: `Story ${activeStory.storyNumber} ni qayta hikoya qildi (Reproduction)`,
+          score: 50,
+          is_verified_productive: true
+        }
+      });
+    }
     playSound('fanfare');
     try {
       confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });

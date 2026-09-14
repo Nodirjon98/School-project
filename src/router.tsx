@@ -55,6 +55,7 @@ const StudentPerformanceAnalytics = lazy(() => import('./pages/admin/StudentPerf
 // Lazy Loaded Shared Pages
 const AIContentStudio = lazy(() => import('./pages/shared/AIContentStudio').then(m => ({ default: m.AIContentStudio })));
 const Championship = lazy(() => import('./pages/shared/Championship').then(m => ({ default: m.Championship })));
+const StudentMonitoringPage = lazy(() => import('./pages/shared/StudentMonitoringPage').then(m => ({ default: m.StudentMonitoringPage })));
 
 const PageLoader: React.FC = () => (
   <div className="min-h-[60vh] flex items-center justify-center p-8">
@@ -190,6 +191,14 @@ export const AppRouter: React.FC = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/teacher/monitoring"
+            element={
+              <ProtectedRoute allowedRoles={['teacher', 'admin']}>
+                <StudentMonitoringPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Admin Routes */}
           <Route
@@ -197,6 +206,14 @@ export const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/monitoring"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <StudentMonitoringPage />
               </ProtectedRoute>
             }
           />

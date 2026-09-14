@@ -2,7 +2,8 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { 
   Group, Lesson, Attendance, Homework, HomeworkSubmission, 
   DailyWord, WordProgress, ChampionshipScore, Badge, AIContent, AttendanceStatus,
-  GrammarExam, GrammarExamSubmission, Profile, CEFRLevel
+  GrammarExam, GrammarExamSubmission, Profile, CEFRLevel,
+  StudentTelemetryLog, StudentActionEvent, TelemetryModule, ModuleTimeBreakdown
 } from '../types';
 import { 
   SEED_GROUPS, SEED_LESSONS, SEED_HOMEWORK, SEED_SUBMISSIONS, 
@@ -31,9 +32,15 @@ interface LMSDataContextType {
   grammarExams: GrammarExam[];
   examSubmissions: GrammarExamSubmission[];
   students: Profile[];
+  telemetryLogs: Record<string, StudentTelemetryLog>;
+  actionEvents: StudentActionEvent[];
   loading: boolean;
   
   // Actions
+  recordActiveTime: (studentId: string, module: TelemetryModule, activeSeconds: number, idleSeconds: number, currentPage?: string) => void;
+  logStudentAction: (event: Omit<StudentActionEvent, 'id' | 'timestamp'>) => void;
+  updateStudentTelemetry: (studentId: string, updates: Partial<StudentTelemetryLog>) => void;
+  saveTeacherNote: (studentId: string, note: string) => void;
   addGroup: (newGroup: Omit<Group, 'id' | 'created_at'>) => Promise<void>;
   createGroup: (newGroup: Omit<Group, 'id' | 'created_at'>) => Promise<void>;
   updateGroup: (groupId: string, updates: Partial<Omit<Group, 'id' | 'created_at'>>) => Promise<void>;
@@ -114,7 +121,82 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     return Array.from(map.values());
   });
+
+  const [telemetryLogs, setTelemetryLogs] = useState<Record<string, StudentTelemetryLog>>(() => {
+    return getStorageItem<Record<string, StudentTelemetryLog>>('premier_student_telemetry', {});
+  });
+  const [actionEvents, setActionEvents] = useState<StudentActionEvent[]>(() => {
+    return getStorageItem<StudentActionEvent[]>('premier_student_action_events', []);
+  });
+
   const [loading, setLoading] = useState(false);
+
+  // Synchronize telemetry records for all official students
+  useEffect(() => {
+    setTelemetryLogs(prev => {
+      let changed = false;
+      const next = { ...prev };
+      students.forEach((st, idx) => {
+        if (!next[st.id]) {
+          changed = true;
+          const randomRecentMins = 10 + (idx * 25) % 180;
+          const lastActive = new Date(Date.now() - randomRecentMins * 60000).toISOString();
+          const baseActiveMins = 25 + (idx * 17) % 75;
+          const storiesMins = Math.floor(baseActiveMins * 0.4);
+          const vocabMins = Math.floor(baseActiveMins * 0.25);
+          const listeningMins = Math.floor(baseActiveMins * 0.2);
+          const grammarMins = Math.max(0, baseActiveMins - (storiesMins + vocabMins + listeningMins));
+          const idleMins = Math.floor(4 + (idx * 3) % 15);
+
+          next[st.id] = {
+            id: `tel-${st.id}`,
+            student_id: st.id,
+            student_name: st.full_name,
+            student_avatar: st.avatar_url,
+            group_name: st.group_name || "Guruhga biriktirilmagan",
+            group_id: st.group_id,
+            phone: st.phone,
+            level: st.level || 'Intermediate B1',
+            online_status: idx === 0 || idx === 1 ? 'online' : (idx === 2 ? 'idle' : 'offline'),
+            current_page: idx === 0 ? '/stories' : (idx === 1 ? '/daily-words' : undefined),
+            current_module: idx === 0 ? 'stories' : (idx === 1 ? 'vocab' : undefined),
+            device: idx % 3 === 0 ? 'desktop' : 'mobile',
+            last_active_at: lastActive,
+            last_active_label: idx === 0 || idx === 1 ? 'Ayni paytda faol' : (idx === 2 ? '10 daqiqa oldin' : `${Math.floor(randomRecentMins / 60)} soat oldin`),
+            total_active_seconds: (baseActiveMins + 120) * 60,
+            today_active_seconds: baseActiveMins * 60,
+            weekly_active_seconds: (baseActiveMins * 4 + 30) * 60,
+            idle_paused_seconds: idleMins * 60,
+            verified_tasks_count: 3 + (idx % 5),
+            module_breakdown: {
+              stories_seconds: storiesMins * 60,
+              vocab_seconds: vocabMins * 60,
+              listening_seconds: listeningMins * 60,
+              grammar_seconds: grammarMins * 60,
+              homework_seconds: 15 * 60,
+              speaking_seconds: 20 * 60,
+              other_seconds: 0
+            },
+            risk_level: idx % 9 === 0 ? 'warning' : 'normal',
+            risk_reasons: idx % 9 === 0 ? ["Oxirgi 3 kunda dars qilmadi"] : undefined,
+            teacher_notes: ''
+          };
+        } else {
+          // Keep student profile data in sync
+          if (next[st.id].group_name !== st.group_name || next[st.id].student_name !== st.full_name) {
+            changed = true;
+            next[st.id] = {
+              ...next[st.id],
+              student_name: st.full_name,
+              group_name: st.group_name || "Guruhga biriktirilmagan",
+              group_id: st.group_id
+            };
+          }
+        }
+      });
+      return changed ? next : prev;
+    });
+  }, [students]);
 
   // Automatically keep groups' students_count dynamically in sync with actual assigned students
   useEffect(() => {
@@ -145,6 +227,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => { setStorageItem('premier_ai_contents', aiContents); }, [aiContents]);
   useEffect(() => { setStorageItem('premier_grammar_exams', grammarExams); }, [grammarExams]);
   useEffect(() => { setStorageItem('premier_grammar_submissions', examSubmissions); }, [examSubmissions]);
+  useEffect(() => { setStorageItem('premier_student_telemetry', telemetryLogs); }, [telemetryLogs]);
+  useEffect(() => { setStorageItem('premier_student_action_events', actionEvents); }, [actionEvents]);
 
   // Sync students to storage
   useEffect(() => {
@@ -857,6 +941,81 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setChampionshipScores(prev => prev.map(cs => ({ ...cs, xp: 0, lessons_attended: 0, homeworks_completed: 0 })));
   };
 
+  const recordActiveTime = useCallback((
+    studentId: string, 
+    module: TelemetryModule, 
+    activeSeconds: number, 
+    idleSeconds: number, 
+    currentPage?: string
+  ) => {
+    setTelemetryLogs(prev => {
+      const current = prev[studentId];
+      if (!current) return prev;
+
+      const updatedModuleBreakdown = { ...current.module_breakdown };
+      const key = `${module}_seconds` as keyof ModuleTimeBreakdown;
+      if (key in updatedModuleBreakdown) {
+        updatedModuleBreakdown[key] = (updatedModuleBreakdown[key] || 0) + activeSeconds;
+      }
+
+      return {
+        ...prev,
+        [studentId]: {
+          ...current,
+          online_status: activeSeconds > 0 ? 'online' : (idleSeconds > 0 ? 'idle' : current.online_status),
+          last_active_at: new Date().toISOString(),
+          last_active_label: 'Ayni paytda faol',
+          current_page: currentPage || current.current_page,
+          current_module: module,
+          total_active_seconds: current.total_active_seconds + activeSeconds,
+          today_active_seconds: current.today_active_seconds + activeSeconds,
+          weekly_active_seconds: current.weekly_active_seconds + activeSeconds,
+          idle_paused_seconds: current.idle_paused_seconds + idleSeconds,
+          module_breakdown: updatedModuleBreakdown
+        }
+      };
+    });
+  }, []);
+
+  const logStudentAction = useCallback((event: Omit<StudentActionEvent, 'id' | 'timestamp'>) => {
+    const newEvent: StudentActionEvent = {
+      ...event,
+      id: `act-ev-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+      timestamp: new Date().toISOString()
+    };
+
+    setActionEvents(prev => [newEvent, ...prev.slice(0, 199)]);
+
+    if (event.details?.is_verified_productive) {
+      setTelemetryLogs(prev => {
+        const cur = prev[event.student_id];
+        if (!cur) return prev;
+        return {
+          ...prev,
+          [event.student_id]: {
+            ...cur,
+            verified_tasks_count: cur.verified_tasks_count + 1
+          }
+        };
+      });
+    }
+  }, []);
+
+  const updateStudentTelemetry = useCallback((studentId: string, updates: Partial<StudentTelemetryLog>) => {
+    setTelemetryLogs(prev => {
+      const cur = prev[studentId];
+      if (!cur) return prev;
+      return {
+        ...prev,
+        [studentId]: { ...cur, ...updates }
+      };
+    });
+  }, []);
+
+  const saveTeacherNote = useCallback((studentId: string, note: string) => {
+    updateStudentTelemetry(studentId, { teacher_notes: note });
+  }, [updateStudentTelemetry]);
+
   return (
     <LMSDataContext.Provider
       value={{
@@ -873,7 +1032,13 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         grammarExams,
         examSubmissions,
         students,
+        telemetryLogs,
+        actionEvents,
         loading,
+        recordActiveTime,
+        logStudentAction,
+        updateStudentTelemetry,
+        saveTeacherNote,
         addGroup,
         createGroup: addGroup,
         updateGroup,

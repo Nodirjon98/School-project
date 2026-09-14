@@ -5,7 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { 
   LayoutDashboard, BookOpen, CheckSquare, Sparkles, 
   Trophy, ClipboardCheck, Users, BrainCircuit, BarChart3, 
-  Layers, Database, X, PenTool, Mic, Award, Swords, FileText, Headphones, CreditCard, Clock, TrendingUp, Music, Radio, MessagesSquare 
+  Layers, Database, X, PenTool, Mic, Award, Swords, FileText, Headphones, CreditCard, Clock, TrendingUp, Music, Radio, MessagesSquare, ShieldCheck
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -75,6 +75,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       category: "ASOSIY",
       items: [
         { label: t('dashboard'), path: '/teacher/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+        { label: "O'quvchilar Nazorati", path: '/teacher/monitoring', icon: <ShieldCheck className="w-4 h-4 text-emerald-400" />, badge: 'Live' },
         { label: t('myGroups'), path: '/teacher/groups', icon: <Users className="w-4 h-4" /> },
         { label: t('attendance'), path: '/teacher/attendance', icon: <ClipboardCheck className="w-4 h-4" /> },
         { label: t('homework'), path: '/teacher/homework', icon: <CheckSquare className="w-4 h-4" /> },
@@ -108,6 +109,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       category: "BOSHQARUV & MOLIYA",
       items: [
         { label: t('adminAnalytics'), path: '/admin/dashboard', icon: <BarChart3 className="w-4 h-4" /> },
+        { label: "O'quvchilar Nazorati", path: '/admin/monitoring', icon: <ShieldCheck className="w-4 h-4 text-emerald-400" />, badge: 'Live' },
         { label: "O'zlashtirish Analytics", path: '/admin/performance', icon: <TrendingUp className="w-4 h-4 text-emerald-400" /> },
         { label: "To'lovlar & Kassa", path: '/admin/payments', icon: <CreditCard className="w-4 h-4 text-emerald-400" />, badge: 'Moliya' },
         { label: t('manageGroups'), path: '/admin/groups', icon: <Users className="w-4 h-4" /> },

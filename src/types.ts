@@ -1190,4 +1190,77 @@ export interface StoryForReproduction {
   modelRetelling: string;
 }
 
+// ==========================================
+// STUDENT TELEMETRY & ACTIVITY MONITORING
+// ==========================================
+
+export type TelemetryModule = 'stories' | 'vocab' | 'listening' | 'grammar' | 'homework' | 'speaking' | 'system';
+export type StudentOnlineStatus = 'online' | 'idle' | 'offline';
+export type StudentRiskLevel = 'normal' | 'warning' | 'danger';
+
+export interface ModuleTimeBreakdown {
+  stories_seconds: number;
+  vocab_seconds: number;
+  listening_seconds: number;
+  grammar_seconds: number;
+  homework_seconds: number;
+  speaking_seconds: number;
+  other_seconds: number;
+}
+
+export interface StudentActionEvent {
+  id: string;
+  student_id: string;
+  student_name: string;
+  action_type: 
+    | 'LOGIN'
+    | 'PAGE_VIEW'
+    | 'STORY_READ'
+    | 'STORY_QUIZ_COMPLETED'
+    | 'STORY_TF_COMPLETED'
+    | 'VOCAB_PRACTICE'
+    | 'LISTENING_PLAY'
+    | 'HOMEWORK_SUBMIT'
+    | 'GRAMMAR_EXAM_SUBMIT'
+    | 'IDLE_PAUSE'
+    | 'RESUME_ACTIVE';
+  module: TelemetryModule;
+  details: {
+    title?: string;
+    score?: number;
+    max_score?: number;
+    duration_seconds?: number;
+    is_verified_productive?: boolean;
+    extra_info?: string;
+  };
+  timestamp: string;
+}
+
+export interface StudentTelemetryLog {
+  id: string;
+  student_id: string;
+  student_name: string;
+  student_avatar?: string;
+  group_name: string;
+  group_id?: string;
+  phone?: string;
+  level: string;
+  online_status: StudentOnlineStatus;
+  current_page?: string;
+  current_module?: TelemetryModule;
+  device: 'mobile' | 'desktop' | 'tablet';
+  last_active_at: string;
+  last_active_label?: string;
+  total_active_seconds: number;
+  today_active_seconds: number;
+  weekly_active_seconds: number;
+  idle_paused_seconds: number; // Anti-cheat: captured fake time
+  verified_tasks_count: number;
+  module_breakdown: ModuleTimeBreakdown;
+  risk_level: StudentRiskLevel;
+  risk_reasons?: string[];
+  teacher_notes?: string;
+}
+
+
 
