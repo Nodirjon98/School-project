@@ -77,6 +77,30 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "aren't",
         "explanationUz": "'These bags' ko'plikda bo'lgani uchun inkor shakli 'aren't' bo'ladi.",
         "points": 15
+      },
+      {
+        "id": "u1-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga am, is yoki are yozing",
+        "prompt": "Look! There _____ Carol waiting for the bus.",
+        "correctAnswer": "is",
+        "explanationUz": "Birlikdagi shaxs (Carol) uchun 'there is' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u1-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri juftlikni tanlang",
+        "prompt": "I _____ 20 years old, and my sister _____ 18.",
+        "options": [
+          "am / is",
+          "is / am",
+          "are / is",
+          "am / are"
+        ],
+        "correctAnswer": "am / is",
+        "explanationUz": "'I am' va uchinchi shaxs birlikda 'my sister is' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -156,6 +180,30 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "I'm not",
         "explanationUz": "'Are you' so'rog'iga birinchi shaxs inkor javobi 'No, I'm not' bo'ladi.",
         "points": 15
+      },
+      {
+        "id": "u2-ex4",
+        "type": "fill_in_gap",
+        "instruction": "So'roq gapda to'g'ri 'to be' shaklini yozing",
+        "prompt": "How old _____ your brother?",
+        "correctAnswer": "is",
+        "explanationUz": "'Your brother' (he) uchun so'roqda 'is' egadan oldinga o'tadi.",
+        "points": 15
+      },
+      {
+        "id": "u2-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri savol shaklini tanlang",
+        "prompt": "_____ that man over there with a black hat?",
+        "options": [
+          "Who is",
+          "Where is",
+          "How is",
+          "Why is"
+        ],
+        "correctAnswer": "Who is",
+        "explanationUz": "Shaxsning kimligini so'rash uchun 'Who is' birikmasi qo'llaniladi.",
+        "points": 15
       }
     ]
   },
@@ -220,6 +268,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "working",
         "explanationUz": "Present Continuous uchun fe'lga '-ing' qo'shimchasi qo'shiladi.",
         "points": 15
+      },
+      {
+        "id": "u3-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor shaklini tanlang",
+        "prompt": "You can turn off the television. I _____ it.",
+        "options": [
+          "am not watching",
+          "don't watch",
+          "not watching",
+          "didn't watch"
+        ],
+        "correctAnswer": "am not watching",
+        "explanationUz": "Ayni paytda davom etmayotgan harakat uchun 'am not watching' to'g'ri.",
+        "points": 15
+      },
+      {
+        "id": "u3-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lning -ing shaklini to'ldiring (swim)",
+        "prompt": "Look at the river! Somebody is _____ in it.",
+        "correctAnswer": "swimming",
+        "explanationUz": "'Swim' fe'liga -ing qo'shilganda 'm' harfi ikkilanadi: swimming.",
+        "points": 15
+      },
+      {
+        "id": "u3-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri shaklni tanlang",
+        "prompt": "The children are in the playground. They _____ football.",
+        "options": [
+          "are playing",
+          "play",
+          "is playing",
+          "plays"
+        ],
+        "correctAnswer": "are playing",
+        "explanationUz": "'Children' ko'plik ot bo'lib, ayni paytda 'are playing' oladi.",
+        "points": 15
       }
     ]
   },
@@ -279,6 +366,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "Why",
         "explanationUz": "Sababini so'rash uchun 'Why' (Nega/Nimaga) so'zi ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u4-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri qisqa javobni tanlang",
+        "prompt": "'Are you listening to me?' - 'Yes, _____.'",
+        "options": [
+          "I am",
+          "I'm",
+          "I do",
+          "I listen"
+        ],
+        "correctAnswer": "I am",
+        "explanationUz": "Qisqa tasdiq javobida qisqartmasiz 'Yes, I am' aytiladi.",
+        "points": 15
+      },
+      {
+        "id": "u4-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Yordamchi fe'lni to'g'ri qo'ying",
+        "prompt": "Where _____ they going with those big suitcases?",
+        "correctAnswer": "are",
+        "explanationUz": "'They' olmoshi bilan Present Continuous so'rog'ida 'are' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u4-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri savol so'zini tanlang",
+        "prompt": "_____ is Paul cooking in the kitchen? - Some soup.",
+        "options": [
+          "What",
+          "Where",
+          "Who",
+          "How"
+        ],
+        "correctAnswer": "What",
+        "explanationUz": "Nima tayyorlayotganini so'rash uchun 'What' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -337,6 +463,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Nurbek speaks English very well, but he _____ (speak) French poorly.",
         "correctAnswer": "speaks",
         "explanationUz": "Uchinchi shaxs birlik (he) bo'lgani uchun 'speaks' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u5-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri fe'lni tanlang",
+        "prompt": "The earth _____ round the sun once a year.",
+        "options": [
+          "goes",
+          "go",
+          "is going",
+          "went"
+        ],
+        "correctAnswer": "goes",
+        "explanationUz": "Umumiy astronomik fakt uchun Present Simple 'goes' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u5-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Qavsdagi fe'lni to'g'ri shaklga qo'ying (live)",
+        "prompt": "My grandparents _____ (live) in a beautiful house in Bukhara.",
+        "correctAnswer": "live",
+        "explanationUz": "'My grandparents' ko'plik shaxslar bo'lgani uchun fe'l 'live' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u5-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri fe'lni tanlang",
+        "prompt": "Water _____ at 100 degrees Celsius.",
+        "options": [
+          "boils",
+          "boil",
+          "is boiling",
+          "boiled"
+        ],
+        "correctAnswer": "boils",
+        "explanationUz": "Doimiy fizik hodisa uchun 'boils' ishlatiladi.",
         "points": 15
       }
     ]
@@ -400,6 +565,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "don't",
         "explanationUz": "'We' ko'plik shaxs olmoshi uchun 'don't' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u6-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor shaklini tanlang",
+        "prompt": "Mark is a vegetarian. He _____ meat.",
+        "options": [
+          "doesn't eat",
+          "don't eat",
+          "not eat",
+          "eats not"
+        ],
+        "correctAnswer": "doesn't eat",
+        "explanationUz": "Mark (he) uchun inkor 'doesn't eat' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u6-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Inkor yordamchi fe'lini yozing (don't yoki doesn't)",
+        "prompt": "I _____ know the answer to this difficult question.",
+        "correctAnswer": "don't",
+        "explanationUz": "'I' birinchi shaxs uchun 'don't' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u6-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor gapni tanlang",
+        "prompt": "Cars _____ fly.",
+        "options": [
+          "don't",
+          "doesn't",
+          "aren't",
+          "not"
+        ],
+        "correctAnswer": "don't",
+        "explanationUz": "'Cars' ko'plik ot bo'lgani uchun 'don't' to'g'ri.",
+        "points": 15
       }
     ]
   },
@@ -461,6 +665,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Where _____ Linda live?",
         "correctAnswer": "does",
         "explanationUz": "Linda (she) uchinchi shaxs birlikda bo'lgani uchun 'does' kerak.",
+        "points": 15
+      },
+      {
+        "id": "u7-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri so'roq shaklini tanlang",
+        "prompt": "What time _____ the banks close in your city?",
+        "options": [
+          "do",
+          "does",
+          "are",
+          "is"
+        ],
+        "correctAnswer": "do",
+        "explanationUz": "'The banks' ko'plikda bo'lgani uchun 'do' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u7-ex4",
+        "type": "fill_in_gap",
+        "instruction": "So'roq so'zini to'ldiring",
+        "prompt": "_____ often do you go to the dentist?",
+        "correctAnswer": "How",
+        "explanationUz": "Tez-tezlikni so'rash uchun 'How often' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u7-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri qisqa javobni tanlang",
+        "prompt": "'Do you and your brother play chess?' - 'Yes, _____.'",
+        "options": [
+          "we do",
+          "I do",
+          "they do",
+          "we are"
+        ],
+        "correctAnswer": "we do",
+        "explanationUz": "'You and your brother' (sizlar) ga javoban 'Yes, we do' aytiladi.",
         "points": 15
       }
     ]
@@ -524,6 +767,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "know",
         "explanationUz": "'Know' holat fe'li bo'lib, odatda Continuous shaklida ishlatilmaydi.",
         "points": 15
+      },
+      {
+        "id": "u8-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri zamon shaklini tanlang",
+        "prompt": "The moon _____ around the earth.",
+        "options": [
+          "goes",
+          "is going",
+          "went",
+          "has gone"
+        ],
+        "correctAnswer": "goes",
+        "explanationUz": "Doimiy tabiiy haqiqat bo'lgani uchun Present Simple 'goes' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u8-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lni to'g'ri zamonga qo'ying (rain)",
+        "prompt": "Look outside! It is _____ right now.",
+        "correctAnswer": "raining",
+        "explanationUz": "Ayni paytda yog'ayotgan yomg'ir uchun Present Continuous 'raining' kerak.",
+        "points": 15
+      },
+      {
+        "id": "u8-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri holat fe'li shaklini tanlang",
+        "prompt": "I _____ hungry. Let's go to a restaurant.",
+        "options": [
+          "feel",
+          "am feeling",
+          "feeling",
+          "feels"
+        ],
+        "correctAnswer": "feel",
+        "explanationUz": "'Feel' holat fe'li sifatida Present Simple da ishlatiladi: I feel hungry.",
+        "points": 15
       }
     ]
   },
@@ -585,6 +867,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Tom likes sports, but he _____ a bicycle.",
         "correctAnswer": "hasn't got",
         "explanationUz": "Tom (he) uchinchi shaxs birlikda bo'lgani uchun 'hasn't got' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u9-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor shaklini tanlang",
+        "prompt": "They live in a flat, so they _____ a private garden.",
+        "options": [
+          "haven't got",
+          "hasn't got",
+          "not have",
+          "haven't have"
+        ],
+        "correctAnswer": "haven't got",
+        "explanationUz": "'They' ko'plik olmoshi uchun inkor 'haven't got' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u9-ex4",
+        "type": "fill_in_gap",
+        "instruction": "So'roq shaklini to'ldiring",
+        "prompt": "_____ you got any brothers or sisters?",
+        "correctAnswer": "Have",
+        "explanationUz": "'Got' bilan savol 'Have you got' deb boshlanadi.",
+        "points": 15
+      },
+      {
+        "id": "u9-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri shaklni tanlang",
+        "prompt": "Mr. Davis _____ two cars and a motorcycle.",
+        "options": [
+          "has got",
+          "have got",
+          "are having",
+          "have"
+        ],
+        "correctAnswer": "has got",
+        "explanationUz": "Mr. Davis (he) birlikda bo'lgani uchun 'has got' ishlatiladi.",
         "points": 15
       }
     ]
@@ -648,6 +969,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "were",
         "explanationUz": "'They' ko'plik olmoshi bilan 'were' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u10-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri o'tgan zamon shaklini tanlang",
+        "prompt": "The museum _____ open yesterday because it was a public holiday.",
+        "options": [
+          "wasn't",
+          "weren't",
+          "isn't",
+          "didn't"
+        ],
+        "correctAnswer": "wasn't",
+        "explanationUz": "'The museum' (it) birlikda, o'tgan zamon inkori 'wasn't' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u10-ex4",
+        "type": "fill_in_gap",
+        "instruction": "So'roq shaklini yozing (was yoki were)",
+        "prompt": "Why _____ you late for work yesterday morning?",
+        "correctAnswer": "were",
+        "explanationUz": "'You' uchun o'tgan zamon so'rog'ida 'were' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u10-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri qisqa javobni tanlang",
+        "prompt": "'Were your parents at home last night?' - 'No, _____.'",
+        "options": [
+          "they weren't",
+          "they wasn't",
+          "they didn't",
+          "they aren't"
+        ],
+        "correctAnswer": "they weren't",
+        "explanationUz": "'Were your parents' savoliga inkor javob: 'No, they weren't'.",
+        "points": 15
       }
     ]
   },
@@ -709,6 +1069,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "She _____ a beautiful dress for the wedding yesterday.",
         "correctAnswer": "bought",
         "explanationUz": "'Buy' noto'g'ri fe'lining 2-shakli 'bought' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u11-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri noto'g'ri fe'l shaklini tanlang",
+        "prompt": "Yesterday I _____ my keys in the office, but I found them today.",
+        "options": [
+          "lost",
+          "losed",
+          "lose",
+          "losing"
+        ],
+        "correctAnswer": "lost",
+        "explanationUz": "'Lose' noto'g'ri fe'lining o'tgan zamoni 'lost' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u11-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lning Past Simple shaklini yozing (see)",
+        "prompt": "We _____ an interesting documentary on TV last night.",
+        "correctAnswer": "saw",
+        "explanationUz": "'See' noto'g'ri fe'lining 2-shakli 'saw' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u11-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri fe'lni tanlang",
+        "prompt": "Shakespeare _____ many famous plays and sonnets.",
+        "options": [
+          "wrote",
+          "writed",
+          "written",
+          "writes"
+        ],
+        "correctAnswer": "wrote",
+        "explanationUz": "'Write' ning o'tgan zamoni 'wrote' bo'ladi.",
         "points": 15
       }
     ]
@@ -772,6 +1171,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "Did",
         "explanationUz": "Past Simple so'roq gapi boshida 'Did' yordamchi fe'li ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u12-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri so'roq shaklini tanlang",
+        "prompt": "What time _____ you wake up this morning?",
+        "options": [
+          "did",
+          "do",
+          "were",
+          "had"
+        ],
+        "correctAnswer": "did",
+        "explanationUz": "Past Simple so'rog'ida 'did' yordamchi fe'li ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u12-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lni to'g'ri shaklga qo'ying (go)",
+        "prompt": "I didn't _____ out yesterday because it was raining.",
+        "correctAnswer": "go",
+        "explanationUz": "'Didn't' dan so'ng asosiy fe'l o'zgarishsiz keladi: go.",
+        "points": 15
+      },
+      {
+        "id": "u12-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri qisqa javobni tanlang",
+        "prompt": "'Did you enjoy the concert?' - 'Yes, _____.'",
+        "options": [
+          "I did",
+          "I enjoyed",
+          "I was",
+          "I do"
+        ],
+        "correctAnswer": "I did",
+        "explanationUz": "Past Simple qisqa tasdiq javobi: 'Yes, I did'.",
+        "points": 15
       }
     ]
   },
@@ -834,6 +1272,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "raining",
         "explanationUz": "Past Continuous da was dan keyin fe'lga -ing qo'shiladi: raining.",
         "points": 15
+      },
+      {
+        "id": "u13-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri Past Continuous shaklini tanlang",
+        "prompt": "This time last year, I _____ in London.",
+        "options": [
+          "was living",
+          "were living",
+          "lived",
+          "am living"
+        ],
+        "correctAnswer": "was living",
+        "explanationUz": "'I' uchun o'tgan davomli zamonda 'was living' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u13-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lni to'g'ri shaklda yozing (cook)",
+        "prompt": "At 7 pm yesterday, my mother was _____ dinner.",
+        "correctAnswer": "cooking",
+        "explanationUz": "Past Continuous da fe'lga -ing qo'shiladi: cooking.",
+        "points": 15
+      },
+      {
+        "id": "u13-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri so'roq shaklini tanlang",
+        "prompt": "What _____ you doing when the lights went out?",
+        "options": [
+          "were",
+          "was",
+          "did",
+          "are"
+        ],
+        "correctAnswer": "were",
+        "explanationUz": "'You' uchun Past Continuous so'rog'i 'were you doing' bo'ladi.",
+        "points": 15
       }
     ]
   },
@@ -891,6 +1368,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "The telephone _____ while I was having a shower.",
         "correctAnswer": "rang",
         "explanationUz": "Dush qabul qilish jarayonida qisqa to'siq bo'lgan harakat uchun Past Simple 'rang' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u14-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri zamon kombinatsiyasini tanlang",
+        "prompt": "While we were having a picnic, it _____ to rain.",
+        "options": [
+          "started",
+          "was starting",
+          "starts",
+          "is starting"
+        ],
+        "correctAnswer": "started",
+        "explanationUz": "Davomli harakat paytida yuz bergan qisqa to'siq harakat uchun Past Simple 'started' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u14-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bog'lovchini yozing (While yoki During)",
+        "prompt": "_____ I was walking home, I met an old friend.",
+        "correctAnswer": "While",
+        "explanationUz": "Ega va fe'ldan iborat ergash gap bilan 'While' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u14-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri shaklni tanlang",
+        "prompt": "I _____ my finger while I was cooking.",
+        "options": [
+          "burned",
+          "was burning",
+          "burn",
+          "burning"
+        ],
+        "correctAnswer": "burned",
+        "explanationUz": "To'satdan bo'lgan qisqa harakat: burned.",
         "points": 15
       }
     ]
@@ -954,6 +1470,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "has",
         "explanationUz": "Tom (he) uchinchi shaxs birlik bo'lgani uchun 'has' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u15-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri Present Perfect shaklini tanlang",
+        "prompt": "Look! Somebody _____ that window.",
+        "options": [
+          "has broken",
+          "have broken",
+          "broke",
+          "is breaking"
+        ],
+        "correctAnswer": "has broken",
+        "explanationUz": "'Somebody' birlik olmoshi bilan 'has broken' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u15-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lning 3-shaklini yozing (clean)",
+        "prompt": "I have _____ my shoes. They look like new.",
+        "correctAnswer": "cleaned",
+        "explanationUz": "'Clean' to'g'ri fe'li Past Participle shaklida 'cleaned' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u15-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri fe'lni tanlang",
+        "prompt": "Where is Mary? - She _____ to the supermarket.",
+        "options": [
+          "has gone",
+          "have gone",
+          "went",
+          "goes"
+        ],
+        "correctAnswer": "has gone",
+        "explanationUz": "U yerga ketgan va hali qaytmagan holat uchun 'has gone' aytiladi.",
+        "points": 15
       }
     ]
   },
@@ -1015,6 +1570,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Have you seen the new movie _____?",
         "correctAnswer": "yet",
         "explanationUz": "So'roq gap oxirida 'yet' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u16-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri so'zni tanlang",
+        "prompt": "Don't forget to send the email! - I have _____ sent it.",
+        "options": [
+          "already",
+          "yet",
+          "still",
+          "ago"
+        ],
+        "correctAnswer": "already",
+        "explanationUz": "Allaqachon bajarilgan ish uchun 'already' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u16-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga yet, just yoki already yozing",
+        "prompt": "Has the postman arrived _____?",
+        "correctAnswer": "yet",
+        "explanationUz": "So'roq gapning oxirida 'yet' qo'yiladi.",
+        "points": 15
+      },
+      {
+        "id": "u16-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri shaklni tanlang",
+        "prompt": "We haven't finished our project _____.",
+        "options": [
+          "yet",
+          "already",
+          "just",
+          "since"
+        ],
+        "correctAnswer": "yet",
+        "explanationUz": "Inkor gap oxirida 'hali' ma'nosida 'yet' ishlatiladi.",
         "points": 15
       }
     ]
@@ -1078,6 +1672,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "never",
         "explanationUz": "'Hech qachon yemagan' ma'nosida 'never' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u17-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri variantni tanlang",
+        "prompt": "Ben has _____ ridden a motorcycle in his life.",
+        "options": [
+          "never",
+          "ever",
+          "yet",
+          "already"
+        ],
+        "correctAnswer": "never",
+        "explanationUz": "Hayotida hech qachon qilmagan ish uchun 'never' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u17-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lning 3-shaklini yozing (see)",
+        "prompt": "Have you ever _____ that famous movie?",
+        "correctAnswer": "seen",
+        "explanationUz": "'See' fe'lining 3-shakli 'seen' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u17-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri qisqa javobni tanlang",
+        "prompt": "'Have you ever been to Paris?' - 'Yes, _____.'",
+        "options": [
+          "I have",
+          "I did",
+          "I was",
+          "I been"
+        ],
+        "correctAnswer": "I have",
+        "explanationUz": "'Have you' savoliga javob: 'Yes, I have'.",
+        "points": 15
       }
     ]
   },
@@ -1139,6 +1772,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "How long _____ Helen lived in London?",
         "correctAnswer": "has",
         "explanationUz": "Helen (she) bo'lgani uchun 'has' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u18-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri zamonni tanlang",
+        "prompt": "They _____ married for twenty-five years.",
+        "options": [
+          "have been",
+          "are",
+          "were",
+          "had been"
+        ],
+        "correctAnswer": "have been",
+        "explanationUz": "25 yildan beri davom etib kelayotgan holat uchun 'have been' to'g'ri.",
+        "points": 15
+      },
+      {
+        "id": "u18-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Yordamchi fe'lni to'ldiring",
+        "prompt": "How long have you _____ your car?",
+        "correctAnswer": "had",
+        "explanationUz": "'Have' fe'lining 3-shakli 'had' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u18-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri savol so'zini tanlang",
+        "prompt": "_____ has Sarah worked in this company?",
+        "options": [
+          "How long",
+          "How much",
+          "When",
+          "How many"
+        ],
+        "correctAnswer": "How long",
+        "explanationUz": "Ish davomiyligini so'rash uchun 'How long' ishlatiladi.",
         "points": 15
       }
     ]
@@ -1203,6 +1875,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "since",
         "explanationUz": "'Last Christmas' aniq boshlanish nuqtasi bo'lgani sababli 'since' to'g'ri keladi.",
         "points": 15
+      },
+      {
+        "id": "u19-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri vaqt ko'rsatkichini tanlang",
+        "prompt": "Jill arrived in Tashkent three days _____.",
+        "options": [
+          "ago",
+          "since",
+          "for",
+          "before"
+        ],
+        "correctAnswer": "ago",
+        "explanationUz": "Past Simple da o'tmish paytini ko'rsatish uchun 'three days ago' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u19-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga for yoki since yozing",
+        "prompt": "It has been raining _____ early this morning.",
+        "correctAnswer": "since",
+        "explanationUz": "Aniq boshlanish vaqti bo'lgani uchun 'since' qo'yiladi.",
+        "points": 15
+      },
+      {
+        "id": "u19-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri predlogni tanlang",
+        "prompt": "We have lived in this apartment _____ ten years.",
+        "options": [
+          "for",
+          "since",
+          "ago",
+          "during"
+        ],
+        "correctAnswer": "for",
+        "explanationUz": "10 yillik vaqt oralig'i uchun 'for' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -1260,6 +1971,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "What time did the train _____ yesterday?",
         "correctAnswer": "arrive",
         "explanationUz": "'Did' bor bo'lgani uchun fe'l o'zining boshlang'ich shaklida (arrive) keladi.",
+        "points": 15
+      },
+      {
+        "id": "u20-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri zamonni tanlang",
+        "prompt": "I _____ in London last year during my summer vacation.",
+        "options": [
+          "was",
+          "have been",
+          "had been",
+          "am"
+        ],
+        "correctAnswer": "was",
+        "explanationUz": "'Last year' aniq o'tgan zamon bo'lgani uchun Past Simple 'was' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u20-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lni to'g'ri zamonga qo'ying (lose)",
+        "prompt": "I can't unlock the door because I have _____ my key.",
+        "correctAnswer": "lost",
+        "explanationUz": "Hozirgi natijaga bog'liq yo'qotish uchun 'have lost' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u20-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri savolni tanlang",
+        "prompt": "What time _____ yesterday?",
+        "options": [
+          "did you arrive",
+          "have you arrived",
+          "do you arrive",
+          "are you arriving"
+        ],
+        "correctAnswer": "did you arrive",
+        "explanationUz": "'Yesterday' bilan doimo Past Simple 'did you arrive' keladi.",
         "points": 15
       }
     ]
@@ -1319,6 +2069,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "built",
         "explanationUz": "'Build' fe'lining 3-shakli (Past Participle) 'built' bo'ladi.",
         "points": 15
+      },
+      {
+        "id": "u21-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri majhul nisbat shaklini tanlang",
+        "prompt": "The telephone _____ by Alexander Graham Bell in 1876.",
+        "options": [
+          "was invented",
+          "is invented",
+          "invented",
+          "were invented"
+        ],
+        "correctAnswer": "was invented",
+        "explanationUz": "O'tmishdagi ixtiro (1876) uchun Past Passive 'was invented' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u21-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bajiruvchi predlogini yozing",
+        "prompt": "This portrait was painted _____ a talented young artist.",
+        "correctAnswer": "by",
+        "explanationUz": "Majhul nisbatda ish-harakat ijrochisi 'by' bilan ko'rsatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u21-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri Passive shaklini tanlang",
+        "prompt": "Butter _____ from milk.",
+        "options": [
+          "is made",
+          "are made",
+          "makes",
+          "is making"
+        ],
+        "correctAnswer": "is made",
+        "explanationUz": "Butter sanalmaydi, shuning uchun 'is made' bo'ladi.",
+        "points": 15
       }
     ]
   },
@@ -1376,6 +2165,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "My wallet has _____ stolen!",
         "correctAnswer": "been",
         "explanationUz": "Present Perfect Passive da has dan keyin 'been' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u22-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri Continuous Passive shaklini tanlang",
+        "prompt": "Please be careful! The floor _____ right now.",
+        "options": [
+          "is being cleaned",
+          "is cleaned",
+          "was cleaned",
+          "has been cleaned"
+        ],
+        "correctAnswer": "is being cleaned",
+        "explanationUz": "'Right now' vaqti uchun 'is being cleaned' to'g'ri.",
+        "points": 15
+      },
+      {
+        "id": "u22-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lning 3-shaklini yozing (repair)",
+        "prompt": "My car is being _____ at the garage today.",
+        "correctAnswer": "repaired",
+        "explanationUz": "Passive da fe'l har doim 3-shaklda (repaired) bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u22-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri Perfect Passive shaklini tanlang",
+        "prompt": "All the invitations _____ to the guests.",
+        "options": [
+          "have been sent",
+          "has been sent",
+          "are being send",
+          "were sending"
+        ],
+        "correctAnswer": "have been sent",
+        "explanationUz": "'Invitations' ko'plikda bo'lgani uchun 'have been sent' bo'ladi.",
         "points": 15
       }
     ]
@@ -1436,6 +2264,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "did",
         "explanationUz": "O'tgan zamon so'rog'i uchun yordamchi fe'l 'did' bo'ladi.",
         "points": 15
+      },
+      {
+        "id": "u23-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri yordamchi fe'lni tanlang",
+        "prompt": "_____ you seen the new museum exhibition yet?",
+        "options": [
+          "Have",
+          "Did",
+          "Are",
+          "Were"
+        ],
+        "correctAnswer": "Have",
+        "explanationUz": "Past participle (seen) bilan 'Have you seen' so'rog'i yasaladi.",
+        "points": 15
+      },
+      {
+        "id": "u23-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Yordamchi fe'lni yozing (was yoki did)",
+        "prompt": "What _____ the weather like on your holiday?",
+        "correctAnswer": "was",
+        "explanationUz": "Ob-havoning holatini so'rashda 'What was the weather like' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u23-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri shaklni tanlang",
+        "prompt": "I _____ my homework every evening before dinner.",
+        "options": [
+          "do",
+          "make",
+          "am doing",
+          "did"
+        ],
+        "correctAnswer": "do",
+        "explanationUz": "Uy vazifasini bajarish uchun asosiy fe'l sifatida 'do homework' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -1493,6 +2360,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "He _____ to the manager about the issue.",
         "correctAnswer": "spoke",
         "explanationUz": "'Speak' ning o'tgan zamon shakli 'spoke' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u24-ex3",
+        "type": "multiple_choice",
+        "instruction": "Fe'lning to'g'ri 3-shaklini tanlang (break)",
+        "prompt": "He couldn't play football because his leg was _____.",
+        "options": [
+          "broken",
+          "broke",
+          "breaked",
+          "breaking"
+        ],
+        "correctAnswer": "broken",
+        "explanationUz": "'Break' fe'lining 3-shakli 'broken' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u24-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lning Past Simple (V2) shaklini yozing (take)",
+        "prompt": "She _____ lots of beautiful photographs in Samarkand.",
+        "correctAnswer": "took",
+        "explanationUz": "'Take' fe'lining o'tgan zamoni 'took' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u24-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri noto'g'ri fe'lni tanlang (fall)",
+        "prompt": "The apple _____ from the tree onto the grass.",
+        "options": [
+          "fell",
+          "falled",
+          "fallen",
+          "falls"
+        ],
+        "correctAnswer": "fell",
+        "explanationUz": "'Fall' fe'lining o'tgan zamoni 'fell' bo'ladi.",
         "points": 15
       }
     ]
@@ -1552,6 +2458,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "use to",
         "explanationUz": "'Didn't' dan keyin 'use to' shaklida yoziladi (d harfi tushadi).",
         "points": 15
+      },
+      {
+        "id": "u25-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri variantni tanlang",
+        "prompt": "There _____ be a park here, but now there is a supermarket.",
+        "options": [
+          "used to",
+          "use to",
+          "is used to",
+          "was used to"
+        ],
+        "correctAnswer": "used to",
+        "explanationUz": "O'tmishdagi mavjudlik holati uchun 'There used to be' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u25-ex4",
+        "type": "fill_in_gap",
+        "instruction": "So'roq shaklini to'ldiring",
+        "prompt": "Did you _____ to play computer games a lot when you were young?",
+        "correctAnswer": "use",
+        "explanationUz": "'Did' bilan savol tuzilganda 'use to' deb yoziladi (d harfisiz).",
+        "points": 15
+      },
+      {
+        "id": "u25-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri shaklni tanlang",
+        "prompt": "We used to _____ in a small apartment, but now we have a house.",
+        "options": [
+          "live",
+          "living",
+          "lived",
+          "to live"
+        ],
+        "correctAnswer": "live",
+        "explanationUz": "'Used to' dan keyin fe'lning asosiy bosh shakli (live) keladi.",
+        "points": 15
       }
     ]
   },
@@ -1609,6 +2554,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "We are _____ to London next Tuesday.",
         "correctAnswer": "flying",
         "explanationUz": "Oldindan rejalashtirilgan safar uchun 'are flying' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u26-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri rejalashtirilgan kelasi zamonni tanlang",
+        "prompt": "We _____ married on the 15th of June. Everything is ready.",
+        "options": [
+          "are getting",
+          "get",
+          "will get",
+          "got"
+        ],
+        "correctAnswer": "are getting",
+        "explanationUz": "Aniq belgilangan reja va sana uchun Present Continuous 'are getting' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u26-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Continuous shaklini yozing (have)",
+        "prompt": "I am _____ lunch with my manager tomorrow at 1 pm.",
+        "correctAnswer": "having",
+        "explanationUz": "Kelajakdagi tushlik uchrashuvi uchun 'having' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u26-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor shaklini tanlang",
+        "prompt": "I _____ anywhere this weekend. I want to rest at home.",
+        "options": [
+          "am not going",
+          "don't go",
+          "not go",
+          "won't going"
+        ],
+        "correctAnswer": "am not going",
+        "explanationUz": "Kelgusi dam olish kuni rejasida 'am not going' to'g'ri.",
         "points": 15
       }
     ]
@@ -1668,6 +2652,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "going to",
         "explanationUz": "Ko'rinib turgan yaqqol alomat (qora bulut) asosidagi xulosa uchun 'going to' kerak.",
         "points": 15
+      },
+      {
+        "id": "u27-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri niyat shaklini tanlang",
+        "prompt": "What are you _____ to do when you leave school?",
+        "options": [
+          "going",
+          "will",
+          "go",
+          "shall"
+        ],
+        "correctAnswer": "going",
+        "explanationUz": "'What are you going to do' kelajak niyatini so'rash qolipi.",
+        "points": 15
+      },
+      {
+        "id": "u27-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lni to'g'ri shaklga qo'ying (buy)",
+        "prompt": "I have saved some money. I am going to _____ a new laptop.",
+        "correctAnswer": "buy",
+        "explanationUz": "'Going to' dan keyin fe'lning boshlang'ich shakli 'buy' keladi.",
+        "points": 15
+      },
+      {
+        "id": "u27-ex5",
+        "type": "multiple_choice",
+        "instruction": "Alomatli kelajak bashoratini tanlang",
+        "prompt": "Careful! You _____ drop those fragile plates!",
+        "options": [
+          "are going to",
+          "will to",
+          "shall to",
+          "go to"
+        ],
+        "correctAnswer": "are going to",
+        "explanationUz": "Yaqqol xavf/alomat ko'rinib turganda 'are going to' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -1725,6 +2748,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Don't drink coffee now or you _____ sleep tonight.",
         "correctAnswer": "won't",
         "explanationUz": "'Will not' ning qisqargan inkor shakli 'won't' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u28-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri bashorat shaklini tanlang",
+        "prompt": "Don't worry about the exam. You _____ pass it easily.",
+        "options": [
+          "will",
+          "are",
+          "shall to",
+          "have"
+        ],
+        "correctAnswer": "will",
+        "explanationUz": "Kelajak bashorati va dalda berishda 'will' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u28-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lni to'ldiring",
+        "prompt": "I think it _____ snow tomorrow because it's freezing.",
+        "correctAnswer": "will",
+        "explanationUz": "'I think' bilan kelajak taxminida 'will' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u28-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor shaklini tanlang",
+        "prompt": "I'm busy tomorrow, so I _____ be able to join you.",
+        "options": [
+          "won't",
+          "don't",
+          "am not",
+          "not will"
+        ],
+        "correctAnswer": "won't",
+        "explanationUz": "'Will not' ning qisqartmasi 'won't' hisoblanadi.",
         "points": 15
       }
     ]
@@ -1784,6 +2846,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "I'll",
         "explanationUz": "Shu paytning o'zida qabul qilingan qaror uchun 'I'll' to'g'ri bo'ladi.",
         "points": 15
+      },
+      {
+        "id": "u29-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri darhol qabul qilingan qarorni tanlang",
+        "prompt": "I don't have enough money for the taxi. - Don't worry, _____ pay.",
+        "options": [
+          "I'll",
+          "I",
+          "I'm",
+          "I shall to"
+        ],
+        "correctAnswer": "I'll",
+        "explanationUz": "Vaziyatda shu zahoti yordam taklif qilish uchun 'I'll' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u29-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Birgalikdagi taklif so'zini yozing",
+        "prompt": "It's a lovely day. _____ we go for a walk in the park?",
+        "correctAnswer": "Shall",
+        "explanationUz": "'Shall we...?' birgalikda biror ish qilishni taklif etishda ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u29-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri iborani tanlang",
+        "prompt": "Which dress _____ I buy - the blue or the green one?",
+        "options": [
+          "shall",
+          "will to",
+          "do will",
+          "would to"
+        ],
+        "correctAnswer": "shall",
+        "explanationUz": "Maslahat so'rashda 'Shall I buy' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -1839,6 +2940,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "type": "fill_in_gap",
         "instruction": "Ehtimollik inkor shaklini to'ldiring",
         "prompt": "I _____ not have time to call you tomorrow, I'll be very busy.",
+        "correctAnswer": "might",
+        "explanationUz": "'Might not' kelajakdagi ehtimoliy inkorni anglatadi.",
+        "points": 15
+      },
+      {
+        "id": "u30-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ehtimollik modalini tanlang",
+        "prompt": "I haven't seen David all day. He _____ be ill.",
+        "options": [
+          "might",
+          "must to",
+          "can to",
+          "should to"
+        ],
+        "correctAnswer": "might",
+        "explanationUz": "Ehtimollikni bildirish uchun 'might' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u30-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lni to'g'ri shaklga qo'ying",
+        "prompt": "Don't phone at 8 o'clock. We might _____ (have) dinner then.",
+        "correctAnswer": "be having",
+        "explanationUz": "'Might be having' ayni o'sha vaqtdagi ehtimoliy davomli harakat.",
+        "points": 15
+      },
+      {
+        "id": "u30-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor ehtimolini tanlang",
+        "prompt": "I _____ not go to the party tomorrow. I'm feeling very tired.",
+        "options": [
+          "might",
+          "can",
+          "must",
+          "do"
+        ],
         "correctAnswer": "might",
         "explanationUz": "'Might not' kelajakdagi ehtimoliy inkorni anglatadi.",
         "points": 15
@@ -1900,6 +3040,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "can",
         "explanationUz": "Hozirgi qobiliyat uchun 'can' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u31-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri o'tgan zamon qobiliyatini tanlang",
+        "prompt": "When my grandfather was young, he _____ run a marathon.",
+        "options": [
+          "could",
+          "can",
+          "is able",
+          "could to"
+        ],
+        "correctAnswer": "could",
+        "explanationUz": "O'tmishdagi umumiy jismoniy qobiliyat uchun 'could' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u31-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Muloyim iltimos modal fe'lini yozing",
+        "prompt": "_____ you please pass me the salt?",
+        "correctAnswer": "Could",
+        "explanationUz": "Muloyim iltimos bildirish uchun 'Could you please...' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u31-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri hozirgi qobiliyat shaklini tanlang",
+        "prompt": "She can _____ three languages fluently.",
+        "options": [
+          "speak",
+          "speaks",
+          "to speak",
+          "speaking"
+        ],
+        "correctAnswer": "speak",
+        "explanationUz": "'Can' modal fe'lidan keyin fe'lning to-siz bosh shakli keladi: speak.",
+        "points": 15
       }
     ]
   },
@@ -1957,6 +3136,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "You _____ wear a seatbelt when driving. It is the law.",
         "correctAnswer": "must",
         "explanationUz": "Qonun talabi va majburiyat uchun 'must' to'g'ri keladi.",
+        "points": 15
+      },
+      {
+        "id": "u32-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri variantni tanlang",
+        "prompt": "We have plenty of milk, so you _____ buy any.",
+        "options": [
+          "needn't",
+          "mustn't",
+          "must",
+          "should"
+        ],
+        "correctAnswer": "needn't",
+        "explanationUz": "Zarurat yo'qligini bildirish uchun 'needn't' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u32-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Qat'iy majburiyat modalini yozing",
+        "prompt": "You _____ show your passport at airport passport control.",
+        "correctAnswer": "must",
+        "explanationUz": "Qat'iy rasmiy qoida va majburiyat uchun 'must' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u32-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri taqiq so'zini tanlang",
+        "prompt": "This is a secret. You _____ tell anyone!",
+        "options": [
+          "mustn't",
+          "needn't",
+          "don't have to",
+          "can"
+        ],
+        "correctAnswer": "mustn't",
+        "explanationUz": "Qat'iy taqiq uchun 'mustn't' ishlatiladi.",
         "points": 15
       }
     ]
@@ -2016,6 +3234,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "shouldn't",
         "explanationUz": "'Ishonmasligingiz kerak' maslahati uchun 'shouldn't' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u33-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri maslahat so'zini tanlang",
+        "prompt": "I think everyone _____ learn at least one foreign language.",
+        "options": [
+          "should",
+          "should to",
+          "must to",
+          "ought"
+        ],
+        "correctAnswer": "should",
+        "explanationUz": "'Should' to-siz ishlatiladigan eng asosiy maslahat fe'li.",
+        "points": 15
+      },
+      {
+        "id": "u33-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Maslahat inkorini yozing",
+        "prompt": "You _____ drive so fast when it is raining.",
+        "correctAnswer": "shouldn't",
+        "explanationUz": "'Qilmasligingiz kerak' maslahati uchun 'shouldn't' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u33-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri savol shaklini tanlang",
+        "prompt": "Do you think I _____ accept their job offer?",
+        "options": [
+          "should",
+          "must to",
+          "would to",
+          "am"
+        ],
+        "correctAnswer": "should",
+        "explanationUz": "Fikr va maslahat so'rashda 'Do you think I should...' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -2073,6 +3330,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "The museum is free. You _____ pay an entrance fee.",
         "correctAnswer": "don't have to",
         "explanationUz": "To'lashga zarurat yo'qligi sababli 'don't have to' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u34-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri o'tgan zamon majburiyatini tanlang",
+        "prompt": "Yesterday I was late because I _____ wait for the repairman.",
+        "options": [
+          "had to",
+          "must",
+          "have to",
+          "musted"
+        ],
+        "correctAnswer": "had to",
+        "explanationUz": "'Must' ning o'tgan zamoni mavjud emas, uning o'rniga 'had to' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u34-ex4",
+        "type": "fill_in_gap",
+        "instruction": "So'roq yordamchi fe'lini yozing",
+        "prompt": "What time do you _____ to get up on weekdays?",
+        "correctAnswer": "have",
+        "explanationUz": "'Do you have to' kundalik majburiyat so'rog'i.",
+        "points": 15
+      },
+      {
+        "id": "u34-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor shaklini tanlang",
+        "prompt": "Tomorrow is Sunday, so I _____ work.",
+        "options": [
+          "don't have to",
+          "doesn't have to",
+          "haven't to",
+          "mustn't to"
+        ],
+        "correctAnswer": "don't have to",
+        "explanationUz": "Majburiyat yo'qligini 'don't have to' bildiradi.",
         "points": 15
       }
     ]
@@ -2132,6 +3428,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "would like",
         "explanationUz": "Ayni paytda istakni muloyim bildirish uchun 'would like' (I'd like) ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u35-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri taklif shaklini tanlang",
+        "prompt": "_____ you like to join us for dinner tonight?",
+        "options": [
+          "Would",
+          "Do",
+          "Are",
+          "Did"
+        ],
+        "correctAnswer": "Would",
+        "explanationUz": "Kechki ovqatga taklif qilishda 'Would you like to...' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u35-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'l shaklini to'ldiring (ask)",
+        "prompt": "I'd like to _____ you a question if I may.",
+        "correctAnswer": "ask",
+        "explanationUz": "'I'd like to' dan keyin to-infinitive keladi: ask.",
+        "points": 15
+      },
+      {
+        "id": "u35-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri farqni tanlang",
+        "prompt": "'Do you like bananas?' - 'Yes, _____.'",
+        "options": [
+          "I do",
+          "I would",
+          "I like",
+          "I'd like"
+        ],
+        "correctAnswer": "I do",
+        "explanationUz": "'Do you like' umumiy savol bo'lib, unga 'Yes, I do' deb javob beriladi.",
+        "points": 15
       }
     ]
   },
@@ -2189,6 +3524,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "There _____ a post office across the street.",
         "correctAnswer": "is",
         "explanationUz": "'A post office' bitta bo'lgani uchun 'is' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u36-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ko'plik shaklini tanlang",
+        "prompt": "_____ any questions after the presentation?",
+        "options": [
+          "Were there",
+          "Was there",
+          "There were",
+          "Is there"
+        ],
+        "correctAnswer": "Were there",
+        "explanationUz": "'Questions' ko'plikda bo'lgani uchun o'tgan zamonda 'Were there' so'rog'i yasaladi.",
+        "points": 15
+      },
+      {
+        "id": "u36-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga is yoki are yozing",
+        "prompt": "There _____ 12 months in a year.",
+        "correctAnswer": "are",
+        "explanationUz": "'12 months' ko'plikda, shuning uchun 'are' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u36-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor shaklini tanlang",
+        "prompt": "There _____ any milk left in the bottle.",
+        "options": [
+          "isn't",
+          "aren't",
+          "not",
+          "is no"
+        ],
+        "correctAnswer": "isn't",
+        "explanationUz": "'Milk' sanalmaydigan ot bo'lgani uchun 'isn't' to'g'ri.",
         "points": 15
       }
     ]
@@ -2248,6 +3622,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "will",
         "explanationUz": "Kelasi zamon ehtimolida 'there will be' qo'llaniladi.",
         "points": 15
+      },
+      {
+        "id": "u37-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri o'tgan zamon shaklini tanlang",
+        "prompt": "Many years ago, _____ no computers or smartphones.",
+        "options": [
+          "there were",
+          "there was",
+          "there are",
+          "they were"
+        ],
+        "correctAnswer": "there were",
+        "explanationUz": "O'tmishdagi ko'plik otlar uchun 'there were' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u37-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga been yoki being yozing",
+        "prompt": "There has _____ a serious traffic accident on the highway.",
+        "correctAnswer": "been",
+        "explanationUz": "Present Perfect 'there has been' birikmasida 'been' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u37-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri kelasi zamon shaklini tanlang",
+        "prompt": "I hope _____ good weather for the picnic tomorrow.",
+        "options": [
+          "there will be",
+          "there is",
+          "there shall",
+          "it will"
+        ],
+        "correctAnswer": "there will be",
+        "explanationUz": "Kelasi zamon mavjudligi uchun 'there will be' to'g'ri.",
+        "points": 15
       }
     ]
   },
@@ -2305,6 +3718,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "_____ is a long way from London to Edinburgh.",
         "correctAnswer": "It",
         "explanationUz": "Masofani ifodalashda 'It is a long way' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u38-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri olmoshni tanlang",
+        "prompt": "_____ is true that exercise is good for your health.",
+        "options": [
+          "It",
+          "There",
+          "That",
+          "This"
+        ],
+        "correctAnswer": "It",
+        "explanationUz": "Umumiy faktni ifodalashda shaxssiz 'It is true that...' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u38-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Vaqtni bildiruvchi olmoshni yozing",
+        "prompt": "What time is _____? - Half past eight.",
+        "correctAnswer": "it",
+        "explanationUz": "Vaqtni so'rashda 'What time is it?' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u38-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri masofa birikmasini tanlang",
+        "prompt": "How far is _____ from your house to the university?",
+        "options": [
+          "it",
+          "there",
+          "that",
+          "distance"
+        ],
+        "correctAnswer": "it",
+        "explanationUz": "Masofa so'rashda 'How far is it...' qo'llaniladi.",
         "points": 15
       }
     ]
@@ -2364,6 +3816,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "does",
         "explanationUz": "Present Simple 'Does she' savoliga javob: 'Yes, she does'.",
         "points": 15
+      },
+      {
+        "id": "u39-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri qisqa javobni tanlang",
+        "prompt": "'Can you speak Chinese?' - 'No, _____.'",
+        "options": [
+          "I can't",
+          "I don't",
+          "I am not",
+          "I couldn't"
+        ],
+        "correctAnswer": "I can't",
+        "explanationUz": "'Can you' savoliga inkor javob: 'No, I can't'.",
+        "points": 15
+      },
+      {
+        "id": "u39-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Qisqa tasdiq javobini to'ldiring",
+        "prompt": "'Were they happy with the score?' - 'Yes, they _____.'",
+        "correctAnswer": "were",
+        "explanationUz": "'Were they' savoliga javob: 'Yes, they were'.",
+        "points": 15
+      },
+      {
+        "id": "u39-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri qisqa javobni tanlang",
+        "prompt": "'Did you watch the match?' - 'No, _____.'",
+        "options": [
+          "I didn't",
+          "I don't",
+          "I haven't",
+          "I wasn't"
+        ],
+        "correctAnswer": "I didn't",
+        "explanationUz": "Past Simple so'rog'iga javob: 'No, I didn't'.",
+        "points": 15
       }
     ]
   },
@@ -2421,6 +3912,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "It's cold today, _____ it?",
         "correctAnswer": "isn't",
         "explanationUz": "Tasdiq 'It's' (It is) gapiga inkor tag 'isn't it?' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u40-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri question tag tanlang",
+        "prompt": "They live in Samarkand, _____?",
+        "options": [
+          "don't they",
+          "do they",
+          "aren't they",
+          "didn't they"
+        ],
+        "correctAnswer": "don't they",
+        "explanationUz": "Present Simple tasdiq gapidan keyin inkor tag 'don't they?' keladi.",
+        "points": 15
+      },
+      {
+        "id": "u40-ex4",
+        "type": "fill_in_gap",
+        "instruction": "To'g'ri question tag yozing",
+        "prompt": "She can play the violin, _____ she?",
+        "correctAnswer": "can't",
+        "explanationUz": "'Can' bilan tasdiq gapga inkor tag 'can't she?' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u40-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri question tag tanlang",
+        "prompt": "You were at home yesterday, _____?",
+        "options": [
+          "weren't you",
+          "were you",
+          "didn't you",
+          "wasn't you"
+        ],
+        "correctAnswer": "weren't you",
+        "explanationUz": "O'tgan zamon 'were' ga inkor tag 'weren't you?' to'g'ri.",
         "points": 15
       }
     ]
@@ -2484,6 +4014,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "Neither",
         "explanationUz": "Inkor fikrga qo'shilish uchun 'Neither do I' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u41-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri qo'shilish iborasini tanlang",
+        "prompt": "'I have lost my passport.' - '_____.'",
+        "options": [
+          "So have I",
+          "So do I",
+          "Neither have I",
+          "So did I"
+        ],
+        "correctAnswer": "So have I",
+        "explanationUz": "'I have lost' tasdiq gapiga qo'shilish uchun 'So have I' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u41-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Inkor fikrga qo'shilish so'zini yozing",
+        "prompt": "'I wasn't at the party.' - 'Neither _____ I.'",
+        "correctAnswer": "was",
+        "explanationUz": "O'tgan zamon 'wasn't' inkoriga javob: 'Neither was I'.",
+        "points": 15
+      },
+      {
+        "id": "u41-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri variantni tanlang",
+        "prompt": "'I can't swim.' - 'I can't _____.'",
+        "options": [
+          "either",
+          "too",
+          "neither",
+          "also"
+        ],
+        "correctAnswer": "either",
+        "explanationUz": "Inkor gap oxirida 'ham' ma'nosida 'either' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -2541,6 +4110,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "_____ be late for your interview tomorrow morning!",
         "correctAnswer": "Don't",
         "explanationUz": "Inkor buyruq gap 'Don't' bilan boshlanadi.",
+        "points": 15
+      },
+      {
+        "id": "u42-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor shaklini tanlang",
+        "prompt": "I _____ remember his phone number.",
+        "options": [
+          "can't",
+          "am not",
+          "don't can",
+          "not can"
+        ],
+        "correctAnswer": "can't",
+        "explanationUz": "'Can' ning inkor shakli 'can't' (cannot) bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u42-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Inkor yordamchi fe'lini yozing",
+        "prompt": "They _____ have any tickets left for the concert.",
+        "correctAnswer": "don't",
+        "explanationUz": "'They' uchun Present Simple inkorda 'don't have' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u42-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor shaklini tanlang",
+        "prompt": "She _____ to school yesterday because she was ill.",
+        "options": [
+          "didn't go",
+          "didn't went",
+          "not went",
+          "went not"
+        ],
+        "correctAnswer": "didn't go",
+        "explanationUz": "'Didn't' dan keyin fe'lning bosh shakli (go) keladi.",
         "points": 15
       }
     ]
@@ -2600,6 +4208,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "does",
         "explanationUz": "'The train' (it) uchun so'roqda 'does' yordamchi fe'li ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u43-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri so'z tartibini tanlang",
+        "prompt": "Why _____ you wearing that heavy coat?",
+        "options": [
+          "are",
+          "do",
+          "did",
+          "have"
+        ],
+        "correctAnswer": "are",
+        "explanationUz": "Present Continuous so'rog'ida 'Why are you wearing' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u43-ex4",
+        "type": "fill_in_gap",
+        "instruction": "So'roq yordamchi fe'lini yozing",
+        "prompt": "_____ the shops open on Sundays in your city?",
+        "correctAnswer": "Are",
+        "explanationUz": "'The shops' ko'plik ot bilan so'roqda 'Are' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u43-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri so'roq gapni tanlang",
+        "prompt": "Choose the grammatically correct question:",
+        "options": [
+          "What time does the train arrive?",
+          "What time the train arrives?",
+          "What time arrives the train?",
+          "What time is the train arrive?"
+        ],
+        "correctAnswer": "What time does the train arrive?",
+        "explanationUz": "So'roq gapda yordamchi fe'l (does) egadan oldinda bo'lishi shart.",
+        "points": 15
       }
     ]
   },
@@ -2657,6 +4304,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "_____ wrote Romeo and Juliet? - William Shakespeare.",
         "correctAnswer": "Who",
         "explanationUz": "Muallifni (egani) so'rash uchun 'Who wrote...' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u44-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri savol shaklini tanlang",
+        "prompt": "_____ phoned while I was out?",
+        "options": [
+          "Who",
+          "Who did",
+          "Whom did",
+          "Who was"
+        ],
+        "correctAnswer": "Who",
+        "explanationUz": "Ega so'rog'ida 'did' qo'yilmaydi: 'Who phoned?'.",
+        "points": 15
+      },
+      {
+        "id": "u44-ex4",
+        "type": "fill_in_gap",
+        "instruction": "So'roq yordamchi fe'lini yozing",
+        "prompt": "Who did you _____ (invite) to your birthday party?",
+        "correctAnswer": "invite",
+        "explanationUz": "'Did' bor bo'lgani uchun fe'l 'invite' shaklida qoladi.",
+        "points": 15
+      },
+      {
+        "id": "u44-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri savolni tanlang",
+        "prompt": "Something happened. -> _____?",
+        "options": [
+          "What happened?",
+          "What did happen?",
+          "What was happen?",
+          "What does happen?"
+        ],
+        "correctAnswer": "What happened?",
+        "explanationUz": "Ega so'rog'ida to'g'ridan-to'g'ri fe'l qo'yiladi: 'What happened?'.",
         "points": 15
       }
     ]
@@ -2716,6 +4402,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "to",
         "explanationUz": "'Listen' fe'li bilan har doim 'to' predlogi ishlatiladi: listening to.",
         "points": 15
+      },
+      {
+        "id": "u45-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri predlogni tanlang",
+        "prompt": "What are you looking _____? - My keys.",
+        "options": [
+          "for",
+          "at",
+          "to",
+          "about"
+        ],
+        "correctAnswer": "for",
+        "explanationUz": "Biror narsani qidirish 'look for' orqali aytiladi.",
+        "points": 15
+      },
+      {
+        "id": "u45-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Gap oxiridagi predlogni yozing",
+        "prompt": "Who did you go to the cinema _____?",
+        "correctAnswer": "with",
+        "explanationUz": "'Kim bilan bordingiz' so'rog'ida oxirida 'with' turadi.",
+        "points": 15
+      },
+      {
+        "id": "u45-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ta'rif savolini tanlang",
+        "prompt": "'_____ was the weather like on holiday?' - 'It was sunny every day.'",
+        "options": [
+          "What",
+          "How",
+          "Which",
+          "Where"
+        ],
+        "correctAnswer": "What",
+        "explanationUz": "'What was ... like?' ob-havo ta'rifini so'rashda ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -2773,6 +4498,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "_____ often do you visit your grandparents?",
         "correctAnswer": "How",
         "explanationUz": "Chastotani so'rash uchun 'How often' (Qanchalik tez-tez) birikmasi ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u46-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri so'roq so'zini tanlang",
+        "prompt": "_____ size shoes do you take?",
+        "options": [
+          "What",
+          "Which",
+          "How",
+          "Whose"
+        ],
+        "correctAnswer": "What",
+        "explanationUz": "O'lcham so'rashda 'What size' birikmasi ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u46-ex4",
+        "type": "fill_in_gap",
+        "instruction": "So'roq so'zini yozing",
+        "prompt": "_____ colour are your eyes?",
+        "correctAnswer": "What",
+        "explanationUz": "Rangni so'rashda 'What colour' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u46-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri tanlov so'zini tanlang",
+        "prompt": "_____ of these two books would you like to read first?",
+        "options": [
+          "Which",
+          "What",
+          "How",
+          "Where"
+        ],
+        "correctAnswer": "Which",
+        "explanationUz": "Ikkita kitob orasidagi tanlov uchun 'Which' ishlatiladi.",
         "points": 15
       }
     ]
@@ -2832,6 +4596,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "long",
         "explanationUz": "Vaqt sarfini so'rashda 'How long' qo'llaniladi.",
         "points": 15
+      },
+      {
+        "id": "u47-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri zamon shaklini tanlang",
+        "prompt": "How long will it take _____ to get to London by train?",
+        "options": [
+          "to get",
+          "get",
+          "getting",
+          "got"
+        ],
+        "correctAnswer": "to get",
+        "explanationUz": "'How long does/will it take to do' qolipida to-infinitive ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u47-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'l shaklini yozing",
+        "prompt": "It _____ me about an hour to cook dinner yesterday.",
+        "correctAnswer": "took",
+        "explanationUz": "O'tgan zamonda 'took me an hour' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u47-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri kelasi zamon vaqt sarfini tanlang",
+        "prompt": "It _____ long to fix this flat tyre.",
+        "options": [
+          "won't take",
+          "not takes",
+          "isn't take",
+          "doesn't take to"
+        ],
+        "correctAnswer": "won't take",
+        "explanationUz": "'Ko'p vaqt olmaydi' ma'nosida 'It won't take long' aytiladi.",
+        "points": 15
       }
     ]
   },
@@ -2889,6 +4692,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "I don't know _____ they will come to the party or not.",
         "correctAnswer": "if",
         "explanationUz": "'Kelish-kelmasliklarini bilmayman' ma'nosida 'if' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u48-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri bilvosita savol shaklini tanlang",
+        "prompt": "Can you tell me what time _____?",
+        "options": [
+          "the bus arrives",
+          "does the bus arrive",
+          "arrives the bus",
+          "is the bus arrive"
+        ],
+        "correctAnswer": "the bus arrives",
+        "explanationUz": "Bilvosita savollarda to'g'ri so'z tartibi: ega (the bus) + fe'l (arrives).",
+        "points": 15
+      },
+      {
+        "id": "u48-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Darak tartibidagi fe'lni yozing",
+        "prompt": "I don't know where he _____ (live).",
+        "correctAnswer": "lives",
+        "explanationUz": "He bilan Present Simple da fe'lga -s qo'shiladi: lives.",
+        "points": 15
+      },
+      {
+        "id": "u48-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri bilvosita bog'lovchini tanlang",
+        "prompt": "Do you know _____ anyone called for me while I was away?",
+        "options": [
+          "if",
+          "what",
+          "where",
+          "which"
+        ],
+        "correctAnswer": "if",
+        "explanationUz": "'Birov qo'ng'iroq qildimi yoki yo'q' ma'nosida 'if' ishlatiladi.",
         "points": 15
       }
     ]
@@ -2948,6 +4790,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "said",
         "explanationUz": "To'ldiruvchi kishi nomi yo'qligi sababli 'said that' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u49-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri o'zlashtirma fe'l shaklini tanlang",
+        "prompt": "Jack said that he _____ very tired after the trip.",
+        "options": [
+          "was",
+          "is",
+          "were",
+          "be"
+        ],
+        "correctAnswer": "was",
+        "explanationUz": "Direct speech dagi 'am' reported speech da 'was' ga o'zgaradi.",
+        "points": 15
+      },
+      {
+        "id": "u49-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga said yoki told yozing",
+        "prompt": "He _____ me his address and phone number.",
+        "correctAnswer": "told",
+        "explanationUz": "To'ldiruvchi 'me' borligi sababli 'told' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u49-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri fe'lni tanlang",
+        "prompt": "She _____ that she couldn't come to our wedding.",
+        "options": [
+          "said",
+          "told",
+          "spoke",
+          "talked"
+        ],
+        "correctAnswer": "said",
+        "explanationUz": "To'ldiruvchi shaxssiz kelganda 'said that' to'g'ri bo'ladi.",
+        "points": 15
       }
     ]
   },
@@ -3005,6 +4886,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "I enjoy _____ movies at the weekend.",
         "correctAnswer": "watching",
         "explanationUz": "'Enjoy' fe'lidan so'ng -ing shakli (gerund) ishlatiladi: watching.",
+        "points": 15
+      },
+      {
+        "id": "u50-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri fe'l shaklini tanlang",
+        "prompt": "Let me _____ you with those heavy shopping bags.",
+        "options": [
+          "help",
+          "to help",
+          "helping",
+          "helped"
+        ],
+        "correctAnswer": "help",
+        "explanationUz": "'Let' fe'lidan so'ng to-siz asosiy fe'l keladi: help.",
+        "points": 15
+      },
+      {
+        "id": "u50-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lni to'g'ri shaklda yozing (watch)",
+        "prompt": "We stayed at home to _____ the football match.",
+        "correctAnswer": "watch",
+        "explanationUz": "Maqsad infinitivida 'to watch' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u50-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri modal fe'l birikmasini tanlang",
+        "prompt": "You must _____ quiet in the library.",
+        "options": [
+          "be",
+          "to be",
+          "being",
+          "been"
+        ],
+        "correctAnswer": "be",
+        "explanationUz": "'Must' dan keyin to-siz infinitive 'be' ishlatiladi.",
         "points": 15
       }
     ]
@@ -3064,6 +4984,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "swimming",
         "explanationUz": "'Love' dan keyin ko'pincha -ing (swimming) ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u51-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri fe'l shaklini tanlang",
+        "prompt": "Have you finished _____ the kitchen?",
+        "options": [
+          "cleaning",
+          "to clean",
+          "clean",
+          "cleaned"
+        ],
+        "correctAnswer": "cleaning",
+        "explanationUz": "'Finish' fe'lidan keyin doimo -ing (gerund) keladi: cleaning.",
+        "points": 15
+      },
+      {
+        "id": "u51-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lni to'g'ri shaklga qo'ying (buy)",
+        "prompt": "I can't afford _____ a brand new car.",
+        "correctAnswer": "to buy",
+        "explanationUz": "'Afford' fe'lidan so'ng to-infinitive (to buy) ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u51-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri gerund shaklini tanlang",
+        "prompt": "Do you mind _____ the window? It's a bit cold.",
+        "options": [
+          "closing",
+          "to close",
+          "close",
+          "closed"
+        ],
+        "correctAnswer": "closing",
+        "explanationUz": "'Mind' fe'lidan so'ng -ing keladi: closing.",
+        "points": 15
       }
     ]
   },
@@ -3121,6 +5080,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "She asked him _____ make any noise.",
         "correctAnswer": "not to",
         "explanationUz": "Inkor buyruqda 'not to' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u52-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri to-infinitive birikmasini tanlang",
+        "prompt": "I asked him _____ late for the meeting.",
+        "options": [
+          "not to be",
+          "to not be",
+          "not being",
+          "don't be"
+        ],
+        "correctAnswer": "not to be",
+        "explanationUz": "Inkor murakkab to'ldiruvchida 'not to be' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u52-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lni to'ldiring (make/let)",
+        "prompt": "The sad news made her _____ (cry).",
+        "correctAnswer": "cry",
+        "explanationUz": "'Make someone do' qolipida 'to' tushib qoladi: cry.",
+        "points": 15
+      },
+      {
+        "id": "u52-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri shaklni tanlang",
+        "prompt": "My parents want me _____ a university degree.",
+        "options": [
+          "to get",
+          "getting",
+          "get",
+          "got"
+        ],
+        "correctAnswer": "to get",
+        "explanationUz": "'Want someone to do' qoidasiga ko'ra 'to get' to'g'ri.",
         "points": 15
       }
     ]
@@ -3180,6 +5178,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "for",
         "explanationUz": "'Lunch' ot so'z turkumi bo'lgani uchun 'for' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u53-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri maqsad ifodasini tanlang",
+        "prompt": "I called the restaurant _____ a table for two.",
+        "options": [
+          "to book",
+          "for book",
+          "for booking",
+          "booking"
+        ],
+        "correctAnswer": "to book",
+        "explanationUz": "Harakat maqsadi uchun 'to + infinitive' ishlatiladi: to book.",
+        "points": 15
+      },
+      {
+        "id": "u53-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga to yoki for yozing",
+        "prompt": "I went to the supermarket _____ some fresh bread.",
+        "correctAnswer": "for",
+        "explanationUz": "Ot ('some fresh bread') oldidan 'for' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u53-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri variantni tanlang",
+        "prompt": "He turned on the light _____ the stairs clearly.",
+        "options": [
+          "to see",
+          "for see",
+          "seeing",
+          "for seeing"
+        ],
+        "correctAnswer": "to see",
+        "explanationUz": "Ko'rish maqsadida: 'to see'.",
+        "points": 15
       }
     ]
   },
@@ -3237,6 +5274,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "The weather is lovely. Let's go _____ a walk.",
         "correctAnswer": "for",
         "explanationUz": "'Sayrga chiqmoq' iborasi 'go for a walk' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u54-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri birikmani tanlang",
+        "prompt": "We usually go _____ in the mountains in winter.",
+        "options": [
+          "skiing",
+          "to ski",
+          "for skiing",
+          "to skiing"
+        ],
+        "correctAnswer": "skiing",
+        "explanationUz": "Sport va dam olish mashg'ulotlari uchun 'go skiing' aytiladi.",
+        "points": 15
+      },
+      {
+        "id": "u54-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Predlogni yozing (to / on / for)",
+        "prompt": "They went _____ holiday to Spain last summer.",
+        "correctAnswer": "on",
+        "explanationUz": "'Ta'tilga bormoq' iborasi 'go on holiday' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u54-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri birikmani tanlang",
+        "prompt": "Would you like to go for a _____ in the swimming pool?",
+        "options": [
+          "swim",
+          "swimming",
+          "swimming pool",
+          "swam"
+        ],
+        "correctAnswer": "swim",
+        "explanationUz": "'Suzishga borish' iborasi 'go for a swim' hisoblanadi.",
         "points": 15
       }
     ]
@@ -3296,6 +5372,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "got",
         "explanationUz": "'Get' fe'lining o'tgan zamon shakli 'got' hisoblanadi.",
         "points": 15
+      },
+      {
+        "id": "u55-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri 'get' ma'nosini tanlang",
+        "prompt": "It's getting late. We should head home.",
+        "options": [
+          "becoming",
+          "arriving",
+          "buying",
+          "receiving"
+        ],
+        "correctAnswer": "becoming",
+        "explanationUz": "'Get late' kech bo'lishi (become) holatini bildiradi.",
+        "points": 15
+      },
+      {
+        "id": "u55-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Transport iborasini to'ldiring (get ... a taxi)",
+        "prompt": "The rain started, so we got _____ a taxi.",
+        "correctAnswer": "in",
+        "explanationUz": "Taksi yoki yengil avtomobilga minish 'get in' deyiladi.",
+        "points": 15
+      },
+      {
+        "id": "u55-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri yetib borish iborasini tanlang",
+        "prompt": "What time do you usually _____ to work in the morning?",
+        "options": [
+          "get",
+          "reach to",
+          "arrive to",
+          "getting"
+        ],
+        "correctAnswer": "get",
+        "explanationUz": "'Get to work' ishga yetib borish ma'nosida ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -3353,6 +5468,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Could you _____ me a favour, please?",
         "correctAnswer": "do",
         "explanationUz": "'Iltimosni bajarmoq / yaxshilik qilmoq' iborasi 'do a favour' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u56-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri fe'lni tanlang (do / make)",
+        "prompt": "I need to _____ a quick phone call to my parents.",
+        "options": [
+          "make",
+          "do",
+          "take",
+          "give"
+        ],
+        "correctAnswer": "make",
+        "explanationUz": "'Qo'ng'iroq qilmoq' iborasi 'make a phone call' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u56-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga do yoki make yozing",
+        "prompt": "Can you _____ a cup of coffee for our guests?",
+        "correctAnswer": "make",
+        "explanationUz": "Kofe yoki choy tayyorlash 'make coffee' deyiladi.",
+        "points": 15
+      },
+      {
+        "id": "u56-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri birikmani tanlang",
+        "prompt": "I always try to _____ my best in every exam.",
+        "options": [
+          "do",
+          "make",
+          "take",
+          "act"
+        ],
+        "correctAnswer": "do",
+        "explanationUz": "'Qo'ldan kelgancha harakat qilmoq' 'do one's best' bo'ladi.",
         "points": 15
       }
     ]
@@ -3412,6 +5566,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "rest",
         "explanationUz": "'Dam olmoq' iborasi 'have a rest' hisoblanadi.",
         "points": 15
+      },
+      {
+        "id": "u57-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri iborani tanlang",
+        "prompt": "Did you _____ a good time at the concert last night?",
+        "options": [
+          "have",
+          "have got",
+          "had",
+          "got"
+        ],
+        "correctAnswer": "have",
+        "explanationUz": "'Did' bilan o'tgan zamon so'rog'ida 'have a good time' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u57-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Iborani to'ldiring",
+        "prompt": "I usually have a _____ before going to bed. (yuvinish/dush)",
+        "correctAnswer": "shower",
+        "explanationUz": "'Dush qabul qilmoq' iborasi 'have a shower' deb yoziladi.",
+        "points": 15
+      },
+      {
+        "id": "u57-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ovqatlanish iborasini tanlang",
+        "prompt": "What time do you usually _____ breakfast?",
+        "options": [
+          "have",
+          "have got",
+          "having",
+          "had"
+        ],
+        "correctAnswer": "have",
+        "explanationUz": "Nonushta qilish uchun 'have breakfast' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -3469,6 +5662,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "They gave _____ a warm welcome.",
         "correctAnswer": "us",
         "explanationUz": "Fe'ldan keyin kelgan to'ldiruvchi uchun 'us' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u58-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri to'ldiruvchi olmoshini tanlang",
+        "prompt": "We invited them to our party, but _____ couldn't come.",
+        "options": [
+          "they",
+          "them",
+          "their",
+          "theirs"
+        ],
+        "correctAnswer": "they",
+        "explanationUz": "Ikkinchi gapning egasi sifatida 'they' olmoshi kerak.",
+        "points": 15
+      },
+      {
+        "id": "u58-ex4",
+        "type": "fill_in_gap",
+        "instruction": "To'ldiruvchi olmoshini yozing",
+        "prompt": "I don't know that woman. Do you know _____?",
+        "correctAnswer": "her",
+        "explanationUz": "Ayol kishi to'ldiruvchi bo'lganda 'her' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u58-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri olmoshni tanlang",
+        "prompt": "Can you help _____ with this exercise, please?",
+        "options": [
+          "me",
+          "I",
+          "my",
+          "mine"
+        ],
+        "correctAnswer": "me",
+        "explanationUz": "Fe'ldan keyin keluvchi to'ldiruvchi: 'help me'.",
         "points": 15
       }
     ]
@@ -3529,6 +5761,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "its",
         "explanationUz": "Hayvon yoki jonsiz narsa egaligi uchun apostrofsiz 'its' yoziladi.",
         "points": 15
+      },
+      {
+        "id": "u59-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri egalik sifatini tanlang",
+        "prompt": "Oxford is famous for _____ ancient university.",
+        "options": [
+          "its",
+          "it's",
+          "their",
+          "his"
+        ],
+        "correctAnswer": "its",
+        "explanationUz": "Shahar (jonsiz) egaligi uchun apostrofsiz 'its' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u59-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Egalik sifatini yozing",
+        "prompt": "Sarah lives with _____ parents in a modern flat.",
+        "correctAnswer": "her",
+        "explanationUz": "Sarah (she) ning ota-onasi uchun 'her parents' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u59-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri egalik sifatini tanlang",
+        "prompt": "The boys are washing _____ father's car.",
+        "options": [
+          "their",
+          "they",
+          "them",
+          "theirs"
+        ],
+        "correctAnswer": "their",
+        "explanationUz": "Ko'plikdagi o'g'il bolalar egaligi: 'their'.",
+        "points": 15
       }
     ]
   },
@@ -3586,6 +5857,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "_____ keys are these on the kitchen table?",
         "correctAnswer": "Whose",
         "explanationUz": "'Kimning kalitlari' deb egalikni so'rashda 'Whose' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u60-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri egalik olmoshini tanlang",
+        "prompt": "It isn't my book. It's _____.",
+        "options": [
+          "hers",
+          "her",
+          "she",
+          "hers'"
+        ],
+        "correctAnswer": "hers",
+        "explanationUz": "Otdan so'ng mustaqil keluvchi egalik olmoshi 'hers' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u60-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Mustaqil egalik olmoshini yozing (bizniki)",
+        "prompt": "Their apartment is modern, but _____ is bigger.",
+        "correctAnswer": "ours",
+        "explanationUz": "'Bizniki' otsiz yolg'iz kelganda 'ours' deb yoziladi.",
+        "points": 15
+      },
+      {
+        "id": "u60-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri so'roq so'zini tanlang",
+        "prompt": "_____ coat is this on the chair?",
+        "options": [
+          "Whose",
+          "Who's",
+          "Who",
+          "Whom"
+        ],
+        "correctAnswer": "Whose",
+        "explanationUz": "'Kimning paltosi' deb so'rashda 'Whose' ishlatiladi.",
         "points": 15
       }
     ]
@@ -3645,6 +5955,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "hers",
         "explanationUz": "Sarahning zontigi (o'ziniki) otsiz kelganida 'hers' bo'ladi.",
         "points": 15
+      },
+      {
+        "id": "u61-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri birikmani tanlang",
+        "prompt": "I went on holiday with two friends of _____.",
+        "options": [
+          "mine",
+          "my",
+          "me",
+          "I"
+        ],
+        "correctAnswer": "mine",
+        "explanationUz": "'Friends of mine' (mening do'stlarim) turg'un birikmasida 'mine' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u61-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Olmoshni to'ldiring",
+        "prompt": "He gave me his address and I gave him _____.",
+        "correctAnswer": "mine",
+        "explanationUz": "'O'zimnikini berdim' otsiz ma'noda 'mine' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u61-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri olmoshni tanlang",
+        "prompt": "Is that woman a friend of _____?",
+        "options": [
+          "yours",
+          "your",
+          "you",
+          "yours'"
+        ],
+        "correctAnswer": "yours",
+        "explanationUz": "'A friend of yours' to'g'ri grammatik qolip.",
+        "points": 15
       }
     ]
   },
@@ -3702,6 +6051,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Be careful with that hot tea! Don't burn _____.",
         "correctAnswer": "yourself",
         "explanationUz": "Suhbatdoshga (you) qaratilgani uchun 'yourself' to'g'ri bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u62-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri o'zlik olmoshini tanlang",
+        "prompt": "We had a wonderful holiday. We enjoyed _____ very much.",
+        "options": [
+          "ourselves",
+          "us",
+          "ourself",
+          "ours"
+        ],
+        "correctAnswer": "ourselves",
+        "explanationUz": "'We' uchun ko'plikdagi o'zlik olmoshi 'ourselves' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u62-ex4",
+        "type": "fill_in_gap",
+        "instruction": "O'zlik olmoshini yozing",
+        "prompt": "He lives all by _____ in a quiet cottage.",
+        "correctAnswer": "himself",
+        "explanationUz": "'Yolg'iz o'zi' ma'nosida 'by himself' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u62-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri o'zlik olmoshini tanlang",
+        "prompt": "She looked at _____ in the mirror before leaving.",
+        "options": [
+          "herself",
+          "her",
+          "hers",
+          "herselfs"
+        ],
+        "correctAnswer": "herself",
+        "explanationUz": "O'ziga qarash uchun 'herself' ishlatiladi.",
         "points": 15
       }
     ]
@@ -3761,6 +6149,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "of",
         "explanationUz": "Jonsiz narsa (kitob) uchun 'the title of the book' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u63-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri egalik shaklini tanlang",
+        "prompt": "This is my _____ bicycle. They share it.",
+        "options": [
+          "brothers'",
+          "brother's",
+          "brothers",
+          "brother"
+        ],
+        "correctAnswer": "brothers'",
+        "explanationUz": "Aka-ukalar (ko'plik) egaligi uchun oxirida faqat apostrof qo'yiladi: brothers'.",
+        "points": 15
+      },
+      {
+        "id": "u63-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Egalik shaklini to'ldiring",
+        "prompt": "What is the name _____ this street?",
+        "correctAnswer": "of",
+        "explanationUz": "Jonsiz narsalarda (ko'cha) 'the name of this street' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u63-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri egalik birikmasini tanlang",
+        "prompt": "We stayed at _____ house during our trip to London.",
+        "options": [
+          "Paul and Sarah's",
+          "Paul's and Sarah's",
+          "Paul and Sarah",
+          "Paul's and Sarah"
+        ],
+        "correctAnswer": "Paul and Sarah's",
+        "explanationUz": "Umumiy egalikda faqat oxirgi nomga 's qo'shiladi.",
+        "points": 15
       }
     ]
   },
@@ -3818,6 +6245,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "We had to wait for _____ hour before the doctor arrived.",
         "correctAnswer": "an",
         "explanationUz": "'Hour' so'zida 'h' harfi o'qilmasdan unli tovush bilan boshlangani sababli 'an' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u64-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri noaniq artiklni tanlang",
+        "prompt": "He is _____ honest man who always tells the truth.",
+        "options": [
+          "an",
+          "a",
+          "the",
+          "-"
+        ],
+        "correctAnswer": "an",
+        "explanationUz": "'Honest' da 'h' o'qilmaydi va unli tovush bilan boshlanadi: an honest man.",
+        "points": 15
+      },
+      {
+        "id": "u64-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga a yoki an yozing",
+        "prompt": "Would you like _____ apple or a banana?",
+        "correctAnswer": "an",
+        "explanationUz": "'Apple' unli tovush bilan boshlangani sababli 'an' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u64-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri kasb artiklini tanlang",
+        "prompt": "My mother works as _____ engineer in an international firm.",
+        "options": [
+          "an",
+          "a",
+          "the",
+          "-"
+        ],
+        "correctAnswer": "an",
+        "explanationUz": "Kasb unli tovush bilan boshlanganda 'an engineer' deb aytiladi.",
         "points": 15
       }
     ]
@@ -3877,6 +6343,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "cities",
         "explanationUz": "Undosh + y bilan tugagan otlar ko'plikda '-ies' oladi: cities.",
         "points": 15
+      },
+      {
+        "id": "u65-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ko'plik ot shaklini tanlang",
+        "prompt": "All the _____ in the office were polite and helpful.",
+        "options": [
+          "women",
+          "womans",
+          "womens",
+          "woman"
+        ],
+        "correctAnswer": "women",
+        "explanationUz": "'Woman' otining ko'pligi 'women' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u65-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Otning ko'plik shaklini yozing (tooth)",
+        "prompt": "You should brush your _____ twice a day.",
+        "correctAnswer": "teeth",
+        "explanationUz": "'Tooth' otining noto'g'ri ko'pligi 'teeth' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u65-ex5",
+        "type": "multiple_choice",
+        "instruction": "Doimiy ko'plikdagi kiyim shaklini tanlang",
+        "prompt": "These jeans _____ too tight for me.",
+        "options": [
+          "are",
+          "is",
+          "was",
+          "be"
+        ],
+        "correctAnswer": "are",
+        "explanationUz": "'Jeans' doimiy ko'plik ot bo'lib, 'are' fe'lini oladi.",
+        "points": 15
       }
     ]
   },
@@ -3934,6 +6439,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "I need _____ information about train times.",
         "correctAnswer": "some",
         "explanationUz": "'Information' ingliz tilida sanalmaydigan ot bo'lib, 'a' olmaydi.",
+        "points": 15
+      },
+      {
+        "id": "u66-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri sanalmaydigan ot birikmasini tanlang",
+        "prompt": "I don't drink _____ coffee in the evening.",
+        "options": [
+          "much",
+          "many",
+          "a lot",
+          "few"
+        ],
+        "correctAnswer": "much",
+        "explanationUz": "'Coffee' sanalmaydigan ot bo'lgani uchun inkor gapda 'much' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u66-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga a yoki some yozing",
+        "prompt": "I bought _____ bread and cheese at the grocery store.",
+        "correctAnswer": "some",
+        "explanationUz": "'Bread' sanalmaydigan ot, shuning uchun 'some' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u66-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri sanaladigan otni tanlang",
+        "prompt": "Would you like _____ cup of green tea?",
+        "options": [
+          "a",
+          "some",
+          "any",
+          "an"
+        ],
+        "correctAnswer": "a",
+        "explanationUz": "'Cup' sanaladigan birlik ot bo'lgani uchun 'a cup' bo'ladi.",
         "points": 15
       }
     ]
@@ -3993,6 +6537,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "piece",
         "explanationUz": "'Bitta maslahat' ingliz tilida 'a piece of advice' deyiladi.",
         "points": 15
+      },
+      {
+        "id": "u67-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri fe'l shaklini tanlang",
+        "prompt": "The weather _____ fantastic during our stay in Italy.",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "have been"
+        ],
+        "correctAnswer": "was",
+        "explanationUz": "'Weather' birlikdagi sanalmaydigan ot bo'lib, 'was' oladi.",
+        "points": 15
+      },
+      {
+        "id": "u67-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga is yoki are yozing",
+        "prompt": "The luggage _____ very heavy. Can you help me?",
+        "correctAnswer": "is",
+        "explanationUz": "'Luggage' sanalmaydi va birlik fe'l (is) oladi.",
+        "points": 15
+      },
+      {
+        "id": "u67-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri variantni tanlang",
+        "prompt": "I have some good _____ for you!",
+        "options": [
+          "news",
+          "a news",
+          "newses",
+          "an news"
+        ],
+        "correctAnswer": "news",
+        "explanationUz": "'News' sanalmaydi, 'some good news' deb aytiladi.",
+        "points": 15
       }
     ]
   },
@@ -4050,6 +6633,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Could you please pass me _____ salt?",
         "correctAnswer": "the",
         "explanationUz": "Stoldagi aniq tuzdon nazarda tutilgani uchun 'the salt' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u68-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri artiklni tanlang",
+        "prompt": "Could you close _____ door, please? It's drafty.",
+        "options": [
+          "the",
+          "a",
+          "an",
+          "-"
+        ],
+        "correctAnswer": "the",
+        "explanationUz": "Xonadagi aniq eshik nazarda tutilgani uchun 'the door' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u68-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Artiklni yozing (the yoki a)",
+        "prompt": "We stayed at a hotel. _____ hotel had a beautiful swimming pool.",
+        "correctAnswer": "The",
+        "explanationUz": "Mehmonxona ikkinchi bor eslatilgani sababli 'The hotel' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u68-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri noaniq artiklni tanlang",
+        "prompt": "There was _____ man standing outside the gate.",
+        "options": [
+          "a",
+          "the",
+          "an",
+          "one of"
+        ],
+        "correctAnswer": "a",
+        "explanationUz": "Birinchi marta eslatilgan notanish kishi uchun 'a man' ishlatiladi.",
         "points": 15
       }
     ]
@@ -4109,6 +6731,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "the",
         "explanationUz": "'Internet' so'zi oldidan har doim 'the' qo'yiladi.",
         "points": 15
+      },
+      {
+        "id": "u69-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri artiklni tanlang",
+        "prompt": "The earth moves around _____ sun.",
+        "options": [
+          "the",
+          "a",
+          "an",
+          "-"
+        ],
+        "correctAnswer": "the",
+        "explanationUz": "'The sun' yagona borliq ob'ekti sifatida 'the' oladi.",
+        "points": 15
+      },
+      {
+        "id": "u69-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Artiklni to'ldiring",
+        "prompt": "Look up at _____ stars in the night sky.",
+        "correctAnswer": "the",
+        "explanationUz": "Osmondagi yulduzlar uchun 'the stars' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u69-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri tashkilot artiklini tanlang",
+        "prompt": "Somebody stole my bag, so I called _____ police.",
+        "options": [
+          "the",
+          "a",
+          "an",
+          "-"
+        ],
+        "correctAnswer": "the",
+        "explanationUz": "'The police' doimo aniq artikl 'the' bilan ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -4166,6 +6827,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "My mother is still _____ work at the hospital.",
         "correctAnswer": "at",
         "explanationUz": "'Ishda' ma'nosida 'at work' iborasi qo'llaniladi.",
+        "points": 15
+      },
+      {
+        "id": "u70-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri iborani tanlang",
+        "prompt": "Children in Uzbekistan usually start _____ at the age of seven.",
+        "options": [
+          "school",
+          "the school",
+          "a school",
+          "to school"
+        ],
+        "correctAnswer": "school",
+        "explanationUz": "Ta'lim maqsadi sifatida 'start school' artiklsiz ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u70-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Predlogni yozing (at / to / in)",
+        "prompt": "I was very exhausted, so I stayed _____ bed until noon.",
+        "correctAnswer": "in",
+        "explanationUz": "'In bed' (o'rinda yotmoq) turg'un iborasida 'in' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u70-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri bino artiklini tanlang",
+        "prompt": "We often go to _____ cinema on Friday evenings.",
+        "options": [
+          "the",
+          "a",
+          "-",
+          "an"
+        ],
+        "correctAnswer": "the",
+        "explanationUz": "'Go to the cinema' iborasida har doim 'the' bo'ladi.",
         "points": 15
       }
     ]
@@ -4225,6 +6925,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "-",
         "explanationUz": "Umumiy musiqa turi oldidan artikl qo'yilmaydi (-).",
         "points": 15
+      },
+      {
+        "id": "u71-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri umumiy ot shaklini tanlang",
+        "prompt": "_____ work very long hours in emergency hospitals.",
+        "options": [
+          "Doctors",
+          "The doctors",
+          "A doctors",
+          "Doctor"
+        ],
+        "correctAnswer": "Doctors",
+        "explanationUz": "Umumiy barcha shifokorlar haqida gapirganda artiklsiz 'Doctors' deyiladi.",
+        "points": 15
+      },
+      {
+        "id": "u71-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Artikl kerak bo'lmasa '-' deb yozing",
+        "prompt": "I never drink _____ coffee late at night.",
+        "correctAnswer": "-",
+        "explanationUz": "Umumiy ichimlik turi oldidan artikl qo'yilmaydi (-).",
+        "points": 15
+      },
+      {
+        "id": "u71-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri variantni tanlang",
+        "prompt": "Most people like _____ music of some kind.",
+        "options": [
+          "-",
+          "the",
+          "a",
+          "an"
+        ],
+        "correctAnswer": "-",
+        "explanationUz": "Umumiy musiqa tushunchasi artiklsiz keladi.",
+        "points": 15
       }
     ]
   },
@@ -4282,6 +7021,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "The Amudarya flows into _____ Aral Sea.",
         "correctAnswer": "the",
         "explanationUz": "Dengizlar va daryolar nomlari oldidan 'the' artikli qo'yiladi.",
+        "points": 15
+      },
+      {
+        "id": "u72-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri geografik artiklni tanlang",
+        "prompt": "Cairo is situated on the banks of _____ River Nile.",
+        "options": [
+          "the",
+          "a",
+          "-",
+          "an"
+        ],
+        "correctAnswer": "the",
+        "explanationUz": "Barcha daryolar oldidan 'the' artikli qo'yiladi: the Nile.",
+        "points": 15
+      },
+      {
+        "id": "u72-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Tog' tizmasi artiklini yozing",
+        "prompt": "Skiing is very popular in _____ Alps.",
+        "correctAnswer": "the",
+        "explanationUz": "Tog' tizmalari (Alplar) oldidan 'the' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u72-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri davlat nomi artiklini tanlang",
+        "prompt": "We visited _____ Uzbekistan and Kazakhstan last spring.",
+        "options": [
+          "-",
+          "the",
+          "a",
+          "an"
+        ],
+        "correctAnswer": "-",
+        "explanationUz": "Aksariyat davlatlar nomlari (Uzbekistan) oldidan artikl qo'yilmaydi (-).",
         "points": 15
       }
     ]
@@ -4341,6 +7119,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "this",
         "explanationUz": "Telefonda o'zini tanishtirish uchun 'this is...' deyiladi.",
         "points": 15
+      },
+      {
+        "id": "u73-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ko'rsatish olmoshini tanlang",
+        "prompt": "Look at _____ picture on the wall over there.",
+        "options": [
+          "that",
+          "this",
+          "these",
+          "those"
+        ],
+        "correctAnswer": "that",
+        "explanationUz": "Uzoqdagi ('over there') bitta rasm uchun 'that' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u73-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Ko'rsatish olmoshini yozing (bu)",
+        "prompt": "I really love _____ delicious apple pie you made.",
+        "correctAnswer": "this",
+        "explanationUz": "Yaqindagi bitta narsa uchun 'this' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u73-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ko'plik ko'rsatish olmoshini tanlang",
+        "prompt": "Do you like _____ shoes I'm wearing?",
+        "options": [
+          "these",
+          "those",
+          "this",
+          "that"
+        ],
+        "correctAnswer": "these",
+        "explanationUz": "O'zi kiyib turgan (yaqin) ko'plik poyafzal uchun 'these' to'g'ri.",
+        "points": 15
       }
     ]
   },
@@ -4398,6 +7215,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "These chocolates are delicious, but those _____ are too sweet.",
         "correctAnswer": "ones",
         "explanationUz": "Ko'plikdagi 'chocolates' o'rniga 'ones' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u74-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri o'rnini bosuvchi so'zni tanlang",
+        "prompt": "Which hotel did you stay at? - The modern _____ near the airport.",
+        "options": [
+          "one",
+          "ones",
+          "it",
+          "hotel one"
+        ],
+        "correctAnswer": "one",
+        "explanationUz": "Birlikdagi ot ('hotel') o'rniga 'the modern one' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u74-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga one yoki ones yozing",
+        "prompt": "Don't buy those green apples. Buy the red _____.",
+        "correctAnswer": "ones",
+        "explanationUz": "Ko'plikdagi olmalar o'rniga 'the red ones' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u74-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri takrorlanishdan qochish shaklini tanlang",
+        "prompt": "My cup is dirty. Can you give me a clean _____?",
+        "options": [
+          "one",
+          "ones",
+          "it",
+          "that"
+        ],
+        "correctAnswer": "one",
+        "explanationUz": "'A clean one' (tozasi) birlikdagi ot o'rnida ishlatiladi.",
         "points": 15
       }
     ]
@@ -4457,6 +7313,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "some",
         "explanationUz": "Muloyim takliflarda 'some' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u75-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri miqdor so'zini tanlang",
+        "prompt": "Did you take _____ photographs during your vacation?",
+        "options": [
+          "any",
+          "some",
+          "no",
+          "none"
+        ],
+        "correctAnswer": "any",
+        "explanationUz": "Umumiy so'roq gapda miqdor uchun 'any' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u75-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Iltimos so'rog'ida to'ldiring",
+        "prompt": "Can I have _____ water, please?",
+        "correctAnswer": "some",
+        "explanationUz": "Ijobiy iltimoslarda 'some' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u75-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri tasdiq shaklini tanlang",
+        "prompt": "I bought _____ lovely postcards in Samarkand.",
+        "options": [
+          "some",
+          "any",
+          "no",
+          "much"
+        ],
+        "correctAnswer": "some",
+        "explanationUz": "Tasdiq gapda ko'plik otlar bilan 'some' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -4514,6 +7409,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "'How many mistakes did you make?' - '_____! I got 100%.'",
         "correctAnswer": "None",
         "explanationUz": "Otsiz yolg'iz ishlatiladigan inkor so'z 'None' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u76-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor miqdorini tanlang",
+        "prompt": "There are _____ free tables left in the restaurant.",
+        "options": [
+          "no",
+          "none",
+          "any",
+          "not"
+        ],
+        "correctAnswer": "no",
+        "explanationUz": "Tasdiq fe'ldan keyin ot oldida 'no free tables' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u76-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Otsiz inkor so'zini yozing",
+        "prompt": "'How many mistakes did she make?' - '_____!'",
+        "correctAnswer": "None",
+        "explanationUz": "Otsiz mustaqil javobda 'None' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u76-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor gapni tanlang",
+        "prompt": "We haven't got _____ petrol in the car.",
+        "options": [
+          "any",
+          "no",
+          "none",
+          "some"
+        ],
+        "correctAnswer": "any",
+        "explanationUz": "Inkor fe'ldan ('haven't got') keyin 'any' ishlatiladi.",
         "points": 15
       }
     ]
@@ -4573,6 +7507,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "nobody",
         "explanationUz": "Fe'l tasdiqda ('passed') bo'lib, inkor ma'no berish uchun 'nobody' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u77-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri kishilik noaniq olmoshini tanlang",
+        "prompt": "The house was silent. _____ answered the door.",
+        "options": [
+          "Nobody",
+          "Anybody",
+          "Somebody",
+          "Anyone"
+        ],
+        "correctAnswer": "Nobody",
+        "explanationUz": "Tasdiq fe'l ('answered') bilan inkor ma'no uchun 'Nobody' qo'yiladi.",
+        "points": 15
+      },
+      {
+        "id": "u77-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Tasdiq olmoshini yozing (kimdir)",
+        "prompt": "There is _____ waiting to see you in the office.",
+        "correctAnswer": "somebody",
+        "explanationUz": "'Kimdir' tasdiq gapda 'somebody' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u77-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor olmoshini tanlang",
+        "prompt": "I didn't recognize _____ at the conference.",
+        "options": [
+          "anybody",
+          "nobody",
+          "somebody",
+          "no one"
+        ],
+        "correctAnswer": "anybody",
+        "explanationUz": "Inkor fe'l ('didn't recognize') bilan 'anybody' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -4630,6 +7603,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Don't worry! I have _____ to hide from you.",
         "correctAnswer": "nothing",
         "explanationUz": "'Yashiradigan hech narsam yo'q' tasdiq fe'l bilan 'nothing' orqali ifodalanadi.",
+        "points": 15
+      },
+      {
+        "id": "u78-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri olmoshni tanlang",
+        "prompt": "Did you say _____? - No, I didn't say a word.",
+        "options": [
+          "anything",
+          "something",
+          "nothing",
+          "everything"
+        ],
+        "correctAnswer": "anything",
+        "explanationUz": "So'roq gapda narsa haqida so'rash uchun 'anything' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u78-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga somewhere yoki anywhere yozing",
+        "prompt": "Let's go _____ warm for our holidays.",
+        "correctAnswer": "somewhere",
+        "explanationUz": "Tasdiq taklifda 'somewhere warm' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u78-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor olmoshini tanlang",
+        "prompt": "There was _____ to sit down in the crowded waiting room.",
+        "options": [
+          "nowhere",
+          "anywhere",
+          "somewhere",
+          "everywhere"
+        ],
+        "correctAnswer": "nowhere",
+        "explanationUz": "Tasdiq fe'l bilan 'hech qayer' ma'nosi 'nowhere' orqali beriladi.",
         "points": 15
       }
     ]
@@ -4689,6 +7701,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "all",
         "explanationUz": "Ko'plikdagi 'colleagues' oldidan 'all' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u79-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri miqdor so'zini tanlang",
+        "prompt": "_____ room in this hotel has air conditioning.",
+        "options": [
+          "Every",
+          "All",
+          "Whole",
+          "All of"
+        ],
+        "correctAnswer": "Every",
+        "explanationUz": "Birlikdagi 'room' oti oldidan 'Every' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u79-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga all yoki every yozing",
+        "prompt": "I spent _____ day on the beach yesterday.",
+        "correctAnswer": "all",
+        "explanationUz": "'Kun bo'yi' ma'nosida 'all day' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u79-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ko'plik ifodasini tanlang",
+        "prompt": "_____ the lights were turned off.",
+        "options": [
+          "All",
+          "Every",
+          "Each",
+          "Whole"
+        ],
+        "correctAnswer": "All",
+        "explanationUz": "'The lights' ko'plik ot oldidan 'All' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -4746,6 +7797,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Some _____ my friends study at the medical university.",
         "correctAnswer": "of",
         "explanationUz": "'My friends' oldidan 'some of' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u80-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri kvantifikatorni tanlang",
+        "prompt": "_____ of the food at the party was delicious.",
+        "options": [
+          "Most",
+          "Many",
+          "Every",
+          "None"
+        ],
+        "correctAnswer": "Most",
+        "explanationUz": "Sanalmaydigan 'the food' oldidan 'Most of' to'g'ri keladi.",
+        "points": 15
+      },
+      {
+        "id": "u80-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga of yoki - yozing",
+        "prompt": "Most _____ birds can fly.",
+        "correctAnswer": "-",
+        "explanationUz": "Umumiy 'birds' oldidan artiklsiz bo'lgani uchun 'of' qo'yilmaydi (-).",
+        "points": 15
+      },
+      {
+        "id": "u80-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor guruhini tanlang",
+        "prompt": "_____ of my colleagues speak German.",
+        "options": [
+          "None",
+          "No",
+          "Nobody",
+          "Not"
+        ],
+        "correctAnswer": "None",
+        "explanationUz": "'None of my colleagues' hech biri ma'nosida to'g'ri shakl.",
         "points": 15
       }
     ]
@@ -4805,6 +7895,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "both",
         "explanationUz": "Ikkala yo'l ham tirband bo'lgani uchun 'both' to'g'ri bo'ladi.",
         "points": 15
+      },
+      {
+        "id": "u81-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri tanlov so'zini tanlang",
+        "prompt": "Which jacket do you prefer? - _____, they both look great!",
+        "options": [
+          "Either",
+          "Neither",
+          "Both of",
+          "None"
+        ],
+        "correctAnswer": "Either",
+        "explanationUz": "'Ixtiyoriy birini' (farqi yo'q) ma'nosida 'Either' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u81-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Ikkala tomon uchun so'zni yozing",
+        "prompt": "There are trees on _____ sides of the road.",
+        "correctAnswer": "both",
+        "explanationUz": "Yo'lning ikkala tomoni uchun 'both sides' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u81-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor so'zini tanlang",
+        "prompt": "_____ of my two brothers can drive a car.",
+        "options": [
+          "Neither",
+          "Either",
+          "Both",
+          "None"
+        ],
+        "correctAnswer": "Neither",
+        "explanationUz": "Ikkita kishining ikkalasi ham qilolmasligi: 'Neither of my two brothers'.",
+        "points": 15
       }
     ]
   },
@@ -4862,6 +7991,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "_____ books did you borrow from the library?",
         "correctAnswer": "How many",
         "explanationUz": "'Books' sanaladigan ko'plik ot bo'lgani sababli 'How many' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u82-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri miqdor birikmasini tanlang",
+        "prompt": "We bought _____ fruit at the local market.",
+        "options": [
+          "a lot of",
+          "many",
+          "much of",
+          "few"
+        ],
+        "correctAnswer": "a lot of",
+        "explanationUz": "Tasdiq gapda meva uchun 'a lot of fruit' eng tabiiy shakl.",
+        "points": 15
+      },
+      {
+        "id": "u82-ex4",
+        "type": "fill_in_gap",
+        "instruction": "So'roq so'zini to'ldiring (much / many)",
+        "prompt": "How _____ luggage have you got?",
+        "correctAnswer": "much",
+        "explanationUz": "'Luggage' sanalmaydi, shuning uchun 'How much' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u82-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri miqdor so'zini tanlang",
+        "prompt": "There weren't _____ people at the meeting yesterday.",
+        "options": [
+          "many",
+          "much",
+          "a lot",
+          "little"
+        ],
+        "correctAnswer": "many",
+        "explanationUz": "'People' sanaladigan ko'plik ot, inkor gapda 'many' ishlatiladi.",
         "points": 15
       }
     ]
@@ -4921,6 +8089,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "few",
         "explanationUz": "'Days' sanaladigan ko'plik ot bo'lgani uchun 'a few' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u83-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ijobiy oz miqdorini tanlang",
+        "prompt": "Can you speak French? - Just _____, not very well.",
+        "options": [
+          "a little",
+          "little",
+          "a few",
+          "few"
+        ],
+        "correctAnswer": "a little",
+        "explanationUz": "Tilni 'ozgina bilaman' ijobiy ma'noda 'a little' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u83-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga few yoki little yozing",
+        "prompt": "She has a _____ close friends who always support her.",
+        "correctAnswer": "few",
+        "explanationUz": "'Friends' sanaladigan ko'plik ot bo'lgani uchun 'a few' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u83-ex5",
+        "type": "multiple_choice",
+        "instruction": "Salbiy (deyarli yo'q) ma'nodagi so'zni tanlang",
+        "prompt": "The town was very quiet. There were _____ tourists in winter.",
+        "options": [
+          "few",
+          "a few",
+          "little",
+          "a little"
+        ],
+        "correctAnswer": "few",
+        "explanationUz": "Deyarli sayyohlar yo'qligi (salbiy ma'no) uchun 'few' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -4978,6 +8185,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "The children looked very _____ when they opened their presents.",
         "correctAnswer": "happy",
         "explanationUz": "'Look' (tuyulmoq) bog'lovchi fe'lidan keyin sifat (happy) ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u84-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri sifat shaklini tanlang",
+        "prompt": "This apple pie smells _____!",
+        "options": [
+          "delicious",
+          "deliciously",
+          "more delicious",
+          "most delicious"
+        ],
+        "correctAnswer": "delicious",
+        "explanationUz": "'Smell' fe'lidan so'ng bevosita sifat (delicious) keladi.",
+        "points": 15
+      },
+      {
+        "id": "u84-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Sifatni to'g'ri qo'ying",
+        "prompt": "You look very _____ today. Did you sleep well? (charchagan)",
+        "correctAnswer": "tired",
+        "explanationUz": "'Look' dan keyin 'tired' (charchagan) sifati keladi.",
+        "points": 15
+      },
+      {
+        "id": "u84-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri so'z tartibini tanlang",
+        "prompt": "He gave his daughter a _____ watch for her birthday.",
+        "options": [
+          "beautiful gold",
+          "gold beautiful",
+          "beautifully gold",
+          "gold beautifully"
+        ],
+        "correctAnswer": "beautiful gold",
+        "explanationUz": "Fikr sifati (beautiful) materialdan (gold) oldin keladi.",
         "points": 15
       }
     ]
@@ -5037,6 +8283,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "fluently",
         "explanationUz": "'Fluent' sifatiga '-ly' qo'shilib 'fluently' ravishi yasaladi.",
         "points": 15
+      },
+      {
+        "id": "u85-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ravish shaklini tanlang",
+        "prompt": "She plays the piano very _____.",
+        "options": [
+          "well",
+          "good",
+          "goodly",
+          "fine"
+        ],
+        "correctAnswer": "well",
+        "explanationUz": "'Good' sifatining ravish shakli 'well' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u85-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Sifatdan ravish yasab yozing (careful)",
+        "prompt": "Please drive _____ on these icy roads.",
+        "correctAnswer": "carefully",
+        "explanationUz": "'Careful' sifatiga '-ly' qo'shilib 'carefully' yasaladi.",
+        "points": 15
+      },
+      {
+        "id": "u85-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ravishni tanlang",
+        "prompt": "My father works very _____ from morning till evening.",
+        "options": [
+          "hard",
+          "hardly",
+          "good",
+          "hardful"
+        ],
+        "correctAnswer": "hard",
+        "explanationUz": "Qattiq mehnat qilmoq 'work hard' (hardly = deyarli emas!).",
+        "points": 15
       }
     ]
   },
@@ -5094,6 +8379,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "The weather today is _____ than it was yesterday.",
         "correctAnswer": "worse",
         "explanationUz": "'Bad' ning qiyosiy darajasi 'worse' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u86-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri qiyosiy darajani tanlang",
+        "prompt": "Health and happiness are _____ than money.",
+        "options": [
+          "more important",
+          "importanter",
+          "most important",
+          "as important"
+        ],
+        "correctAnswer": "more important",
+        "explanationUz": "Ko'p bo'g'inli sifatlar qiyosi 'more important' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u86-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Sifatning qiyosiy darajasini yozing (easy)",
+        "prompt": "This exercise is much _____ than the previous one.",
+        "correctAnswer": "easier",
+        "explanationUz": "'Easy' qiyosiy shaklda 'easier' bo'ladi (-y -> -ier).",
+        "points": 15
+      },
+      {
+        "id": "u86-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri noto'g'ri qiyosiyni tanlang (good)",
+        "prompt": "I hope you feel _____ tomorrow.",
+        "options": [
+          "better",
+          "gooder",
+          "more good",
+          "best"
+        ],
+        "correctAnswer": "better",
+        "explanationUz": "'Good' ning qiyosiy darajasi 'better' bo'ladi.",
         "points": 15
       }
     ]
@@ -5153,6 +8477,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "much",
         "explanationUz": "Qiyosiy darajani kuchaytirish uchun 'much faster' deyiladi.",
         "points": 15
+      },
+      {
+        "id": "u87-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri taqqoslash so'zini tanlang",
+        "prompt": "Going by train is more relaxing _____ driving in traffic.",
+        "options": [
+          "than",
+          "then",
+          "as",
+          "like"
+        ],
+        "correctAnswer": "than",
+        "explanationUz": "Qiyosiy daraja bog'lovchisi 'than' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u87-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Taqqoslash bog'lovchisini yozing",
+        "prompt": "He is much taller _____ his elder brother.",
+        "correctAnswer": "than",
+        "explanationUz": "Qiyosdan keyin 'than' (qaraganda) ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u87-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri kuchaytirgichni tanlang",
+        "prompt": "Our new flat is a _____ bigger than our old one.",
+        "options": [
+          "bit",
+          "lot",
+          "little of",
+          "more"
+        ],
+        "correctAnswer": "bit",
+        "explanationUz": "'Bir oz kattaroq' iborasi 'a bit bigger' deyiladi.",
+        "points": 15
       }
     ]
   },
@@ -5210,6 +8573,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Jack is 22. Emma is 22. Jack is as old _____ Emma.",
         "correctAnswer": "as",
         "explanationUz": "Tenglikda 'as old as' shaklida yoziladi.",
+        "points": 15
+      },
+      {
+        "id": "u88-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri tenglik iborasini tanlang",
+        "prompt": "I don't play tennis as well _____ my brother.",
+        "options": [
+          "as",
+          "than",
+          "so",
+          "like"
+        ],
+        "correctAnswer": "as",
+        "explanationUz": "'As well as' bir xil darajada o'ynash ma'nosida.",
+        "points": 15
+      },
+      {
+        "id": "u88-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Tenglik bog'lovchisini to'ldiring",
+        "prompt": "You can have as _____ coffee as you want. (ko'p)",
+        "correctAnswer": "much",
+        "explanationUz": "'As much as' sanalmaydigan ot bilan qo'llaniladi.",
+        "points": 15
+      },
+      {
+        "id": "u88-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri notenglik shaklini tanlang",
+        "prompt": "Tashkent is not as hot _____ Dubai in summer.",
+        "options": [
+          "as",
+          "than",
+          "so",
+          "like"
+        ],
+        "correctAnswer": "as",
+        "explanationUz": "'Not as hot as' qolipi qo'llaniladi.",
         "points": 15
       }
     ]
@@ -5269,6 +8671,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "best",
         "explanationUz": "'Good' ning orttirma darajasi 'best' (the best) bo'ladi.",
         "points": 15
+      },
+      {
+        "id": "u89-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri orttirma darajani tanlang",
+        "prompt": "What is _____ building in your city?",
+        "options": [
+          "the tallest",
+          "tallest",
+          "the most tall",
+          "the taller"
+        ],
+        "correctAnswer": "the tallest",
+        "explanationUz": "Birlikdagi bir bo'g'inli orttirma sifat 'the tallest' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u89-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Sifatning orttirma darajasini yozing (large)",
+        "prompt": "The Pacific Ocean is the _____ ocean in the world.",
+        "correctAnswer": "largest",
+        "explanationUz": "'Large' sifatining orttirma darajasi 'largest' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u89-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri orttirma shaklini tanlang",
+        "prompt": "She is _____ popular singer in the country.",
+        "options": [
+          "the most",
+          "most",
+          "the more",
+          "the best"
+        ],
+        "correctAnswer": "the most",
+        "explanationUz": "Ko'p bo'g'inli sifat orttirmasi 'the most popular' bo'ladi.",
+        "points": 15
       }
     ]
   },
@@ -5326,6 +8767,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "We don't have _____ fuel to reach the next city.",
         "correctAnswer": "enough",
         "explanationUz": "Ot ('fuel') oldidan 'enough' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u90-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri so'z tartibini tanlang",
+        "prompt": "Do we have _____ to invite twenty guests?",
+        "options": [
+          "enough room",
+          "room enough",
+          "enough of room",
+          "room to enough"
+        ],
+        "correctAnswer": "enough room",
+        "explanationUz": "Ot ('room') oldidan 'enough' qo'yiladi: enough room.",
+        "points": 15
+      },
+      {
+        "id": "u90-ex4",
+        "type": "fill_in_gap",
+        "instruction": "So'z tartibini to'ldiring (warm)",
+        "prompt": "It isn't _____ enough to go swimming today.",
+        "correctAnswer": "warm",
+        "explanationUz": "Sifat 'enough' so'zidan oldin keladi: warm enough.",
+        "points": 15
+      },
+      {
+        "id": "u90-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri variantni tanlang",
+        "prompt": "He didn't run _____ to win the race.",
+        "options": [
+          "fast enough",
+          "enough fast",
+          "fastly enough",
+          "enough fastly"
+        ],
+        "correctAnswer": "fast enough",
+        "explanationUz": "Ravish 'enough' dan oldin turadi: fast enough.",
         "points": 15
       }
     ]
@@ -5385,6 +8865,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "much",
         "explanationUz": "'Sugar' sanalmaydigan ot bo'lgani uchun 'too much' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u91-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri shaklni tanlang",
+        "prompt": "I can't drink this tea. It's _____ hot.",
+        "options": [
+          "too",
+          "too much",
+          "too many",
+          "enough"
+        ],
+        "correctAnswer": "too",
+        "explanationUz": "Sifat oldidan faqat 'too' ishlatiladi: too hot.",
+        "points": 15
+      },
+      {
+        "id": "u91-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga much yoki many yozing",
+        "prompt": "You made too _____ mistakes on the test.",
+        "correctAnswer": "many",
+        "explanationUz": "'Mistakes' sanaladigan ko'plik ot uchun 'too many' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u91-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri birikmani tanlang",
+        "prompt": "The suitcase was _____ heavy to carry up the stairs.",
+        "options": [
+          "too",
+          "very much",
+          "so much",
+          "enough"
+        ],
+        "correctAnswer": "too",
+        "explanationUz": "'Too ... to do' qolipida 'too heavy' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -5442,6 +8961,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "In English, Place comes _____ Time.",
         "correctAnswer": "before",
         "explanationUz": "Ingliz tilida o'rin-joy (Place) har doim vaqtdan (Time) oldin keladi.",
+        "points": 15
+      },
+      {
+        "id": "u92-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri so'z tartibini tanlang",
+        "prompt": "Choose the correct sentence:",
+        "options": [
+          "We played football in the park yesterday.",
+          "We played in the park football yesterday.",
+          "We played yesterday football in the park.",
+          "Yesterday played we football in the park."
+        ],
+        "correctAnswer": "We played football in the park yesterday.",
+        "explanationUz": "Tartib: Fe'l + to'ldiruvchi (football) + o'rin (park) + vaqt (yesterday).",
+        "points": 15
+      },
+      {
+        "id": "u92-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Gapni to'g'ri tartibda to'ldiring: 'speak English'",
+        "prompt": "He _____ (speak English) very fluently.",
+        "correctAnswer": "speaks English",
+        "explanationUz": "Fe'l va to'ldiruvchi ajralmaydi: speaks English.",
+        "points": 15
+      },
+      {
+        "id": "u92-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri variantni tanlang",
+        "prompt": "I don't like _____ very much.",
+        "options": [
+          "this film",
+          "very much this film",
+          "to this film",
+          "it this film"
+        ],
+        "correctAnswer": "this film",
+        "explanationUz": "To'ldiruvchi bevosita fe'ldan keyin keladi: like this film.",
         "points": 15
       }
     ]
@@ -5501,6 +9059,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "after",
         "explanationUz": "'To be' fe'lidan keyin keladi: He is often late.",
         "points": 15
+      },
+      {
+        "id": "u93-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri joylashuvni tanlang",
+        "prompt": "Where does 'usually' go in this sentence?",
+        "options": [
+          "I usually have coffee for breakfast.",
+          "I have usually coffee for breakfast.",
+          "Usually I have coffee for breakfast.",
+          "I have coffee usually for breakfast."
+        ],
+        "correctAnswer": "I usually have coffee for breakfast.",
+        "explanationUz": "Chastota ravishi asosiy fe'ldan oldin keladi: usually have.",
+        "points": 15
+      },
+      {
+        "id": "u93-ex4",
+        "type": "fill_in_gap",
+        "instruction": "O'rinni to'g'ri to'ldiring: 'never' fe'l 'is' dan oldinmi yoki keyin?",
+        "prompt": "She is _____ late for school. (hech qachon)",
+        "correctAnswer": "never",
+        "explanationUz": "'Be' fe'lidan keyin turadi: is never late.",
+        "points": 15
+      },
+      {
+        "id": "u93-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri jumla tartibini tanlang",
+        "prompt": "Which sentence is correct?",
+        "options": [
+          "We have always lived in this city.",
+          "We always have lived in this city.",
+          "We have lived always in this city.",
+          "Always we have lived in this city."
+        ],
+        "correctAnswer": "We have always lived in this city.",
+        "explanationUz": "Yordamchi va asosiy fe'l o'rtasida bo'ladi: have always lived.",
+        "points": 15
       }
     ]
   },
@@ -5558,6 +9155,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "I haven't received their reply _____.",
         "correctAnswer": "yet",
         "explanationUz": "Inkor gap oxirida 'yet' qo'yiladi.",
+        "points": 15
+      },
+      {
+        "id": "u94-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri vaqt ravishini tanlang",
+        "prompt": "Is it _____ raining outside?",
+        "options": [
+          "still",
+          "yet",
+          "already",
+          "ago"
+        ],
+        "correctAnswer": "still",
+        "explanationUz": "Harakat hali ham davom etayotganini so'rashda 'still' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u94-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Ravishni yozing (already / yet)",
+        "prompt": "I have _____ finished my dinner, so I can go out now.",
+        "correctAnswer": "already",
+        "explanationUz": "Allaqachon tugallangan harakat uchun 'already' qo'yiladi.",
+        "points": 15
+      },
+      {
+        "id": "u94-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri inkor gapni tanlang",
+        "prompt": "I haven't heard from Sarah _____.",
+        "options": [
+          "yet",
+          "still",
+          "already",
+          "since"
+        ],
+        "correctAnswer": "yet",
+        "explanationUz": "Inkor gap oxirida 'yet' ishlatiladi.",
         "points": 15
       }
     ]
@@ -5617,6 +9253,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "to",
         "explanationUz": "'Pass something to someone' iborasida 'to' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u95-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri iborani tanlang",
+        "prompt": "Can you pass _____ the salt, please?",
+        "options": [
+          "me",
+          "to me",
+          "for me",
+          "at me"
+        ],
+        "correctAnswer": "me",
+        "explanationUz": "'Pass someone something' qolipida 'pass me the salt' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u95-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Predlogni yozing (to yoki for)",
+        "prompt": "My uncle bought a lovely present _____ me.",
+        "correctAnswer": "for",
+        "explanationUz": "'Buy something for someone' birikmasida 'for' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u95-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri olmoshli iborani tanlang",
+        "prompt": "Did you send the letter? - Yes, I sent _____ yesterday.",
+        "options": [
+          "it to him",
+          "him it",
+          "it him",
+          "to him it"
+        ],
+        "correctAnswer": "it to him",
+        "explanationUz": "'It' olmoshi bilan har doim 'sent it to him' shaklida aytiladi.",
+        "points": 15
       }
     ]
   },
@@ -5674,6 +9349,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "We usually play football together _____ Saturday afternoons.",
         "correctAnswer": "on",
         "explanationUz": "Hafta kunlari oldidan 'on' predlogi ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u96-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri vaqt predlogini tanlang",
+        "prompt": "The school year begins _____ September.",
+        "options": [
+          "in",
+          "on",
+          "at",
+          "to"
+        ],
+        "correctAnswer": "in",
+        "explanationUz": "Oylar oldidan 'in' ishlatiladi: in September.",
+        "points": 15
+      },
+      {
+        "id": "u96-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Kun qismi predlogini yozing",
+        "prompt": "I usually do my homework _____ the evening.",
+        "correctAnswer": "in",
+        "explanationUz": "'Kechqurun' iborasi 'in the evening' deb aytiladi.",
+        "points": 15
+      },
+      {
+        "id": "u96-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri sana predlogini tanlang",
+        "prompt": "Independence Day of Uzbekistan is celebrated _____ 1st September.",
+        "options": [
+          "on",
+          "in",
+          "at",
+          "from"
+        ],
+        "correctAnswer": "on",
+        "explanationUz": "To'liq sanalar oldidan 'on' predlogi qo'yiladi.",
         "points": 15
       }
     ]
@@ -5733,6 +9447,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "for",
         "explanationUz": "Vaqt oralig'i (3 hafta) uchun 'for' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u97-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri vaqt chegarasini tanlang",
+        "prompt": "The library is open from 9:00 am _____ 6:00 pm.",
+        "options": [
+          "to",
+          "until",
+          "since",
+          "at"
+        ],
+        "correctAnswer": "to",
+        "explanationUz": "'From ... to' (dan ... gacha) vaqt oralig'i.",
+        "points": 15
+      },
+      {
+        "id": "u97-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga until yoki since yozing",
+        "prompt": "Let's wait under the roof _____ the rain stops.",
+        "correctAnswer": "until",
+        "explanationUz": "'Yomg'ir to'xtaguncha' ma'nosida 'until' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u97-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri predlogni tanlang",
+        "prompt": "He has been living abroad _____ 2018.",
+        "options": [
+          "since",
+          "for",
+          "from",
+          "ago"
+        ],
+        "correctAnswer": "since",
+        "explanationUz": "Boshlangan yil ko'rsatilgani uchun 'since 2018' to'g'ri.",
+        "points": 15
       }
     ]
   },
@@ -5790,6 +9543,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "The phone rang _____ I was cooking dinner.",
         "correctAnswer": "while",
         "explanationUz": "'I was cooking' to'liq gap bo'lgani sababli 'while' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u98-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri bog'lovchini tanlang",
+        "prompt": "Always turn off your phone _____ the examination begins.",
+        "options": [
+          "before",
+          "after",
+          "during",
+          "while"
+        ],
+        "correctAnswer": "before",
+        "explanationUz": "Imtihon boshlanishidan oldin: 'before'.",
+        "points": 15
+      },
+      {
+        "id": "u98-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Bo'sh joyga during yoki while yozing",
+        "prompt": "We stayed at a hotel _____ our visit to Rome.",
+        "correctAnswer": "during",
+        "explanationUz": "'Our visit' ot so'z turkumi bo'lgani uchun 'during' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u98-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri zamondosh bog'lovchini tanlang",
+        "prompt": "Somebody stole his bag _____ he was sleeping on the train.",
+        "options": [
+          "while",
+          "during",
+          "for",
+          "since"
+        ],
+        "correctAnswer": "while",
+        "explanationUz": "'He was sleeping' to'liq gap bo'lgani sababli 'while' qo'yiladi.",
         "points": 15
       }
     ]
@@ -5850,6 +9642,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "on",
         "explanationUz": "Devor sirtida joylashgan narsa uchun 'on the wall' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u99-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri joy predlogini tanlang",
+        "prompt": "There are some beautiful paintings hanging _____ the wall.",
+        "options": [
+          "on",
+          "in",
+          "at",
+          "to"
+        ],
+        "correctAnswer": "on",
+        "explanationUz": "Devor sirtidagi narsa uchun 'on the wall' deyiladi.",
+        "points": 15
+      },
+      {
+        "id": "u99-ex4",
+        "type": "fill_in_gap",
+        "instruction": "O'rin predlogini yozing (in / at / on)",
+        "prompt": "Write your name _____ the top of the paper.",
+        "correctAnswer": "at",
+        "explanationUz": "'Sahifa tepasida' iborasi 'at the top' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u99-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri bino predlogini tanlang",
+        "prompt": "Who is that standing _____ the entrance door?",
+        "options": [
+          "at",
+          "in",
+          "on",
+          "to"
+        ],
+        "correctAnswer": "at",
+        "explanationUz": "Eshik oldida aniq nuqtada turganlik uchun 'at the door' aytiladi.",
+        "points": 15
       }
     ]
   },
@@ -5907,6 +9738,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "My father is _____ work right now.",
         "correctAnswer": "at",
         "explanationUz": "'Ishda' ma'nosida 'at work' iborasi qo'llaniladi.",
+        "points": 15
+      },
+      {
+        "id": "u100-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri transport predlogini tanlang",
+        "prompt": "We arrived in Samarkand _____ a fast Afrosiyob train.",
+        "options": [
+          "on",
+          "in",
+          "at",
+          "by the"
+        ],
+        "correctAnswer": "on",
+        "explanationUz": "Poyezdda bo'lish 'on a train' orqali ifodalanadi.",
+        "points": 15
+      },
+      {
+        "id": "u100-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Predlogni yozing",
+        "prompt": "My uncle was ill, so he spent two weeks _____ hospital.",
+        "correctAnswer": "in",
+        "explanationUz": "Kasalxonada davolanayotganlik uchun 'in hospital' aytiladi.",
+        "points": 15
+      },
+      {
+        "id": "u100-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri taksi predlogini tanlang",
+        "prompt": "I left my wallet _____ a taxi yesterday.",
+        "options": [
+          "in",
+          "on",
+          "at",
+          "to"
+        ],
+        "correctAnswer": "in",
+        "explanationUz": "Yengil avtomobil yoki taksi ichida 'in a taxi' bo'ladi.",
         "points": 15
       }
     ]
@@ -5966,6 +9836,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "to",
         "explanationUz": "'Xush kelibsiz' iborasida har doim 'Welcome to...' bo'ladi.",
         "points": 15
+      },
+      {
+        "id": "u101-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri harakat predlogini tanlang",
+        "prompt": "We went _____ France for our summer holiday.",
+        "options": [
+          "to",
+          "in",
+          "at",
+          "into"
+        ],
+        "correctAnswer": "to",
+        "explanationUz": "Davlatga borish yo'nalishi uchun 'go to France' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u101-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Shahar bilan keladigan fe'l predlogini yozing",
+        "prompt": "What time did you arrive _____ Tashkent?",
+        "correctAnswer": "in",
+        "explanationUz": "Shaharga yetib kelishda 'arrive in Tashkent' deyiladi.",
+        "points": 15
+      },
+      {
+        "id": "u101-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri joylashuv predlogini tanlang",
+        "prompt": "We stayed _____ a comfortable hotel near the beach.",
+        "options": [
+          "at",
+          "to",
+          "into",
+          "on"
+        ],
+        "correctAnswer": "at",
+        "explanationUz": "Mehmonxonada turish 'stay at a hotel' deb aytiladi.",
+        "points": 15
       }
     ]
   },
@@ -6023,6 +9932,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "There is a lovely garden in _____ of the house.",
         "correctAnswer": "front",
         "explanationUz": "'In front of' (oldida) iborasida 'front' so'zi yoziladi.",
+        "points": 15
+      },
+      {
+        "id": "u102-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri joylashuv predlogini tanlang",
+        "prompt": "The cat was sleeping _____ the dining table.",
+        "options": [
+          "under",
+          "between",
+          "opposite",
+          "behind to"
+        ],
+        "correctAnswer": "under",
+        "explanationUz": "Stol ostida uxlash 'under the table' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u102-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Ro'parasida predlogini yozing",
+        "prompt": "There is a supermarket directly _____ our apartment.",
+        "correctAnswer": "opposite",
+        "explanationUz": "'Ro'parasida' so'zi 'opposite' hisoblanadi.",
+        "points": 15
+      },
+      {
+        "id": "u102-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri yonma-yon predlogini tanlang",
+        "prompt": "Who is that sitting _____ to Sarah?",
+        "options": [
+          "next",
+          "near",
+          "beside",
+          "by"
+        ],
+        "correctAnswer": "next",
+        "explanationUz": "'Next to' (yonida) birikmasida 'next' ishlatiladi.",
         "points": 15
       }
     ]
@@ -6082,6 +10030,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "through",
         "explanationUz": "Tunnel ichidan o'tish 'through a tunnel' bo'ladi.",
         "points": 15
+      },
+      {
+        "id": "u103-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri harakat predlogini tanlang",
+        "prompt": "The children ran _____ the street to greet their grandparents.",
+        "options": [
+          "across",
+          "through",
+          "over",
+          "up"
+        ],
+        "correctAnswer": "across",
+        "explanationUz": "Ko'chani narigi tomoniga kesib o'tish 'across the street' deyiladi.",
+        "points": 15
+      },
+      {
+        "id": "u103-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Yo'nalish predlogini yozing",
+        "prompt": "We walked _____ the river bank enjoying the cool breeze.",
+        "correctAnswer": "along",
+        "explanationUz": "Daryo qirg'og'i bo'ylab yurish 'along the river' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u103-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri ustidan oshib o'tish predlogini tanlang",
+        "prompt": "A plane flew _____ the city at low altitude.",
+        "options": [
+          "over",
+          "through",
+          "along",
+          "across to"
+        ],
+        "correctAnswer": "over",
+        "explanationUz": "Shahar ustidan uchib o'tish 'flew over the city' deb aytiladi.",
+        "points": 15
       }
     ]
   },
@@ -6139,6 +10126,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "He opened the locked door _____ a spare key.",
         "correctAnswer": "with",
         "explanationUz": "Asbob yordamida harakat qilish 'with' predlogi bilan ifodalanadi.",
+        "points": 15
+      },
+      {
+        "id": "u104-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri mavzu predlogini tanlang",
+        "prompt": "We had a long discussion _____ the future of artificial intelligence.",
+        "options": [
+          "about",
+          "with",
+          "by",
+          "at"
+        ],
+        "correctAnswer": "about",
+        "explanationUz": "Mavzu haqida gaplashganda 'about' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u104-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Transport usuli predlogini yozing",
+        "prompt": "Did you travel to Samarkand _____ train or by car?",
+        "correctAnswer": "by",
+        "explanationUz": "Transport vositasi usuli uchun 'by train' deyiladi.",
+        "points": 15
+      },
+      {
+        "id": "u104-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri asbob predlogini tanlang",
+        "prompt": "Please write your exam answers _____ a blue ballpoint pen.",
+        "options": [
+          "with",
+          "by",
+          "on",
+          "in"
+        ],
+        "correctAnswer": "with",
+        "explanationUz": "Ruchka yoki asbob vositasida yozish 'with a pen' bo'ladi.",
         "points": 15
       }
     ]
@@ -6198,6 +10224,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "in",
         "explanationUz": "'Interested in' birikmasi 'qiziqmoq' ma'nosini beradi.",
         "points": 15
+      },
+      {
+        "id": "u105-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri sifat predlogini tanlang",
+        "prompt": "Samarkand is famous _____ its breathtaking historic architecture.",
+        "options": [
+          "for",
+          "of",
+          "about",
+          "with"
+        ],
+        "correctAnswer": "for",
+        "explanationUz": "'Famous for' (bilan mashhur) turg'un birikma.",
+        "points": 15
+      },
+      {
+        "id": "u105-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Qo'rquv predlogini yozing",
+        "prompt": "My little brother is afraid _____ spiders.",
+        "correctAnswer": "of",
+        "explanationUz": "'Afraid of' birikmasi qo'rqishni bildiradi.",
+        "points": 15
+      },
+      {
+        "id": "u105-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri charchash predlogini tanlang",
+        "prompt": "I'm fed up _____ doing the same routine every day.",
+        "options": [
+          "with",
+          "of",
+          "about",
+          "at"
+        ],
+        "correctAnswer": "with",
+        "explanationUz": "'Fed up with' (joniga tegmoq/charchamoq) 'with' predlogini oladi.",
+        "points": 15
       }
     ]
   },
@@ -6255,6 +10320,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "Please listen _____ me carefully.",
         "correctAnswer": "to",
         "explanationUz": "'Listen' fe'lidan keyin 'to' predlogi ishlatiladi: listen to me.",
+        "points": 15
+      },
+      {
+        "id": "u106-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri fe'l predlogini tanlang",
+        "prompt": "Look _____ those colorful hot air balloons in the sky!",
+        "options": [
+          "at",
+          "to",
+          "for",
+          "on"
+        ],
+        "correctAnswer": "at",
+        "explanationUz": "'Look at' birikmasi 'qaramoq' ma'nosini beradi.",
+        "points": 15
+      },
+      {
+        "id": "u106-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Tegishlilik predlogini yozing",
+        "prompt": "Does this leather backpack belong _____ you?",
+        "correctAnswer": "to",
+        "explanationUz": "'Belong to' (tegishli bo'lmoq) fe'li 'to' oladi.",
+        "points": 15
+      },
+      {
+        "id": "u106-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri o'ylash predlogini tanlang",
+        "prompt": "What do you think _____ this new phone design?",
+        "options": [
+          "of",
+          "at",
+          "to",
+          "for"
+        ],
+        "correctAnswer": "of",
+        "explanationUz": "Fikr-mulohaza so'rashda 'What do you think of/about...' ishlatiladi.",
         "points": 15
       }
     ]
@@ -6314,6 +10418,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "up",
         "explanationUz": "'Uyg'onmoq' frazeologik fe'li 'wake up' deb aytiladi.",
         "points": 15
+      },
+      {
+        "id": "u107-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri frazeologik fe'lni tanlang",
+        "prompt": "Please come _____ and make yourself comfortable!",
+        "options": [
+          "in",
+          "on",
+          "up",
+          "away"
+        ],
+        "correctAnswer": "in",
+        "explanationUz": "'Come in' (ichkariga kiring) taklif iborasi.",
+        "points": 15
+      },
+      {
+        "id": "u107-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Qaytish qo'shimchasini yozing",
+        "prompt": "When did you get _____ from your holiday?",
+        "correctAnswer": "back",
+        "explanationUz": "'Get back' (qaytmoq) frazeologik fe'li.",
+        "points": 15
+      },
+      {
+        "id": "u107-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri tushish frazasini tanlang",
+        "prompt": "The car stopped and two men got _____.",
+        "options": [
+          "out",
+          "off",
+          "away",
+          "down"
+        ],
+        "correctAnswer": "out",
+        "explanationUz": "Mashinadan tushish 'get out' deyiladi.",
+        "points": 15
       }
     ]
   },
@@ -6371,6 +10514,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "The TV is too loud. Please turn _____ off.",
         "correctAnswer": "it",
         "explanationUz": "Olmosh 'it' fe'l va predlog o'rtasida bo'ladi: turn it off.",
+        "points": 15
+      },
+      {
+        "id": "u108-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri kiyinish frazeologik fe'lini tanlang",
+        "prompt": "It's cold outside. Put _____ your warm coat.",
+        "options": [
+          "on",
+          "in",
+          "up",
+          "off"
+        ],
+        "correctAnswer": "on",
+        "explanationUz": "'Put on' kiyimni kiyish ma'nosida ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u108-ex4",
+        "type": "fill_in_gap",
+        "instruction": "O'chirish qo'shimchasini yozing",
+        "prompt": "Don't forget to turn _____ the computer before you leave.",
+        "correctAnswer": "off",
+        "explanationUz": "Elektr asbobni o'chirish 'turn off' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u108-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri olmoshli frazani tanlang",
+        "prompt": "Here are your boots. _____.",
+        "options": [
+          "Put them on",
+          "Put on them",
+          "Put they on",
+          "Put on they"
+        ],
+        "correctAnswer": "Put them on",
+        "explanationUz": "Olmosh to'ldiruvchi fe'l va predlog o'rtasiga tushadi: Put them on.",
         "points": 15
       }
     ]
@@ -6430,6 +10612,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "because",
         "explanationUz": "Sababni ifodalash uchun 'because' (chunki) ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u109-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri zidlik bog'lovchisini tanlang",
+        "prompt": "He studied very hard, _____ he didn't pass the final exam.",
+        "options": [
+          "but",
+          "so",
+          "because",
+          "or"
+        ],
+        "correctAnswer": "but",
+        "explanationUz": "Zidlikni ifodalash uchun 'but' (lekin) ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u109-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Tanlov bog'lovchisini yozing",
+        "prompt": "Would you like to drink tea _____ coffee?",
+        "correctAnswer": "or",
+        "explanationUz": "Ikki variant orasidagi tanlov uchun 'or' (yoki) ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u109-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri natija bog'lovchisini tanlang",
+        "prompt": "The weather was wonderful, _____ we decided to go hiking.",
+        "options": [
+          "so",
+          "because",
+          "but",
+          "although"
+        ],
+        "correctAnswer": "so",
+        "explanationUz": "Natijani ifodalash uchun 'so' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -6487,6 +10708,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "I'll wait here until you _____ back.",
         "correctAnswer": "come",
         "explanationUz": "'Until' dan keyin kelasi ma'noda Present Simple (come) ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u110-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri zamonni tanlang",
+        "prompt": "Before you leave, don't forget to _____ the front door.",
+        "options": [
+          "lock",
+          "will lock",
+          "locked",
+          "locking"
+        ],
+        "correctAnswer": "lock",
+        "explanationUz": "Buyruq gapda boshlang'ich shakl 'lock' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u110-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Qavsdagi fe'lni to'g'ri zamonga qo'ying (call)",
+        "prompt": "I will phone you as soon as I _____ (arrive) at the hotel.",
+        "correctAnswer": "arrive",
+        "explanationUz": "'As soon as' dan keyin kelasi ma'noda Present Simple 'arrive' qo'yiladi.",
+        "points": 15
+      },
+      {
+        "id": "u110-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri kelasi vaqt ergash gapini tanlang",
+        "prompt": "When I see Dave tomorrow, I _____ him your warm regards.",
+        "options": [
+          "will give",
+          "give",
+          "gave",
+          "have given"
+        ],
+        "correctAnswer": "will give",
+        "explanationUz": "Bosh gapda kelasi zamon 'will give' ishlatiladi.",
         "points": 15
       }
     ]
@@ -6546,6 +10806,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "will",
         "explanationUz": "First conditional natija qismida 'will' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u111-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri First Conditional shaklini tanlang",
+        "prompt": "If you don't hurry, you _____ the last train home.",
+        "options": [
+          "will miss",
+          "miss",
+          "missed",
+          "would miss"
+        ],
+        "correctAnswer": "will miss",
+        "explanationUz": "First conditional natija qismida 'will miss' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u111-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Fe'lni to'g'ri zamonga qo'ying (rain)",
+        "prompt": "If it _____ tomorrow, we won't go on a picnic.",
+        "correctAnswer": "rains",
+        "explanationUz": "If qismida Present Simple da 'it rains' bo'ladi.",
+        "points": 15
+      },
+      {
+        "id": "u111-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri savol shaklini tanlang",
+        "prompt": "What _____ if you fail the driving test tomorrow?",
+        "options": [
+          "will you do",
+          "do you do",
+          "would you do",
+          "did you do"
+        ],
+        "correctAnswer": "will you do",
+        "explanationUz": "Real shart natijasini so'rashda 'will you do' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -6603,6 +10902,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "If I _____ you, I would see a doctor immediately.",
         "correctAnswer": "were",
         "explanationUz": "'Sizning o'rningizda bo'lganimda' rasmiy qoidaga ko'ra 'If I were you' deb aytiladi.",
+        "points": 15
+      },
+      {
+        "id": "u112-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri Second Conditional natijasini tanlang",
+        "prompt": "If I won a million dollars, I _____ around the world.",
+        "options": [
+          "would travel",
+          "will travel",
+          "traveled",
+          "travel"
+        ],
+        "correctAnswer": "would travel",
+        "explanationUz": "Second conditional natija qismida 'would travel' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u112-ex4",
+        "type": "fill_in_gap",
+        "instruction": "If qismidagi fe'lni o'tgan zamonga qo'ying (have)",
+        "prompt": "If I _____ more free time, I would learn Spanish.",
+        "correctAnswer": "had",
+        "explanationUz": "Noreal shart if qismida Past Simple 'had' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u112-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri noreal shart savolini tanlang",
+        "prompt": "What _____ if a fire broke out in the building?",
+        "options": [
+          "would you do",
+          "will you do",
+          "did you do",
+          "do you do"
+        ],
+        "correctAnswer": "would you do",
+        "explanationUz": "Noreal vaziyat so'rog'ida 'would you do' ishlatiladi.",
         "points": 15
       }
     ]
@@ -6662,6 +11000,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "correctAnswer": "which",
         "explanationUz": "Jonsiz narsa ('a book') uchun 'which' ishlatiladi.",
         "points": 15
+      },
+      {
+        "id": "u113-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri nisbiy olmoshni tanlang",
+        "prompt": "What was the name of the horse _____ won the race?",
+        "options": [
+          "that",
+          "who",
+          "whom",
+          "where"
+        ],
+        "correctAnswer": "that",
+        "explanationUz": "Hayvonlar uchun 'that' yoki 'which' nisbiy olmoshi ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u113-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Odamlar uchun nisbiy olmoshni yozing",
+        "prompt": "I met an architect _____ designed this futuristic skyscraper.",
+        "correctAnswer": "who",
+        "explanationUz": "Odamlar haqidagi ergash gapda 'who' ishlatiladi.",
+        "points": 15
+      },
+      {
+        "id": "u113-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri buyum nisbiy olmoshini tanlang",
+        "prompt": "Have you seen the documentary _____ was on TV last night?",
+        "options": [
+          "which",
+          "who",
+          "whom",
+          "whose"
+        ],
+        "correctAnswer": "which",
+        "explanationUz": "Narsalar va ko'rsatuvlar uchun 'which' ishlatiladi.",
+        "points": 15
       }
     ]
   },
@@ -6719,6 +11096,45 @@ export const ALL_ESSENTIAL_GRAMMAR_UNITS: EssentialGrammarUnit[] = [
         "prompt": "That is the house I used to live _____.",
         "correctAnswer": "in",
         "explanationUz": "'Live in a house' iborasi bo'lgani sababli oxirida 'in' predlogi qoladi.",
+        "points": 15
+      },
+      {
+        "id": "u114-ex3",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri tushirib qoldirilgan gapni tanlang",
+        "prompt": "Choose the most natural English sentence:",
+        "options": [
+          "The dress you are wearing looks fabulous.",
+          "The dress what you are wearing looks fabulous.",
+          "The dress where you are wearing looks fabulous.",
+          "The dress whom you are wearing looks fabulous."
+        ],
+        "correctAnswer": "The dress you are wearing looks fabulous.",
+        "explanationUz": "To'ldiruvchi o'rnidagi olmosh tushib qolgan 'The dress you are wearing' eng to'g'ri.",
+        "points": 15
+      },
+      {
+        "id": "u114-ex4",
+        "type": "fill_in_gap",
+        "instruction": "Jumla oxiridagi predlogni yozing",
+        "prompt": "Who was that person you were talking _____?",
+        "correctAnswer": "to",
+        "explanationUz": "'Talk to someone' iborasi sababli gap oxirida 'to' qoladi.",
+        "points": 15
+      },
+      {
+        "id": "u114-ex5",
+        "type": "multiple_choice",
+        "instruction": "To'g'ri nisbiy jumla shaklini tanlang",
+        "prompt": "Everything _____ he said turned out to be completely true.",
+        "options": [
+          "that",
+          "what",
+          "which of",
+          "whom"
+        ],
+        "correctAnswer": "that",
+        "explanationUz": "'Everything', 'all', 'nothing' dan keyin 'that' ishlatiladi (yoki tushirib qoldiriladi).",
         "points": 15
       }
     ]
