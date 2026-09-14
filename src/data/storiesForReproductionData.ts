@@ -6501,6 +6501,1677 @@ export const STORIES_FOR_REPRODUCTION: StoryForReproduction[] = [
       }
 ]
   }
+,
+  {
+    id: 'story-22',
+    storyNumber: 22,
+    title: "Nasreddin and the End of the World",
+    titleUz: "Nasriddin va Oxirzamon",
+    cefrLevel: 'A2',
+    wordCount: 165,
+    readingTimeMinutes: 1,
+    storyText: "One day, the boys of Nasreddin's village said to him, 'You have a nice, fat sheep. Will you invite us to a party to eat it with you?'\nNasreddin did not want the boys to eat his sheep, so he said, 'It is not fat enough yet.'\n'But have you not heard?' they said. 'The world is going to end tomorrow, so the sheep will never get fat!'\nNasreddin was getting tired of this, so he said, 'All right, boys, we will have a picnic tomorrow, and eat the sheep.'\nSo the next morning they all went to the river, the boys took off their clothes and jumped into the water, and Nasreddin killed the sheep.\nWhen the boys came out, their clothes were not there.\n'Where are our clothes, Nasreddin?' they asked.\n'Oh,' he answered, 'I made the fire to cook the sheep with your clothes. You will not need them again. The world is going to end today, don't you remember?'",
+    paragraphs: [
+      "One day, the boys of Nasreddin's village said to him, 'You have a nice, fat sheep. Will you invite us to a party to eat it with you?'\nNasreddin did not want the boys to eat his sheep, so he said, 'It is not fat enough yet.'",
+      "'But have you not heard?' they said. 'The world is going to end tomorrow, so the sheep will never get fat!'\nNasreddin was getting tired of this, so he said, 'All right, boys, we will have a picnic tomorrow, and eat the sheep.'",
+      "So the next morning they all went to the river, the boys took off their clothes and jumped into the water, and Nasreddin killed the sheep. When the boys came out, their clothes were not there.",
+      "'Where are our clothes, Nasreddin?' they asked.\n'Oh,' he answered, 'I made the fire to cook the sheep with your clothes. You will not need them again. The world is going to end today, don't you remember?'"
+],
+    summaryUz: "Qishloq bolalari Nasriddinning semiz qo'yini yeb olish uchun: 'Ertaga dunyoning oxiri bo'ladi, qo'ying semirib ulgurmaydi, kel uni yeymiz!' deyishadi. Ertasi kuni daryo bo'yida bolalar kiyimlarini yechib suvga tushishadi. Chiqishsa kiyimlari yo'q! Nasriddin ularga: 'Go'shtni pishirish uchun o'choqqa kiyimlaringizni yoqdim. Axir bugun oxirzamon bo'lsa, sizlarga kiyim nega kerak?!' deb javob beradi.",
+    vocabulary: [
+      {
+            "word": "fat",
+            "pos": "adj.",
+            "phonetic": "[fæt]",
+            "translationUz": "semiz, go'shtdor",
+            "definitionEn": "Having a lot of excess flesh; plump.",
+            "exampleSentence": "Nasreddin owned a nice, fat sheep."
+      },
+      {
+            "word": "invite",
+            "pos": "v.",
+            "phonetic": "[ɪnˈvaɪt]",
+            "translationUz": "taklif qilmoq",
+            "definitionEn": "To ask someone politely to come somewhere or do something.",
+            "exampleSentence": "Will you invite us to a feast?"
+      },
+      {
+            "word": "end of the world",
+            "pos": "n. phr.",
+            "phonetic": "[end əv ðə wɜːld]",
+            "translationUz": "dunyoning oxiri, oxirzamon",
+            "definitionEn": "The complete destruction of the world.",
+            "exampleSentence": "They claimed the world is going to end tomorrow."
+      },
+      {
+            "word": "picnic",
+            "pos": "n.",
+            "phonetic": "[ˈpɪknɪk]",
+            "translationUz": "piknik, tabiat qo'ynidagi ziyofat",
+            "definitionEn": "An occasion when a packed meal is eaten outdoors.",
+            "exampleSentence": "We will have a picnic by the river tomorrow."
+      },
+      {
+            "word": "take off",
+            "pos": "phr. v.",
+            "phonetic": "[teɪk ɒf]",
+            "translationUz": "yechmoq (kiyimni)",
+            "definitionEn": "To remove clothing from one's body.",
+            "exampleSentence": "The boys took off their clothes and jumped into the river."
+      },
+      {
+            "word": "fire",
+            "pos": "n.",
+            "phonetic": "[ˈfaɪə]",
+            "translationUz": "olov, o'choq",
+            "definitionEn": "Combustion or burning in which substances combine chemically with oxygen.",
+            "exampleSentence": "He made a fire using their clothes to roast the meat."
+      }
+],
+    reproductionOutline: [
+      "Village boys pressured Nasreddin to slaughter his fat sheep for a feast.",
+      "When Nasreddin delayed, they claimed the world would end tomorrow so the sheep would never get fatter.",
+      "Nasreddin agreed and took them for a picnic by the river the following morning.",
+      "While the boys stripped naked and swam, Nasreddin prepared the meat.",
+      "Upon emerging, the freezing boys found their clothes incinerated; Nasreddin retorted that the doomed world made clothes useless!"
+],
+    modelRetelling: "Hoping to feast on Nasreddin's plump sheep, the village boys urged him to throw a party. When Nasreddin protested that the animal was not fat enough yet, they argued that the world was ending the next day anyway. Growing annoyed by their persistence, Nasreddin agreed to a riverbank picnic. The next morning, the boys threw off their clothes and leapt into the water to swim while Nasreddin slaughtered the sheep. When they climbed back out onto the bank, their garments were nowhere to be found. Inquiring frantically, they were told by Nasreddin that he had burned their clothes to fuel the cooking fire—reminding them that since the world was ending today, clothes would be completely unnecessary!",
+    questions: [
+      {
+            "id": "s22-q1",
+            "order": 1,
+            "question": "What did the boys of Nasreddin's village say to him?",
+            "modelAnswer": "They said, 'You have a nice, fat sheep. Will you invite us to a party to eat it with you?'",
+            "keywords": [
+                  "nice, fat sheep",
+                  "invite us to a party"
+            ],
+            "options": [
+                  "'You have a nice, fat sheep. Will you invite us to a party to eat it with you?'",
+                  "'Will you lend us your donkey for the market?'",
+                  "'Can you teach us how to catch fish in the river?'",
+                  "'Where did you buy that beautiful woollen coat?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Qishloq bolalari unga semiz qo'yini birgalikda yeyish uchun mehmondorchilikka chaqirishini so'rashdi."
+      },
+      {
+            "id": "s22-q2",
+            "order": 2,
+            "question": "What did Nasreddin not want?",
+            "modelAnswer": "Nasreddin did not want the boys to eat his sheep.",
+            "keywords": [
+                  "not want the boys to eat his sheep"
+            ],
+            "options": [
+                  "He did not want the boys to eat his sheep",
+                  "He did not want to go to the river",
+                  "He did not want to sell his wool",
+                  "He did not want the world to end"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin bolalarning uning qo'yini yeb qo'yishlarini istamas edi."
+      },
+      {
+            "id": "s22-q3",
+            "order": 3,
+            "question": "What did he say to the boys?",
+            "modelAnswer": "He said, 'It is not fat enough yet.'",
+            "keywords": [
+                  "not fat enough yet"
+            ],
+            "options": [
+                  "'It is not fat enough yet.'",
+                  "'I sold the sheep yesterday.'",
+                  "'The sheep is terribly sick.'",
+                  "'Go ask your own parents for meat.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U qo'y hali yetarlicha semiz emasligini aytdi."
+      },
+      {
+            "id": "s22-q4",
+            "order": 4,
+            "question": "What did they answer?",
+            "modelAnswer": "They answered, 'The world is going to end tomorrow, so the sheep will never get fat!'",
+            "keywords": [
+                  "world is going to end tomorrow",
+                  "never get fat"
+            ],
+            "options": [
+                  "'The world is going to end tomorrow, so the sheep will never get fat!'",
+                  "'We will bring extra grass to feed it.'",
+                  "'We can wait until next year.'",
+                  "'You are lying to us, Nasreddin.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ular: 'Ertaga dunyoning oxiri bo'ladi, demak qo'y baribir semirmaydi!' deb javob berishdi."
+      },
+      {
+            "id": "s22-q5",
+            "order": 5,
+            "question": "How did Nasreddin feel about this?",
+            "modelAnswer": "Nasreddin was getting tired of this.",
+            "keywords": [
+                  "getting tired of this"
+            ],
+            "options": [
+                  "He was getting tired of this",
+                  "He became terrified of the apocalypse",
+                  "He was extremely excited and joyful",
+                  "He felt sorry for the poor boys"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin bu gap-so'zlardan bezor bo'lib charchadi: 'getting tired of this'."
+      },
+      {
+            "id": "s22-q6",
+            "order": 6,
+            "question": "What did he say?",
+            "modelAnswer": "He said, 'All right, boys, we will have a picnic tomorrow, and eat the sheep.'",
+            "keywords": [
+                  "have a picnic tomorrow",
+                  "eat the sheep"
+            ],
+            "options": [
+                  "'All right, boys, we will have a picnic tomorrow, and eat the sheep.'",
+                  "'Never mention my sheep again!'",
+                  "'I will give you five pence each instead.'",
+                  "'Bring your own pots and pans tomorrow.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U mayli, ertaga daryo bo'yida piknik qilamiz va qo'yni yeymiz dedi."
+      },
+      {
+            "id": "s22-q7",
+            "order": 7,
+            "question": "What happened the next morning?",
+            "modelAnswer": "The next morning they all went to the river.",
+            "keywords": [
+                  "went to the river"
+            ],
+            "options": [
+                  "The next morning they all went to the river",
+                  "The world really came to an end",
+                  "It rained heavily and they stayed home",
+                  "The sheep escaped into the hills"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ertasi kuni ertalab ularning barchasi daryo bo'yiga bordilar."
+      },
+      {
+            "id": "s22-q8",
+            "order": 8,
+            "question": "What did the boys do?",
+            "modelAnswer": "The boys took off their clothes and jumped into the water.",
+            "keywords": [
+                  "took off their clothes",
+                  "jumped into the water"
+            ],
+            "options": [
+                  "The boys took off their clothes and jumped into the water",
+                  "The boys gathered dry firewood for the fire",
+                  "The boys prepared the roasting spices",
+                  "The boys slept under a shady tree"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bolalar kiyimlarini yechib, daryoga cho'milish uchun sakradilar."
+      },
+      {
+            "id": "s22-q9",
+            "order": 9,
+            "question": "What did Nasreddin do?",
+            "modelAnswer": "Nasreddin killed the sheep.",
+            "keywords": [
+                  "killed the sheep"
+            ],
+            "options": [
+                  "Nasreddin killed the sheep",
+                  "Nasreddin jumped into the water with them",
+                  "Nasreddin ran away back to his village",
+                  "Nasreddin let the sheep run free"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin qo'yni so'ydi: 'Nasreddin killed the sheep'."
+      },
+      {
+            "id": "s22-q10",
+            "order": 10,
+            "question": "What happened when the boys came out of the water?",
+            "modelAnswer": "When the boys came out, their clothes were not there.",
+            "keywords": [
+                  "clothes were not there"
+            ],
+            "options": [
+                  "Their clothes were not there",
+                  "The sheep meat was completely eaten",
+                  "A pack of wolves surrounded them",
+                  "A policeman was waiting for them"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bolalar suvdan chiqqanlarida, kiyimlari joyida yo'q edi."
+      },
+      {
+            "id": "s22-q11",
+            "order": 11,
+            "question": "What did they say?",
+            "modelAnswer": "They asked, 'Where are our clothes, Nasreddin?'",
+            "keywords": [
+                  "Where are our clothes"
+            ],
+            "options": [
+                  "'Where are our clothes, Nasreddin?'",
+                  "'Is the mutton soup ready yet?'",
+                  "'Why is the water so freezing cold?'",
+                  "'Did you bring any fresh bread?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ular: 'Kiyimlarimiz qani, Nasriddin?' deb so'rashdi."
+      },
+      {
+            "id": "s22-q12",
+            "order": 12,
+            "question": "What did Nasreddin answer?",
+            "modelAnswer": "He answered, 'I made the fire to cook the sheep with your clothes. You will not need them again. The world is going to end today, don't you remember?'",
+            "keywords": [
+                  "made the fire with your clothes",
+                  "world is going to end today"
+            ],
+            "options": [
+                  "'I made the fire with your clothes. The world is going to end today, don't you remember?'",
+                  "'A thief stole them while you were swimming.'",
+                  "'The wind blew them into the rushing river.'",
+                  "'I washed them and hung them on a faraway tree.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin go'sht pishirish uchun ularning kiyimlarini o'choqqa yoqqanini, bugun oxirzamon bo'lsa kiyim kerak emasligini aytdi!"
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s22-tf1",
+            "order": 1,
+            "statement": "The village boys wanted to feast on Nasreddin's fat sheep.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'You have a nice, fat sheep. Will you invite us to a party to eat it with you?'."
+      },
+      {
+            "id": "s22-tf2",
+            "order": 2,
+            "statement": "Nasreddin was happy and eager to sacrifice his sheep for the boys from the start.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Nasriddin qo'yini ularga berishni umuman istamagan edi ('Nasreddin did not want the boys to eat his sheep')."
+      },
+      {
+            "id": "s22-tf3",
+            "order": 3,
+            "statement": "The boys used the excuse of an impending apocalypse to convince Nasreddin.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'The world is going to end tomorrow, so the sheep will never get fat!'."
+      },
+      {
+            "id": "s22-tf4",
+            "order": 4,
+            "statement": "Nasreddin invited the village judge to join their river picnic.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda qozilar yoki boshqa qishloq oqsoqollari haqida ma'lumot yo'q."
+      },
+      {
+            "id": "s22-tf5",
+            "order": 5,
+            "statement": "Nasreddin burned the boys' clothing in the cooking fire.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'I made the fire to cook the sheep with your clothes'."
+      },
+      {
+            "id": "s22-tf6",
+            "order": 6,
+            "statement": "Nasreddin genuinely believed the world would perish that afternoon.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Nasriddin ularning o'z hiylasini o'zlariga qarshi qo'llab, saboq berish uchun shunday degan edi."
+      }
+]
+  },
+  {
+    id: 'story-23',
+    storyNumber: 23,
+    title: "Nasreddin and the Beggar on the Roof",
+    titleUz: "Nasriddin va Tomdagi Tilanchi",
+    cefrLevel: 'A2',
+    wordCount: 168,
+    readingTimeMinutes: 1,
+    storyText: "Whenever it rained, water came through Nasreddin's roof, so one day he got his ladder, climbed up on to the roof and began to mend it. It was quite difficult and dangerous work.\nWhile he was up there, he suddenly saw an old man in the street. This man was waving to him. He wanted Nasreddin to come down. Nasreddin thought, 'What has happened? What news has this man got for me?' So he climbed down the ladder quickly. Several times he slipped and nearly broke his neck. When he got to the bottom, the old man said,' I am a poor man. Please give me some money.'\nNasreddin was very angry, but he said, 'Come up.' He helped the old man to climb up the ladder and on to the roof.\nThen he said to him, 'I am a poor man too. I have no money for you. And now go down alone. I will not help you.'",
+    paragraphs: [
+      "Whenever it rained, water came through Nasreddin's roof, so one day he got his ladder, climbed up on to the roof and began to mend it. It was quite difficult and dangerous work.",
+      "While he was up there, he suddenly saw an old man in the street. This man was waving to him. He wanted Nasreddin to come down. Nasreddin thought, 'What has happened? What news has this man got for me?' So he climbed down the ladder quickly. Several times he slipped and nearly broke his neck. When he got to the bottom, the old man said,' I am a poor man. Please give me some money.'",
+      "Nasreddin was very angry, but he said, 'Come up.' He helped the old man to climb up the ladder and on to the roof.",
+      "Then he said to him, 'I am a poor man too. I have no money for you. And now go down alone. I will not help you.'"
+],
+    summaryUz: "Nasriddin yomg'irda chakka o'tadigan tomini xavfli narvonda zo'rg'a tuzatayotganida, ko'chadagi qariya unga qo'l silkitib pastga tushishini so'raydi. Nasriddin muhim xabar bor deb shoshib tushadi, yo'lda yiqilib bo'yni sinishiga sal qoladi. Pastga tushsa, qariya tilanchilik qilib pul so'raydi! Nasriddinning jahli chiqadi, lekin indamay uni narvon orqali tomga olib chiqadi. Tomga chiqqach: 'Men ham kambag'alman, senga beradigan pulim yo'q! Endi esa pastga o'zing yolg'iz tush, senga yordam bermayman!' deydi.",
+    vocabulary: [
+      {
+            "word": "mend",
+            "pos": "v.",
+            "phonetic": "[mend]",
+            "translationUz": "tuzatmoq, ta'mirlamoq",
+            "definitionEn": "To repair something that is broken or damaged.",
+            "exampleSentence": "He climbed up on to the roof to mend the hole."
+      },
+      {
+            "word": "dangerous",
+            "pos": "adj.",
+            "phonetic": "[ˈdeɪndʒərəs]",
+            "translationUz": "xavfli",
+            "definitionEn": "Able or likely to cause harm or injury.",
+            "exampleSentence": "Working on a wet, steep roof is dangerous."
+      },
+      {
+            "word": "wave",
+            "pos": "v.",
+            "phonetic": "[weɪv]",
+            "translationUz": "qo'l silkitmoq",
+            "definitionEn": "To move one's hand to and fro in greeting or as a signal.",
+            "exampleSentence": "An old man in the street was waving to him."
+      },
+      {
+            "word": "break one's neck",
+            "pos": "idiom",
+            "phonetic": "[breɪk wʌnz nek]",
+            "translationUz": "bo'ynini sindirib olmoq",
+            "definitionEn": "To fracture the vertebrae in the neck, causing fatal or severe injury.",
+            "exampleSentence": "He slipped on the ladder and nearly broke his neck."
+      },
+      {
+            "word": "poor",
+            "pos": "adj.",
+            "phonetic": "[pɔː]",
+            "translationUz": "kambag'al, qashshoq",
+            "definitionEn": "Lacking sufficient money to live comfortably.",
+            "exampleSentence": "I am a poor man with no money to spare."
+      },
+      {
+            "word": "alone",
+            "pos": "adv.",
+            "phonetic": "[əˈləʊn]",
+            "translationUz": "yolg'iz, o'zi",
+            "definitionEn": "Having no one else present; without assistance.",
+            "exampleSentence": "Now climb down that perilous ladder all alone!"
+      }
+],
+    reproductionOutline: [
+      "Every rainstorm leaked into Nasreddin's house, prompting him to mend the roof.",
+      "From the hazardous rooftop, he noticed an old man gesturing urgently from the road below.",
+      "Assuming urgent news, Nasreddin dangerously scrambled down the ladder, narrowly escaping injury.",
+      "At the bottom, the stranger nonchalantly begged for a handout of coins.",
+      "Furious, Nasreddin coerced the beggar all the way up to the roof, declared he had no money, and abandoned him to climb down alone!"
+],
+    modelRetelling: "Frustrated by a leaking roof whenever it rained, Nasreddin fetched his ladder and climbed onto the steep rooftop to carry out dangerous repairs. Suddenly, an elderly man in the street began frantically waving, motioning for him to descend. Convinced that the stranger was delivering urgent news, Nasreddin hurried down, slipping several times and nearly breaking his neck in the process. Upon reaching the ground, however, the old man casually asked for alms. Suppressing his immense rage, Nasreddin told the beggar to follow him and helped him up the ladder onto the roof. Once at the top, Nasreddin sternly announced that he too was destitute with nothing to give, ordering the terrified beggar to find his own way down!",
+    questions: [
+      {
+            "id": "s23-q1",
+            "order": 1,
+            "question": "What happened whenever it rained?",
+            "modelAnswer": "Whenever it rained, water came through Nasreddin's roof.",
+            "keywords": [
+                  "water came through",
+                  "roof"
+            ],
+            "options": [
+                  "Water came through Nasreddin's roof",
+                  "The street became a deep river",
+                  "Nasreddin's donkey ran into the house",
+                  "The chimney fell off the roof"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Har gal yomg'ir yoqqanda, Nasriddinning tomidan suv o'tardi: 'water came through Nasreddin's roof'."
+      },
+      {
+            "id": "s23-q2",
+            "order": 2,
+            "question": "What did Nasreddin do?",
+            "modelAnswer": "He got his ladder, climbed up on to the roof and began to mend it.",
+            "keywords": [
+                  "got his ladder",
+                  "climbed up",
+                  "mend it"
+            ],
+            "options": [
+                  "He got his ladder, climbed up on to the roof and began to mend it",
+                  "He hired a professional builder from the city",
+                  "He put buckets in the living room and slept",
+                  "He sold his house and moved away"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U narvon olib tomga chiqdi va uni tuzatishga kirishdi."
+      },
+      {
+            "id": "s23-q3",
+            "order": 3,
+            "question": "What was this work like?",
+            "modelAnswer": "It was quite difficult and dangerous work.",
+            "keywords": [
+                  "quite difficult and dangerous work"
+            ],
+            "options": [
+                  "It was quite difficult and dangerous work",
+                  "It was very easy and enjoyable",
+                  "It was boring and noisy",
+                  "It took only two minutes"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bu juda qiyin va xavfli ish edi: 'quite difficult and dangerous work'."
+      },
+      {
+            "id": "s23-q4",
+            "order": 4,
+            "question": "Whom did he see in the street?",
+            "modelAnswer": "He saw an old man in the street.",
+            "keywords": [
+                  "saw an old man in the street"
+            ],
+            "options": [
+                  "An old man",
+                  "His best friend",
+                  "A policeman",
+                  "A young boy selling roses"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U ko'chada bir qariyani ko'rib qoldi: 'saw an old man in the street'."
+      },
+      {
+            "id": "s23-q5",
+            "order": 5,
+            "question": "When did he see this person?",
+            "modelAnswer": "While he was up on the roof.",
+            "keywords": [
+                  "While he was up there"
+            ],
+            "options": [
+                  "While he was up there on the roof",
+                  "Before he climbed the ladder",
+                  "After he finished repairing the roof",
+                  "During dinner time"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U tomda turgan vaqtida ko'rdi: 'While he was up there'."
+      },
+      {
+            "id": "s23-q6",
+            "order": 6,
+            "question": "What did Nasreddin think?",
+            "modelAnswer": "Nasreddin thought, 'What has happened? What news has this man got for me?'",
+            "keywords": [
+                  "What has happened",
+                  "What news has this man got for me"
+            ],
+            "options": [
+                  "'What has happened? What news has this man got for me?'",
+                  "'He wants to steal my ladder.'",
+                  "'The police are looking for me.'",
+                  "'My donkey has escaped again.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddin nima bo'ldi ekan, bu kishi qanday muhim xabar olib keldi ekan deb o'yladi."
+      },
+      {
+            "id": "s23-q7",
+            "order": 7,
+            "question": "What did he do?",
+            "modelAnswer": "He climbed down the ladder quickly.",
+            "keywords": [
+                  "climbed down the ladder quickly"
+            ],
+            "options": [
+                  "He climbed down the ladder quickly",
+                  "He shouted from the roof",
+                  "He threw a tile down to get attention",
+                  "He ignored the man and continued working"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U tezda narvondan pastga tushdi: 'climbed down the ladder quickly'."
+      },
+      {
+            "id": "s23-q8",
+            "order": 8,
+            "question": "What happened while he was doing this?",
+            "modelAnswer": "Several times he slipped and nearly broke his neck.",
+            "keywords": [
+                  "slipped",
+                  "nearly broke his neck"
+            ],
+            "options": [
+                  "Several times he slipped and nearly broke his neck",
+                  "The ladder snapped in half",
+                  "He dropped his hammer into the street",
+                  "It started raining heavily"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir necha bor sirpanib, bo'yni sinishiga sal qoldi."
+      },
+      {
+            "id": "s23-q9",
+            "order": 9,
+            "question": "What did the old man say when Nasreddin got to the bottom?",
+            "modelAnswer": "The old man said, 'I am a poor man. Please give me some money.'",
+            "keywords": [
+                  "poor man",
+                  "give me some money"
+            ],
+            "options": [
+                  "'I am a poor man. Please give me some money.'",
+                  "'Your house is on fire!'",
+                  "'A messenger arrived from the sultan.'",
+                  "'Can you help me carry my heavy bags?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Qariya: 'Men kambag'al odamman, iltimos menga biroz pul bering' dedi."
+      },
+      {
+            "id": "s23-q10",
+            "order": 10,
+            "question": "How did Nasreddin feel?",
+            "modelAnswer": "Nasreddin was very angry.",
+            "keywords": [
+                  "very angry"
+            ],
+            "options": [
+                  "He was very angry",
+                  "He was delighted to help",
+                  "He felt sorry for the beggar",
+                  "He was laughing loudly"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Nasriddinning g'azabi qaynadi: 'Nasreddin was very angry'."
+      },
+      {
+            "id": "s23-q11",
+            "order": 11,
+            "question": "What did he say?",
+            "modelAnswer": "He said, 'Come up.'",
+            "keywords": [
+                  "Come up"
+            ],
+            "options": [
+                  "'Come up.'",
+                  "'Go away!'",
+                  "'Wait inside the kitchen.'",
+                  "'Here is two pence.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U qariyaga: 'Tepaga chiq' dedi: 'Come up'."
+      },
+      {
+            "id": "s23-q12",
+            "order": 12,
+            "question": "What did he do?",
+            "modelAnswer": "He helped the old man to climb up the ladder and on to the roof.",
+            "keywords": [
+                  "helped the old man to climb up",
+                  "on to the roof"
+            ],
+            "options": [
+                  "He helped the old man to climb up the ladder and on to the roof",
+                  "He hit the old man with his stick",
+                  "He gave him all the copper coins in his pocket",
+                  "He pushed the ladder away"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U qariyaga narvondan tomga chiqib olishga yordam berdi."
+      },
+      {
+            "id": "s23-q13",
+            "order": 13,
+            "question": "What did he say when they were on the roof?",
+            "modelAnswer": "He said, 'I am a poor man too. I have no money for you. And now go down alone. I will not help you.'",
+            "keywords": [
+                  "poor man too",
+                  "no money for you",
+                  "go down alone",
+                  "not help you"
+            ],
+            "options": [
+                  "'I am a poor man too. I have no money for you. And now go down alone. I will not help you.'",
+                  "'Look at the beautiful view of our village.'",
+                  "'Help me fix this roof and I will feed you.'",
+                  "'Stay here until the rain stops.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U tomda: 'Men ham kambag'alman, senga pulim yo'q! Endi pastga o'zing yolg'iz tush, yordam bermayman!' dedi."
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s23-tf1",
+            "order": 1,
+            "statement": "Nasreddin climbed onto the roof to carry out necessary home repairs.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'climbed up on to the roof and began to mend it'."
+      },
+      {
+            "id": "s23-tf2",
+            "order": 2,
+            "statement": "The old man in the street had brought an urgent letter from the local court.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U shunchaki tilanchi bo'lib, pul so'rash uchun chaqirgan edi."
+      },
+      {
+            "id": "s23-tf3",
+            "order": 3,
+            "statement": "Nasreddin safely descended the ladder without any risk or slipping.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U bir necha bor sirpanib, bo'ynini sindirishiga oz qolgan edi ('Several times he slipped and nearly broke his neck')."
+      },
+      {
+            "id": "s23-tf4",
+            "order": 4,
+            "statement": "The beggar was blind and carrying a wooden cane.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda qariyaning ko'zi ojizligi yoki hassasi haqida ma'lumot yo'q."
+      },
+      {
+            "id": "s23-tf5",
+            "order": 5,
+            "statement": "Nasreddin gave the old man five silver coins before climbing back up.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U bir tiyin ham bermadi ('I have no money for you')."
+      },
+      {
+            "id": "s23-tf6",
+            "order": 6,
+            "statement": "Nasreddin brought the beggar up to the roof to teach him a lesson about wasting others' time.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: Nasriddin uni qasddan tomga olib chiqib, o'zi yolg'iz tushishga majbur qildi."
+      }
+]
+  },
+  {
+    id: 'story-24',
+    storyNumber: 24,
+    title: "Ten Children in the Same Clothes",
+    titleUz: "Bir Xil Kiyimdagi O'n Bola",
+    cefrLevel: 'A2',
+    wordCount: 147,
+    readingTimeMinutes: 1,
+    storyText: "One day Mr Robinson saw a lady in the street with ten children. He was very surprised because all the children were wearing the same clothes-white caps, dark blue coats and grey trousers.\n'Are all those children yours?' he asked the mother.\n'Yes, they are,' she answered.\n'Do you always dress them in the same clothes?' asked Mr Robinson.\n'Yes,' answered the mother. 'When we had only four children, we dressed them in the same clothes because we did not want to lose any of them. It was easy to see our children when they were among other children, because they were all wearing the same clothes. And now, when we have ten, we dress them like this because we do not want to take other children home too by mistake. When there are other children among ours, it is easy to see them, because their clothes are different.'",
+    paragraphs: [
+      "One day Mr Robinson saw a lady in the street with ten children. He was very surprised because all the children were wearing the same clothes-white caps, dark blue coats and grey trousers.",
+      "'Are all those children yours?' he asked the mother.\n'Yes, they are,' she answered.",
+      "'Do you always dress them in the same clothes?' asked Mr Robinson.",
+      "'Yes,' answered the mother. 'When we had only four children, we dressed them in the same clothes because we did not want to lose any of them. It was easy to see our children when they were among other children, because they were all wearing the same clothes. And now, when we have ten, we dress them like this because we do not want to take other children home too by mistake. When there are other children among ours, it is easy to see them, because their clothes are different.'"
+],
+    summaryUz: "Janob Robinson ko'chada 10 nafar bolasi bilan ketayotgan ayolni ko'radi. Barcha bolalar bir xil kiyingan edi: oq kepka, to'q ko'k palto va kulrang shim. Ayoldan sababini so'raganida: 'Bolam 4 ta bo'lganida birovlarning bolalari orasida yo'qotib qo'ymaslik uchun bir xil kiyintirar edik. Hozir 10 ta bo'lgach esa, adashib birovlarning bolasini uyimizga olib ketmaslik uchun shunday qilamiz, chunki begona bolalarning kiyimi darhol ajralib turadi!' deb javob beradi.",
+    vocabulary: [
+      {
+            "word": "the same",
+            "pos": "adj.",
+            "phonetic": "[ðə seɪm]",
+            "translationUz": "bir xil",
+            "definitionEn": "Identical; not different.",
+            "exampleSentence": "All ten children were wearing the same clothes."
+      },
+      {
+            "word": "cap",
+            "pos": "n.",
+            "phonetic": "[kæp]",
+            "translationUz": "kepka, qalpoq",
+            "definitionEn": "A kind of soft, flat hat, typically with a visor.",
+            "exampleSentence": "They wore clean white caps on their heads."
+      },
+      {
+            "word": "trousers",
+            "pos": "n.",
+            "phonetic": "[ˈtraʊzəz]",
+            "translationUz": "shim",
+            "definitionEn": "An outer garment covering the body from waist to ankles.",
+            "exampleSentence": "Each boy had matching grey trousers."
+      },
+      {
+            "word": "among",
+            "pos": "prep.",
+            "phonetic": "[əˈmʌŋ]",
+            "translationUz": "orasida, ichida",
+            "definitionEn": "Surrounded by; in the company or midst of.",
+            "exampleSentence": "It was easy to spot them among other schoolchildren."
+      },
+      {
+            "word": "by mistake",
+            "pos": "idiom",
+            "phonetic": "[baɪ mɪˈsteɪk]",
+            "translationUz": "adashib, yanglishib",
+            "definitionEn": "As a result of an accident, carelessness, or error.",
+            "exampleSentence": "We did not want to take home a strange child by mistake."
+      },
+      {
+            "word": "different",
+            "pos": "adj.",
+            "phonetic": "[ˈdɪfrənt]",
+            "translationUz": "boshqacha, har xil",
+            "definitionEn": "Not the same as another or each other; unlike.",
+            "exampleSentence": "Other children stand out because their clothes are different."
+      }
+],
+    reproductionOutline: [
+      "Mr Robinson was startled to see a mother walking ten identically dressed children.",
+      "Every child wore a white cap, dark blue coat, and grey trousers.",
+      "He inquired whether they were all hers and why they were dressed alike.",
+      "She explained that with four children, uniform clothes prevented losing them in crowds.",
+      "With ten children, the same outfit prevented accidentally bringing someone else's child home!"
+],
+    modelRetelling: "While strolling through town, Mr Robinson was astonished to encounter a woman herding ten children, all dressed in identical outfits consisting of white caps, navy coats, and grey trousers. Inquiring curiously, he confirmed that all ten were indeed her own offspring and asked why she dressed them uniformly. The mother candidly revealed her practical system: when they had only four children, dressing them alike ensured they would never lose any of their own among crowds. However, now that their brood had expanded to ten, uniform clothing prevented them from mistakenly gathering up and taking home someone else's child, as any intruder's different clothes were immediately noticeable!",
+    questions: [
+      {
+            "id": "s24-q1",
+            "order": 1,
+            "question": "What did Mr Robinson see one morning?",
+            "modelAnswer": "He saw a lady in the street with ten children.",
+            "keywords": [
+                  "lady in the street with ten children"
+            ],
+            "options": [
+                  "A lady in the street with ten children",
+                  "A parade of school soldiers",
+                  "A clothes sale in the marketplace",
+                  "A famous circus troupe"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U ko'chada 10 nafar bolasi bor ayolni ko'rdi."
+      },
+      {
+            "id": "s24-q2",
+            "order": 2,
+            "question": "Where did he see this?",
+            "modelAnswer": "He saw this in the street.",
+            "keywords": [
+                  "in the street"
+            ],
+            "options": [
+                  "In the street",
+                  "In a children's playground",
+                  "Inside a clothing department store",
+                  "At a railway station"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U buni ko'chada ko'rdi: 'in the street'."
+      },
+      {
+            "id": "s24-q3",
+            "order": 3,
+            "question": "How did he feel about it?",
+            "modelAnswer": "He was very surprised.",
+            "keywords": [
+                  "very surprised"
+            ],
+            "options": [
+                  "He was very surprised",
+                  "He was annoyed and angry",
+                  "He was completely indifferent",
+                  "He was frightened"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U juda hayron qoldi: 'He was very surprised'."
+      },
+      {
+            "id": "s24-q4",
+            "order": 4,
+            "question": "Why did he feel like this?",
+            "modelAnswer": "Because all the children were wearing the same clothes—white caps, dark blue coats and grey trousers.",
+            "keywords": [
+                  "all the children were wearing the same clothes"
+            ],
+            "options": [
+                  "Because all the children were wearing identical clothes",
+                  "Because the children were walking without shoes",
+                  "Because the children were singing loudly",
+                  "Because the mother was driving a tractor"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Chunki barcha bolalar bir xil kiyingan edi: oq kepka, ko'k palto va kulrang shim."
+      },
+      {
+            "id": "s24-q5",
+            "order": 5,
+            "question": "What did he say?",
+            "modelAnswer": "He asked the mother, 'Are all those children yours?'",
+            "keywords": [
+                  "Are all those children yours"
+            ],
+            "options": [
+                  "'Are all those children yours?'",
+                  "'Where did you buy those uniforms?'",
+                  "'Are you taking them to boarding school?'",
+                  "'Can I take a photograph of your family?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U onadan: 'Bu bolalarning barchasi siznikimi?' deb so'radi."
+      },
+      {
+            "id": "s24-q6",
+            "order": 6,
+            "question": "What did the lady answer?",
+            "modelAnswer": "She answered, 'Yes, they are.'",
+            "keywords": [
+                  "Yes, they are"
+            ],
+            "options": [
+                  "'Yes, they are.'",
+                  "'No, half belong to my sister.'",
+                  "'Only three of them are mine.'",
+                  "'I am their school teacher.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ayol: 'Ha, hammasi o'zimniki' deb javob berdi."
+      },
+      {
+            "id": "s24-q7",
+            "order": 7,
+            "question": "What did Mr Robinson say then?",
+            "modelAnswer": "He asked, 'Do you always dress them in the same clothes?'",
+            "keywords": [
+                  "dress them in the same clothes"
+            ],
+            "options": [
+                  "'Do you always dress them in the same clothes?'",
+                  "'How much do their clothes cost?'",
+                  "'Do they ever argue with each other?'",
+                  "'Why don't you send them to school?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Janob Robinson: 'Ularni doim bir xil kiyintirasizmi?' deb so'radi."
+      },
+      {
+            "id": "s24-q8",
+            "order": 8,
+            "question": "What was the lady's answer?",
+            "modelAnswer": "She answered, 'Yes.'",
+            "keywords": [
+                  "Yes"
+            ],
+            "options": [
+                  "'Yes.'",
+                  "'Only on weekends.'",
+                  "'No, only when it rains.'",
+                  "'Never at home.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ayol: 'Ha' deb tasdiqladi."
+      },
+      {
+            "id": "s24-q9",
+            "order": 9,
+            "question": "Why did she dress her children like that when she had four ?",
+            "modelAnswer": "Because they did not want to lose any of them, and it was easy to see them among other children.",
+            "keywords": [
+                  "did not want to lose any of them",
+                  "easy to see our children among other children"
+            ],
+            "options": [
+                  "Because they did not want to lose any of them among other children",
+                  "Because clothing was cheaper when bought in bulk",
+                  "Because the school required that exact uniform",
+                  "Because they only had one colour of dye"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bolalari 4 ta bo'lganida, boshqa bolalar orasida yo'qotib qo'ymaslik uchun bir xil kiyintirishgan."
+      },
+      {
+            "id": "s24-q10",
+            "order": 10,
+            "question": "Why did she dress them like that when she had ten?",
+            "modelAnswer": "Because they did not want to take other children home too by mistake, as other children wearing different clothes are easy to spot.",
+            "keywords": [
+                  "did not want to take other children home too by mistake",
+                  "clothes are different"
+            ],
+            "options": [
+                  "Because they did not want to take other children home by mistake",
+                  "Because the older children passed down their clothes",
+                  "Because they had opened their own textile factory",
+                  "Because their father loved blue and grey"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "10 ta bo'lgach esa, adashib begona bolalarni uyga olib ketmaslik uchun shunday qilishgan!"
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s24-tf1",
+            "order": 1,
+            "statement": "The mother was walking with a group of ten children on the street.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'saw a lady in the street with ten children'."
+      },
+      {
+            "id": "s24-tf2",
+            "order": 2,
+            "statement": "Each child wore a different colourful hat.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Barchasi bir xil oq kepka kiygan edi ('all the children were wearing... white caps')."
+      },
+      {
+            "id": "s24-tf3",
+            "order": 3,
+            "statement": "Mr Robinson was the local primary school headmaster.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda janob Robinsonning kasbi haqida hech narsa deyilmagan."
+      },
+      {
+            "id": "s24-tf4",
+            "order": 4,
+            "statement": "The mother used to have only four children in the past.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'When we had only four children, we dressed them in the same clothes'."
+      },
+      {
+            "id": "s24-tf5",
+            "order": 5,
+            "statement": "With four children, identical clothes helped ensure they didn't lose any of them.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'because we did not want to lose any of them'."
+      },
+      {
+            "id": "s24-tf6",
+            "order": 6,
+            "statement": "With ten children, the mother feared that strange children would be mistaken for her own and taken home.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'because we do not want to take other children home too by mistake'."
+      }
+]
+  },
+  {
+    id: 'story-25',
+    storyNumber: 25,
+    title: "Mr Brown and the Lost Key",
+    titleUz: "Janob Braun va Yo'qolgan Kalit",
+    cefrLevel: 'A2',
+    wordCount: 168,
+    readingTimeMinutes: 1,
+    storyText: "Mr and Mrs Brown lived in a small house near London with their child. Sometimes Mr Brown came back from work very late, when his wife and the child were asleep, and then he opened the front door of his house with his key and came in very quietly.\nBut one night when he was coming home late, he lost his key, so when he reached his house, he rang the bell. Nothing happened. He rang it again. Again nothing happened-nobody moved inside the house. Mr Brown knocked at the bedroom window, he spoke to his wife, he shouted, but she did not wake up. At last he stopped and thought for a few seconds. Then he began to speak like a small child. 'Mother!' he said, 'I want to go to the lavatory!' He spoke quite quietly but at once Mrs Brown woke up. Then he spoke to her, and she opened the door for him.",
+    paragraphs: [
+      "Mr and Mrs Brown lived in a small house near London with their child. Sometimes Mr Brown came back from work very late, when his wife and the child were asleep, and then he opened the front door of his house with his key and came in very quietly.",
+      "But one night when he was coming home late, he lost his key, so when he reached his house, he rang the bell. Nothing happened. He rang it again. Again nothing happened-nobody moved inside the house.",
+      "Mr Brown knocked at the bedroom window, he spoke to his wife, he shouted, but she did not wake up. At last he stopped and thought for a few seconds.",
+      "Then he began to speak like a small child. 'Mother!' he said, 'I want to go to the lavatory!' He spoke quite quietly but at once Mrs Brown woke up. Then he spoke to her, and she opened the door for him."
+],
+    summaryUz: "Janob Braun kech qaytganida kalitini yo'qotib qo'yadi. Qo'ng'iroq chaladi, derazani taqillatadi, baqiradi — xotini uyg'onmaydi. Shunda u kichik bola ovozida sekingina: 'Ona! Hojatxonaga bormoqchiman!' deydi. Xotini ona instinkti bilan darhol uyg'onadi va eriga eshikni ochib beradi.",
+    vocabulary: [
+      {
+            "word": "asleep",
+            "pos": "adj.",
+            "phonetic": "[əˈsliːp]",
+            "translationUz": "uyquda, uxlayotgan",
+            "definitionEn": "In a state of sleep; not awake.",
+            "exampleSentence": "His wife and the child were fast asleep."
+      },
+      {
+            "word": "quietly",
+            "pos": "adv.",
+            "phonetic": "[ˈkwaɪətli]",
+            "translationUz": "sekin, shovqinsiz",
+            "definitionEn": "Making little or no noise.",
+            "exampleSentence": "He opened the door and came in very quietly."
+      },
+      {
+            "word": "reach",
+            "pos": "v.",
+            "phonetic": "[riːtʃ]",
+            "translationUz": "yetib kelmoq",
+            "definitionEn": "To arrive at; get as far as.",
+            "exampleSentence": "When he reached his front door, he realized his key was gone."
+      },
+      {
+            "word": "knock",
+            "pos": "v.",
+            "phonetic": "[nɒk]",
+            "translationUz": "taqillatmoq",
+            "definitionEn": "To strike a surface noisily to attract attention.",
+            "exampleSentence": "He knocked hard on the bedroom window."
+      },
+      {
+            "word": "at once",
+            "pos": "adv. phr.",
+            "phonetic": "[æt wʌns]",
+            "translationUz": "darhol, shu zahotiyoq",
+            "definitionEn": "Immediately; without delay.",
+            "exampleSentence": "Mrs Brown woke up at once upon hearing the child's voice."
+      },
+      {
+            "word": "lavatory",
+            "pos": "n.",
+            "phonetic": "[ˈlævətri]",
+            "translationUz": "hojatxona",
+            "definitionEn": "A room with a toilet and washbasin.",
+            "exampleSentence": "Mother, I want to go to the lavatory!"
+      }
+],
+    reproductionOutline: [
+      "Mr and Mrs Brown lived near London with their young child.",
+      "Coming home late on ordinary nights, Mr Brown used his key to enter without making noise.",
+      "One night he lost his key and was locked out; neither ringing the doorbell nor loud shouting woke his sleeping wife.",
+      "Realizing maternal instincts, he whispered like a toddler: \"Mother! I want to go to the lavatory!\"",
+      "The quiet child-like plea woke Mrs Brown instantly, and she opened the door."
+],
+    modelRetelling: "Living in a small cottage near London with their child, Mr Brown occasionally returned home late from work, quietly unlocking the front door so as not to disturb his sleeping family. However, on one late evening he realized he had lost his key. He repeatedly rang the doorbell, knocked firmly against the bedroom window, and shouted his wife's name, but she remained sound asleep. Pausing to ponder a solution, he ingeniously mimicked their young child's voice, whispering softly: 'Mother! I want to go to the lavatory!' Triggered by motherly instinct, Mrs Brown woke up in an instant, realized her husband was locked outside, and happily unbolted the door.",
+    questions: [
+      {
+            "id": "s25-q1",
+            "order": 1,
+            "question": "Where did Mr and Mrs Brown live?",
+            "modelAnswer": "They lived in a small house near London.",
+            "keywords": [
+                  "small house near London"
+            ],
+            "options": [
+                  "In a small house near London",
+                  "In a flat in downtown Manchester",
+                  "On a farm in Scotland",
+                  "In a seaside cottage in Brighton"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ular London yaqinidagi kichik uyda yashashgan: 'in a small house near London'."
+      },
+      {
+            "id": "s25-q2",
+            "order": 2,
+            "question": "How many children did they have?",
+            "modelAnswer": "They had one child.",
+            "keywords": [
+                  "their child",
+                  "one child"
+            ],
+            "options": [
+                  "One child",
+                  "Two children",
+                  "Four children",
+                  "Ten children"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ularning bitta bolasi bor edi: 'with their child'."
+      },
+      {
+            "id": "s25-q3",
+            "order": 3,
+            "question": "What happened sometimes ?",
+            "modelAnswer": "Sometimes Mr Brown came back from work very late.",
+            "keywords": [
+                  "came back from work very late"
+            ],
+            "options": [
+                  "Mr Brown came back from work very late",
+                  "Mrs Brown traveled to London alone",
+                  "Their child stayed up all night",
+                  "The front door lock broke"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ba'zida janob Braun ishdan juda kech qaytardi: 'came back from work very late'."
+      },
+      {
+            "id": "s25-q4",
+            "order": 4,
+            "question": "What were his wife and child doing when this happened?",
+            "modelAnswer": "His wife and child were asleep.",
+            "keywords": [
+                  "were asleep"
+            ],
+            "options": [
+                  "They were asleep",
+                  "They were watching television",
+                  "They were waiting at the bus stop",
+                  "They were eating dinner"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Xotini va bolasi uxlab yotgan bo'lardi: 'were asleep'."
+      },
+      {
+            "id": "s25-q5",
+            "order": 5,
+            "question": "What did Mr Brown do then?",
+            "modelAnswer": "He opened the front door of his house with his key.",
+            "keywords": [
+                  "opened the front door",
+                  "with his key"
+            ],
+            "options": [
+                  "He opened the front door with his key",
+                  "He rang the doorbell loudly",
+                  "He slept in the garden shed",
+                  "He phoned his wife from the road"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U uyni o'z kaliti bilan ochardi."
+      },
+      {
+            "id": "s25-q6",
+            "order": 6,
+            "question": "How did he come in?",
+            "modelAnswer": "He came in very quietly.",
+            "keywords": [
+                  "very quietly"
+            ],
+            "options": [
+                  "Very quietly",
+                  "Making a lot of noise",
+                  "Singing a song",
+                  "With a heavy flashlight"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U juda sekin va shovqinsiz kirardi: 'very quietly'."
+      },
+      {
+            "id": "s25-q7",
+            "order": 7,
+            "question": "What happened one night?",
+            "modelAnswer": "One night he lost his key.",
+            "keywords": [
+                  "lost his key"
+            ],
+            "options": [
+                  "He lost his key",
+                  "His car broke down",
+                  "The house caught fire",
+                  "A thief entered the house"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir kecha u kalitini yo'qotib qo'ydi: 'he lost his key'."
+      },
+      {
+            "id": "s25-q8",
+            "order": 8,
+            "question": "When did this happen?",
+            "modelAnswer": "When he was coming home late from work.",
+            "keywords": [
+                  "coming home late"
+            ],
+            "options": [
+                  "When he was coming home late",
+                  "Early on Sunday morning",
+                  "During his lunch break",
+                  "On Christmas Eve"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U kechqurun kech qaytayotgan paytda yuz berdi."
+      },
+      {
+            "id": "s25-q9",
+            "order": 9,
+            "question": "What did Mr Brown do when he reached his house?",
+            "modelAnswer": "When he reached his house, he rang the bell.",
+            "keywords": [
+                  "rang the bell"
+            ],
+            "options": [
+                  "He rang the bell",
+                  "He broke the front window",
+                  "He climbed through the chimney",
+                  "He walked to a hotel"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Uyiga yetib kelgach qo'ng'iroqni chaldi: 'he rang the bell'."
+      },
+      {
+            "id": "s25-q10",
+            "order": 10,
+            "question": "What happened?",
+            "modelAnswer": "Nothing happened.",
+            "keywords": [
+                  "Nothing happened"
+            ],
+            "options": [
+                  "Nothing happened",
+                  "The lights turned on",
+                  "The dog started barking",
+                  "His wife answered immediately"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Hech narsa bo'lmadi: 'Nothing happened'."
+      },
+      {
+            "id": "s25-q11",
+            "order": 11,
+            "question": "What did Mr Brown do then?",
+            "modelAnswer": "He rang it again.",
+            "keywords": [
+                  "rang it again"
+            ],
+            "options": [
+                  "He rang it again",
+                  "He sat on the doorstep",
+                  "He called the police",
+                  "He threw pebbles at the roof"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U qo'ng'iroqni yana bir bor chaldi: 'He rang it again'."
+      },
+      {
+            "id": "s25-q12",
+            "order": 12,
+            "question": "What happened this time?",
+            "modelAnswer": "Again nothing happened—nobody moved inside the house.",
+            "keywords": [
+                  "Again nothing happened",
+                  "nobody moved"
+            ],
+            "options": [
+                  "Again nothing happened—nobody moved inside the house",
+                  "The door opened automatically",
+                  "His neighbour came out with a torch",
+                  "The baby started crying"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Yana hech narsa bo'lmadi, uy ichida hech kim qimirlamadi."
+      },
+      {
+            "id": "s25-q13",
+            "order": 13,
+            "question": "What did Mr Brown do then?",
+            "modelAnswer": "He knocked at the bedroom window, spoke to his wife, and shouted.",
+            "keywords": [
+                  "knocked at the bedroom window",
+                  "shouted"
+            ],
+            "options": [
+                  "He knocked at the bedroom window, spoke to his wife, and shouted",
+                  "He tried to kick the door down",
+                  "He slept inside his parked car",
+                  "He went back to his office"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U yotoqxona derazasini taqillatdi, xotiniga gapirdi va baqirdi."
+      },
+      {
+            "id": "s25-q14",
+            "order": 14,
+            "question": "What did his wife do?",
+            "modelAnswer": "She did not wake up.",
+            "keywords": [
+                  "did not wake up"
+            ],
+            "options": [
+                  "She did not wake up",
+                  "She shouted back at him",
+                  "She called the guards",
+                  "She hid under the bed"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Xotini aslo uyg'onmadi: 'she did not wake up'."
+      },
+      {
+            "id": "s25-q15",
+            "order": 15,
+            "question": "What did Mr Brown do then?",
+            "modelAnswer": "He stopped and thought for a few seconds.",
+            "keywords": [
+                  "stopped and thought for a few seconds"
+            ],
+            "options": [
+                  "He stopped and thought for a few seconds",
+                  "He gave up completely",
+                  "He started crying outside",
+                  "He threw a heavy stone"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U to'xtab, bir necha soniya o'ylab ko'rdi."
+      },
+      {
+            "id": "s25-q16",
+            "order": 16,
+            "question": "How did Mr Brown wake his wife?",
+            "modelAnswer": "He spoke like a small child and said, 'Mother! I want to go to the lavatory!'",
+            "keywords": [
+                  "spoke like a small child",
+                  "Mother",
+                  "want to go to the lavatory"
+            ],
+            "options": [
+                  "He spoke like a small child: 'Mother! I want to go to the lavatory!'",
+                  "He sounded an emergency car horn",
+                  "He broke the bedroom window pane",
+                  "He played loud music on his phone"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U yosh bola ovozida: 'Ona! Hojatxonaga bormoqchiman!' dedi."
+      },
+      {
+            "id": "s25-q17",
+            "order": 17,
+            "question": "What did he do then?",
+            "modelAnswer": "Then he spoke to her as she woke up.",
+            "keywords": [
+                  "spoke to her"
+            ],
+            "options": [
+                  "He spoke to her and explained he was locked out",
+                  "He ran away into the garden",
+                  "He jumped through the open window",
+                  "He hid behind the bush"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Xotini uyg'ongach, u bilan gaplashdi."
+      },
+      {
+            "id": "s25-q18",
+            "order": 18,
+            "question": "What did she do?",
+            "modelAnswer": "She opened the door for him.",
+            "keywords": [
+                  "opened the door for him"
+            ],
+            "options": [
+                  "She opened the door for him",
+                  "She locked the latch tighter",
+                  "She told him to go away",
+                  "She called an ambulance"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Xotini unga eshikni ochib berdi: 'she opened the door for him'."
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s25-tf1",
+            "order": 1,
+            "statement": "Mr and Mrs Brown had three school-age children.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Ularning faqat bitta bolasi bor edi ('with their child')."
+      },
+      {
+            "id": "s25-tf2",
+            "order": 2,
+            "statement": "Mr Brown often had late working hours.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'Sometimes Mr Brown came back from work very late'."
+      },
+      {
+            "id": "s25-tf3",
+            "order": 3,
+            "statement": "One night, Mr Brown lost his front door key.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'he lost his key'."
+      },
+      {
+            "id": "s25-tf4",
+            "order": 4,
+            "statement": "Loud knocking and shouting woke Mrs Brown immediately.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U baqirsa ham, derazani taqillatsa ham xotini uyg'onmadi ('she did not wake up')."
+      },
+      {
+            "id": "s25-tf5",
+            "order": 5,
+            "statement": "The husband successfully awakened his wife by pretending to be their child.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: U yosh bola kabi gapirib, 'Ona, hojatxonaga bormoqchiman' deganida xotini darhol uyg'ondi."
+      },
+      {
+            "id": "s25-tf6",
+            "order": 6,
+            "statement": "Mrs Brown called the police thinking a burglar was outside.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda uning politsiya chaqirgani haqida hech narsa deyilmagan."
+      }
+]
+  },
+  {
+    id: 'story-26',
+    storyNumber: 26,
+    title: "Uncle George's Friendly Habit",
+    titleUz: "Jorj Tog'aning Do'stona Odati",
+    cefrLevel: 'A2',
+    wordCount: 164,
+    readingTimeMinutes: 1,
+    storyText: "Peter's uncle lived in the country. Once Peter went to stay with him for a few weeks. Whenever they went for a walk or for a drive in the car and they passed somebody, his uncle waved. Peter was surprised, and said, 'Uncle George, you know everybody here. Where did you meet them all?'\n'I don't know all these people,' said his uncle.\n'Then why do you wave to them?' asked Peter.\n'Well, Peter,' answered his uncle, 'when I wave to some one and he knows me, he is pleased. He continues his journey with a happier heart. But when I wave to someone and he doesn't know me, he is surprised and says to himself, \"Who is that man? Why did he wave to me?\" So he has something to think about during the rest of his journey, and that makes his journey seem shorter. So I make everybody happy.'",
+    paragraphs: [
+      "Peter's uncle lived in the country. Once Peter went to stay with him for a few weeks. Whenever they went for a walk or for a drive in the car and they passed somebody, his uncle waved. Peter was surprised, and said, 'Uncle George, you know everybody here. Where did you meet them all?'",
+      "'I don't know all these people,' said his uncle.\n'Then why do you wave to them?' asked Peter.",
+      "'Well, Peter,' answered his uncle, 'when I wave to some one and he knows me, he is pleased. He continues his journey with a happier heart. But when I wave to someone and he doesn't know me, he is surprised and says to himself, \"Who is that man? Why did he wave to me?\" So he has something to think about during the rest of his journey, and that makes his journey seem shorter. So I make everybody happy.'"
+],
+    summaryUz: "Piter qishloqda yashovchi Jorj tog'asinikiga mehmonga boradi. Tog'asi ko'chada mashinada ketayotib har bir uchragan odamga qo'l silkitib salom beradi. Piter hamma odamlarni qaerdan tanishini so'raganida, tog'asi: 'Men ularning hammasini tanimayman. Taniydigan odamga qo'l silkitsam xursand bo'ladi. Tanimaydigan odam esa \"Bu kim edi? Nega menga qo'l siltadi?\" deb o'ylanib, yo'li qanday o'tganini bilmay qoladi va uning ham yo'li qisqaradi. Shunday qilib men barchani xursand qilaman!' deydi.",
+    vocabulary: [
+      {
+            "word": "country",
+            "pos": "n.",
+            "phonetic": "[ˈkʌntri]",
+            "translationUz": "qishloq joy, shahar tashqarisi",
+            "definitionEn": "Districts outside cities and towns; rural areas.",
+            "exampleSentence": "Peter spent his summer holiday in the quiet country."
+      },
+      {
+            "word": "stay with",
+            "pos": "phr. v.",
+            "phonetic": "[steɪ wɪð]",
+            "translationUz": "...nikida mehmon bo'lmoq / yashamoq",
+            "definitionEn": "To live temporarily as a guest in someone's home.",
+            "exampleSentence": "Peter went to stay with his eccentric uncle."
+      },
+      {
+            "word": "wave",
+            "pos": "v.",
+            "phonetic": "[weɪv]",
+            "translationUz": "qo'l silkitmoq (salom bermoq)",
+            "definitionEn": "To move one's hand to signal friendly greeting.",
+            "exampleSentence": "Uncle George waved warmly at every passer-by."
+      },
+      {
+            "word": "journey",
+            "pos": "n.",
+            "phonetic": "[ˈdʒɜːni]",
+            "translationUz": "sayohat, safar, yo'l",
+            "definitionEn": "An act of travelling from one place to another.",
+            "exampleSentence": "The friendly gesture brightened their long journey."
+      },
+      {
+            "word": "seem shorter",
+            "pos": "v. phr.",
+            "phonetic": "[siːm ˈʃɔːtə]",
+            "translationUz": "qisqaroqdek tuyulmoq",
+            "definitionEn": "To appear to take less time than actual.",
+            "exampleSentence": "Thinking about the mystery makes the trip seem shorter."
+      },
+      {
+            "word": "pleased",
+            "pos": "adj.",
+            "phonetic": "[pliːzd]",
+            "translationUz": "mamnun, xursand",
+            "definitionEn": "Feeling happy or satisfied with a situation.",
+            "exampleSentence": "People are always pleased when greeted warmly."
+      }
+],
+    reproductionOutline: [
+      "Peter stayed with his countryside uncle, George, for several weeks.",
+      "Whenever they walked or drove past anyone on the roads, Uncle George enthusiastically waved.",
+      "Peter expressed astonishment, assuming his uncle knew the entire local population.",
+      "Uncle George admitted he was complete strangers with most of them.",
+      "His reasoning was uplifting: acquaintances felt cheered, while strangers grew intrigued, causing their journeys to feel pleasantly shorter!"
+],
+    modelRetelling: "Visiting his countryside uncle George for several weeks, young Peter was struck by an unusual habit: whenever they drove or strolled past someone, George waved warmly. Mistakenly assuming his uncle was acquainted with every soul in the region, Peter asked where he had met so many people. Uncle George surprised the boy by revealing that he hardly recognized any of them. He explained his unique philosophy: when he greeted an acquaintance, they felt appreciated and traveled happier. When he greeted a complete stranger, that person was left pleasantly puzzled, pondering who the mystery man was, which made the remainder of their journey fly by. In this simple way, George reasoned, he made everyone happy!",
+    questions: [
+      {
+            "id": "s26-q1",
+            "order": 1,
+            "question": "Where did Peter's uncle live?",
+            "modelAnswer": "Peter's uncle lived in the country.",
+            "keywords": [
+                  "lived in the country"
+            ],
+            "options": [
+                  "In the country",
+                  "In central London",
+                  "In a seaside port",
+                  "In an apartment in New York"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Piterning tog'asi qishloqda yashardi: 'lived in the country'."
+      },
+      {
+            "id": "s26-q2",
+            "order": 2,
+            "question": "What did Peter once do?",
+            "modelAnswer": "Once Peter went to stay with him for a few weeks.",
+            "keywords": [
+                  "stay with him for a few weeks"
+            ],
+            "options": [
+                  "He went to stay with him for a few weeks",
+                  "He bought a vintage motor-car from him",
+                  "He helped him harvest wheat",
+                  "He moved to the village permanently"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Bir safar Piter u bilan bir necha hafta yashashga bordi."
+      },
+      {
+            "id": "s26-q3",
+            "order": 3,
+            "question": "What happened?",
+            "modelAnswer": "Whenever they went for a walk or drive and passed somebody, his uncle waved.",
+            "keywords": [
+                  "passed somebody",
+                  "his uncle waved"
+            ],
+            "options": [
+                  "Whenever they passed somebody, his uncle waved",
+                  "His uncle stopped and took pictures of everybody",
+                  "His uncle invited every stranger for dinner",
+                  "Their car broke down on every country road"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Ular qachon yurishsa yoki mashinada ketishsa, tog'asi har bir o'tgan odamga qo'l silkitardi."
+      },
+      {
+            "id": "s26-q4",
+            "order": 4,
+            "question": "What did Peter feel about this?",
+            "modelAnswer": "Peter was surprised.",
+            "keywords": [
+                  "was surprised"
+            ],
+            "options": [
+                  "He was surprised",
+                  "He was embarrassed and annoyed",
+                  "He was scared of the strangers",
+                  "He was indifferent"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Piter bundan hayratda qoldi: 'Peter was surprised'."
+      },
+      {
+            "id": "s26-q5",
+            "order": 5,
+            "question": "What did he say?",
+            "modelAnswer": "Peter said, 'Uncle George, you know everybody here. Where did you meet them all?'",
+            "keywords": [
+                  "you know everybody here",
+                  "Where did you meet them all"
+            ],
+            "options": [
+                  "'Uncle George, you know everybody here. Where did you meet them all?'",
+                  "'Why are you driving so fast down these narrow lanes?'",
+                  "'Can we stop at the next village bakery?'",
+                  "'Do people always wave back at you?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "U: 'Jorj tog'a, siz bu yerdagi hamma odamlarni taniysiz. Ularning hammasi bilan qayerda uchrashgansiz?' deb so'radi."
+      },
+      {
+            "id": "s26-q6",
+            "order": 6,
+            "question": "What did his uncle answer?",
+            "modelAnswer": "His uncle answered, 'I don't know all these people.'",
+            "keywords": [
+                  "don't know all these people"
+            ],
+            "options": [
+                  "'I don't know all these people.'",
+                  "'I went to school with all of them.'",
+                  "'They are all our distant cousins.'",
+                  "'I met them at the annual country fair.'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Tog'asi: 'Men bu odamlarning hammasini tanimayman' deb javob berdi."
+      },
+      {
+            "id": "s26-q7",
+            "order": 7,
+            "question": "What did Peter ask him then?",
+            "modelAnswer": "Peter asked, 'Then why do you wave to them?'",
+            "keywords": [
+                  "why do you wave to them"
+            ],
+            "options": [
+                  "'Then why do you wave to them?'",
+                  "'Can I wave to them too?'",
+                  "'Are they angry when you wave?'",
+                  "'Do you ever stop to speak with them?'"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Piter: 'Unda nega ularga qo'l siltaysiz?' deb so'radi."
+      },
+      {
+            "id": "s26-q8",
+            "order": 8,
+            "question": "What was his uncle's answer?",
+            "modelAnswer": "His uncle answered that acquaintances feel pleased, while strangers wonder who waved, which gives them something to think about and makes their journey seem shorter, thus making everybody happy.",
+            "keywords": [
+                  "pleased",
+                  "surprised",
+                  "something to think about",
+                  "makes his journey seem shorter",
+                  "make everybody happy"
+            ],
+            "options": [
+                  "Known people are pleased, while strangers have something to think about making their trip seem shorter",
+                  "He waved to keep his arm muscles warm and active",
+                  "It was a local traffic regulation to wave at oncoming cars",
+                  "He was practicing his election campaign for mayor"
+            ],
+            "correctOptionIndex": 0,
+            "explanationUz": "Tog'asi taniydiganlar xursand bo'lishini, tanimaydiganlar esa o'ylanib yo'li qanday o'tganini bilmay qolishini va shu tariqa barchani baxtli qilishini aytdi."
+      }
+],
+    trueFalseQuestions: [
+      {
+            "id": "s26-tf1",
+            "order": 1,
+            "statement": "Peter spent several weeks visiting his uncle in the countryside.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'Peter went to stay with him for a few weeks'."
+      },
+      {
+            "id": "s26-tf2",
+            "order": 2,
+            "statement": "Uncle George waved strictly to personal friends and business clients.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U yo'ldan o'tgan har bir odamga qo'l silkitardi ('Whenever they... passed somebody, his uncle waved')."
+      },
+      {
+            "id": "s26-tf3",
+            "order": 3,
+            "statement": "Uncle George knew every single inhabitant of the surrounding villages.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: U barcha odamlarni tanimasligini ochiq aytdi ('I don't know all these people')."
+      },
+      {
+            "id": "s26-tf4",
+            "order": 4,
+            "statement": "Uncle George was running for political office in the county.",
+            "correctAnswer": "Not Given",
+            "explanationUz": "Matnda uning siyosatga aloqadorligi yoki saylovda qatnashayotgani haqida gap yo'q."
+      },
+      {
+            "id": "s26-tf5",
+            "order": 5,
+            "statement": "Uncle George believed curiosity about his waving helped strangers' journeys feel shorter.",
+            "correctAnswer": "True",
+            "explanationUz": "To'g'ri: 'So he has something to think about... and that makes his journey seem shorter'."
+      },
+      {
+            "id": "s26-tf6",
+            "order": 6,
+            "statement": "Peter was disgusted by his uncle's friendly habit and refused to ride with him.",
+            "correctAnswer": "False",
+            "explanationUz": "Xato: Piter faqat hayratlangan va sababini qiziqib so'ragan edi."
+      }
+]
+  }
 ];
 
 export function getStoryById(id: string): StoryForReproduction | undefined {
