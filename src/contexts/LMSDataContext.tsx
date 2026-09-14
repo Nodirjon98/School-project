@@ -36,6 +36,8 @@ interface LMSDataContextType {
   // Actions
   addGroup: (newGroup: Omit<Group, 'id' | 'created_at'>) => Promise<void>;
   createGroup: (newGroup: Omit<Group, 'id' | 'created_at'>) => Promise<void>;
+  updateGroup: (groupId: string, updates: Partial<Omit<Group, 'id' | 'created_at'>>) => Promise<void>;
+  deleteGroup: (groupId: string) => Promise<void>;
   assignStudentToGroup: (studentId: string, groupId: string) => Promise<void>;
   removeStudentFromGroup: (studentId: string) => Promise<void>;
   deleteStudent: (studentId: string) => Promise<void>;
@@ -326,6 +328,70 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         console.warn('Supabase addGroup warning:', e);
       }
     }
+  };
+
+  const updateGroup = async (groupId: string, updates: Partial<Omit<Group, 'id' | 'created_at'>>) => {
+    setGroups(prev => prev.map(g => {
+      if (g.id === groupId) {
+        return { ...g, ...updates };
+      }
+      return g;
+    }));
+
+    // If group name is updated, sync it with all students assigned to this group
+    if (updates.name) {
+      setStudents(prev => prev.map(s => {
+        if (s.group_id === groupId) {
+          return { ...s, group_name: updates.name };
+        }
+        return s;
+      }));
+    }
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('groups').update(updates).eq('id', groupId);
+      } catch (e) {
+        console.warn('Supabase updateGroup warning:', e);
+      }
+    }
+
+    playSound('bell');
+    realtime.publish({
+      type: 'GROUP_UPDATED',
+      title: 'Guruh yangilandi',
+      message: `"${updates.name || 'Guruh'}" ma'lumotlari muvaffaqiyatli tahrirlandi`,
+      actor: { id: profile?.id || 'admin', name: profile?.full_name || 'Admin', role: 'admin' }
+    });
+  };
+
+  const deleteGroup = async (groupId: string) => {
+    const target = groups.find(g => g.id === groupId);
+    setGroups(prev => prev.filter(g => g.id !== groupId));
+
+    // Release all students from this deleted group
+    setStudents(prev => prev.map(s => {
+      if (s.group_id === groupId) {
+        return { ...s, group_id: undefined, group_name: undefined };
+      }
+      return s;
+    }));
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('groups').delete().eq('id', groupId);
+      } catch (e) {
+        console.warn('Supabase deleteGroup warning:', e);
+      }
+    }
+
+    playSound('pop');
+    realtime.publish({
+      type: 'GROUP_DELETED',
+      title: "Guruh o'chirildi",
+      message: `"${target?.name || 'Guruh'}" tizimdan o'chirildi`,
+      actor: { id: profile?.id || 'admin', name: profile?.full_name || 'Admin', role: 'admin' }
+    });
   };
 
   const addLesson = async (newLesson: Omit<Lesson, 'id' | 'created_at'>) => {
@@ -810,6 +876,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         loading,
         addGroup,
         createGroup: addGroup,
+        updateGroup,
+        deleteGroup,
         assignStudentToGroup,
         removeStudentFromGroup,
         deleteStudent,

@@ -9,13 +9,13 @@ import {
   Users, Plus, Clock, MapPin, 
   UserPlus, Search, Phone, Mail, CheckCircle2,
   Calendar, CreditCard, AlertCircle, ArrowRight, Sparkles, X, ChevronRight,
-  Trash2, KeyRound, Copy, Check, UserX, UserCheck, Eye
+  Trash2, KeyRound, Copy, Check, UserX, UserCheck, Eye, Edit3
 } from 'lucide-react';
 
 export const GroupManager: React.FC = () => {
   const { t } = useLanguage();
   const { 
-    groups, createGroup, students, 
+    groups, createGroup, updateGroup, deleteGroup, students, 
     assignStudentToGroup, removeStudentFromGroup, deleteStudent, registerStudentByAdmin 
   } = useLMSData();
 
@@ -31,6 +31,17 @@ export const GroupManager: React.FC = () => {
   const [copiedField, setCopiedField] = useState<'login' | 'password' | 'all' | null>(null);
   const [assignTargetGroupId, setAssignTargetGroupId] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Edit Group states
+  const [editingGroup, setEditingGroup] = useState<Group | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editLevel, setEditLevel] = useState<CEFRLevel>('B2');
+  const [editScheduleDays, setEditScheduleDays] = useState<'MWF' | 'TTS' | 'custom'>('MWF');
+  const [editScheduleTime, setEditScheduleTime] = useState('18:30 - 20:00');
+  const [editCustomSchedule, setEditCustomSchedule] = useState('');
+  const [editRoom, setEditRoom] = useState('Oybek Campus, Room 304');
+  const [editCapacity, setEditCapacity] = useState(14);
+  const [editTeacherName, setEditTeacherName] = useState('Malika Karimova');
 
   // Search and Filters
   const [groupSearch, setGroupSearch] = useState('');
@@ -59,6 +70,78 @@ export const GroupManager: React.FC = () => {
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 4000);
+  };
+
+  const openEditGroupModal = (grp: Group) => {
+    setEditingGroup(grp);
+    setEditName(grp.name);
+    setEditLevel(grp.level);
+    if (grp.schedule.includes('Dush') || grp.schedule.includes('Chor') || grp.schedule.includes('Mon')) {
+      setEditScheduleDays('MWF');
+      const timeMatch = grp.schedule.match(/\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}/);
+      if (timeMatch) setEditScheduleTime(timeMatch[0]);
+    } else if (grp.schedule.includes('Sesh') || grp.schedule.includes('Pay') || grp.schedule.includes('Tue')) {
+      setEditScheduleDays('TTS');
+      const timeMatch = grp.schedule.match(/\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}/);
+      if (timeMatch) setEditScheduleTime(timeMatch[0]);
+    } else {
+      setEditScheduleDays('custom');
+      setEditCustomSchedule(grp.schedule);
+    }
+    setEditRoom(grp.room || 'Oybek Campus, Room 304');
+    setEditCapacity(grp.capacity || 14);
+    setEditTeacherName(grp.teacher_name || 'Malika Karimova');
+  };
+
+  const handleSaveEditGroup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingGroup || !editName.trim()) return;
+
+    let fullSchedule = editCustomSchedule;
+    if (editScheduleDays === 'MWF') {
+      fullSchedule = `Dush / Chor / Jum ${editScheduleTime}`;
+    } else if (editScheduleDays === 'TTS') {
+      fullSchedule = `Sesh / Pay / Shan ${editScheduleTime}`;
+    }
+
+    await updateGroup(editingGroup.id, {
+      name: editName.trim(),
+      level: editLevel,
+      schedule: fullSchedule,
+      room: editRoom.trim(),
+      capacity: Number(editCapacity),
+      teacher_name: editTeacherName.trim(),
+    });
+
+    if (selectedGroupForDetail?.id === editingGroup.id) {
+      setSelectedGroupForDetail({
+        ...selectedGroupForDetail,
+        name: editName.trim(),
+        level: editLevel,
+        schedule: fullSchedule,
+        room: editRoom.trim(),
+        capacity: Number(editCapacity),
+        teacher_name: editTeacherName.trim(),
+      });
+    }
+
+    showToast(`"${editName}" guruhi ma'lumotlari muvaffaqiyatli tahrirlandi!`);
+    setEditingGroup(null);
+  };
+
+  const handleDeleteGroup = async (grp: Group) => {
+    const assignedCount = students.filter(s => s.group_id === grp.id).length;
+    const confirmMsg = assignedCount > 0
+      ? `"${grp.name}" guruhida ${assignedCount} nafar o'quvchi mavjud. Guruh o'chirilsa, ular guruhsiz holatga o'tadi.\n\nGuruhni butunlay o'chirishni tasdiqlaysizmi?`
+      : `"${grp.name}" guruhini tizimdan butunlay o'chirishni tasdiqlaysizmi?`;
+
+    if (window.confirm(confirmMsg)) {
+      await deleteGroup(grp.id);
+      if (selectedGroupForDetail?.id === grp.id) {
+        setSelectedGroupForDetail(null);
+      }
+      showToast(`"${grp.name}" guruhi muvaffaqiyatli o'chirildi.`);
+    }
   };
 
   const handleCreateGroup = async (e: React.FormEvent) => {
@@ -641,17 +724,31 @@ export const GroupManager: React.FC = () => {
               return (
                 <div 
                   key={g.id} 
-                  className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs flex flex-col justify-between hover:border-indigo-300 transition"
+                  className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs flex flex-col justify-between hover:border-indigo-300 transition group"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
                         {g.level} Daraja
                       </span>
-                      <span className="text-xs text-slate-400 font-semibold flex items-center gap-1">
-                        <Users className="w-3.5 h-3.5 text-slate-400" />
-                        {assignedCount || g.students_count || 12} / {g.capacity || 14} o'quvchi
-                      </span>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => openEditGroupModal(g)}
+                          className="p-1.5 rounded-lg text-indigo-600 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition cursor-pointer"
+                          title="Guruhni tahrirlash"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteGroup(g)}
+                          className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 transition cursor-pointer"
+                          title="Guruhni o'chirish"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
 
                     <h3 className="text-base font-bold text-slate-900 mb-1">{g.name}</h3>
@@ -668,16 +765,34 @@ export const GroupManager: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                    <span className="text-slate-500 font-medium">Ustoz: {g.teacher_name || 'Malika Karimova'}</span>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedGroupForDetail(g)}
-                      className="text-indigo-600 font-bold hover:underline flex items-center gap-0.5 cursor-pointer"
-                    >
-                      <span>O'quvchilari ({assignedCount})</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </button>
+                  <div>
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs mb-3">
+                      <span className="text-slate-500 font-medium truncate max-w-[140px]">Ustoz: {g.teacher_name || 'Malika Karimova'}</span>
+                      <span className="text-xs text-slate-500 font-semibold flex items-center gap-1">
+                        <Users className="w-3.5 h-3.5 text-slate-400" />
+                        {assignedCount} / {g.capacity || 14} o'quvchi
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-50">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedGroupForDetail(g)}
+                        className="w-full py-2 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <Users className="w-3.5 h-3.5" />
+                        <span>O'quvchilar ({assignedCount})</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => openEditGroupModal(g)}
+                        className="w-full py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs border border-indigo-200 transition flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Tahrirlash</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -774,9 +889,19 @@ export const GroupManager: React.FC = () => {
                 <span className="font-bold text-slate-700 block">{selectedGroupForDetail.schedule}</span>
                 <span className="text-slate-400">{selectedGroupForDetail.room} • Ustoz: {selectedGroupForDetail.teacher_name}</span>
               </div>
-              <span className="px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 font-extrabold text-xs">
-                {selectedGroupForDetail.level}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 font-extrabold text-xs">
+                  {selectedGroupForDetail.level}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => openEditGroupModal(selectedGroupForDetail)}
+                  className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-1 transition cursor-pointer shadow-xs"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>Tahrirlash</span>
+                </button>
+              </div>
             </div>
 
             <div className="max-h-72 overflow-y-auto space-y-2">
@@ -1153,6 +1278,159 @@ export const GroupManager: React.FC = () => {
               </button>
             </div>
           </div>
+        )}
+      </Modal>
+
+      {/* MODAL 6: EDIT GROUP */}
+      <Modal
+        isOpen={!!editingGroup}
+        onClose={() => setEditingGroup(null)}
+        title={editingGroup ? `Guruhni Tahrirlash: ${editingGroup.name}` : "Guruhni Tahrirlash"}
+      >
+        {editingGroup && (
+          <form onSubmit={handleSaveEditGroup} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Guruh nomi</label>
+              <input
+                type="text"
+                required
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                placeholder="Masalan: IELTS Intensive Autumn 2026"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden font-bold text-slate-900"
+              />
+              <p className="text-[11px] text-slate-400 mt-1">
+                Guruh nomi o'zgartirilsa, unga biriktirilgan barcha o'quvchilar profilida ham avtomatik yangilanadi.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">CEFR Darajasi</label>
+                <select
+                  value={editLevel}
+                  onChange={(e) => setEditLevel(e.target.value as CEFRLevel)}
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden font-bold"
+                >
+                  <option value="A1">A1 - Beginner</option>
+                  <option value="A2">A2 - Elementary</option>
+                  <option value="B1">B1 - Intermediate</option>
+                  <option value="B2">B2 - Upper-Intermediate</option>
+                  <option value="C1">C1 - Advanced</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Maksimal Sig'im (o'rin)</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="50"
+                  value={editCapacity}
+                  onChange={(e) => setEditCapacity(Number(e.target.value))}
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden font-bold"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Dars Kunlari</label>
+                <select
+                  value={editScheduleDays}
+                  onChange={(e) => setEditScheduleDays(e.target.value as 'MWF' | 'TTS' | 'custom')}
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden font-medium"
+                >
+                  <option value="MWF">Dushanba / Chorshanba / Juma</option>
+                  <option value="TTS">Seshanba / Payshanba / Shanba</option>
+                  <option value="custom">Boshqa / Maxsus jadval</option>
+                </select>
+              </div>
+
+              {editScheduleDays !== 'custom' ? (
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Dars Soati</label>
+                  <select
+                    value={editScheduleTime}
+                    onChange={(e) => setEditScheduleTime(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden font-medium"
+                  >
+                    <option value="09:00 - 10:30">09:00 - 10:30</option>
+                    <option value="11:00 - 12:30">11:00 - 12:30</option>
+                    <option value="14:00 - 15:30">14:00 - 15:30</option>
+                    <option value="16:30 - 18:00">16:30 - 18:00</option>
+                    <option value="18:30 - 20:00">18:30 - 20:00</option>
+                  </select>
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Maxsus Jadval Matni</label>
+                  <input
+                    type="text"
+                    value={editCustomSchedule}
+                    onChange={(e) => setEditCustomSchedule(e.target.value)}
+                    placeholder="Masalan: Shanba / Yakshanba 10:00 - 12:00"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden font-medium"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Biriktirilgan Ustoz</label>
+              <input
+                type="text"
+                required
+                value={editTeacherName}
+                onChange={(e) => setEditTeacherName(e.target.value)}
+                placeholder="Malika Karimova"
+                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden font-medium"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Filial va Sinf Xonasi</label>
+              <input
+                type="text"
+                required
+                value={editRoom}
+                onChange={(e) => setEditRoom(e.target.value)}
+                placeholder="Oybek Campus, Room 304"
+                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden font-medium"
+              />
+            </div>
+
+            <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => {
+                  const grpToDel = editingGroup;
+                  setEditingGroup(null);
+                  if (grpToDel) handleDeleteGroup(grpToDel);
+                }}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-rose-600 hover:bg-rose-50 text-xs font-bold border border-rose-200 transition cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Guruhni O'chirish</span>
+              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingGroup(null)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 cursor-pointer"
+                >
+                  Bekor qilish
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition cursor-pointer shadow-sm"
+                >
+                  O'zgarishlarni Saqlash ✓
+                </button>
+              </div>
+            </div>
+          </form>
         )}
       </Modal>
     </div>
