@@ -1142,3 +1142,42 @@ export interface RealWorldBook {
   units: RealWorldUnit[];
 }
 
+// ==================== STORIES FOR REPRODUCTION (L.A. HILL) ====================
+
+export interface StoryVocabulary {
+  word: string;
+  pos: string; // n., v., adj., adv., phrase
+  phonetic: string;
+  translationUz: string;
+  definitionEn: string;
+  exampleSentence: string;
+}
+
+export interface StoryQuestion {
+  id: string;
+  order: number;
+  question: string;
+  modelAnswer: string;
+  keywords: string[];
+  options?: string[];
+  correctOptionIndex?: number;
+  explanationUz?: string;
+}
+
+export interface StoryForReproduction {
+  id: string;
+  storyNumber: number;
+  title: string;
+  titleUz: string;
+  cefrLevel: 'A1' | 'A2' | 'B1';
+  wordCount: number;
+  readingTimeMinutes: number;
+  storyText: string;
+  paragraphs: string[];
+  summaryUz: string;
+  vocabulary: StoryVocabulary[];
+  questions: StoryQuestion[];
+  reproductionOutline: string[];
+  modelRetelling: string;
+}
+

@@ -43,6 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       category: "O'QUV DASTURI",
       items: [
         { label: 'Essential Grammar (Murphy)', path: '/essential-grammar', icon: <BookOpen className="w-4 h-4 text-amber-400" />, badge: 'A1-A2' },
+        { label: 'Stories for Reproduction', path: '/stories-for-reproduction', icon: <BookOpen className="w-4 h-4 text-rose-400" />, badge: 'L.A. Hill' },
         { label: '4000 Words & Reading', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" />, badge: 'A1-C2' },
         { label: 'Tactics for Listening', path: '/listening', icon: <Headphones className="w-4 h-4 text-sky-400" />, badge: 'Oxford' },
         { label: 'Karaoke & Podkastlar', path: '/karaoke', icon: <Music className="w-4 h-4 text-purple-400" />, badge: 'Audio' },
@@ -83,6 +84,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       category: "O'QUV MATERIALARI",
       items: [
         { label: 'Essential Grammar (Murphy)', path: '/essential-grammar', icon: <BookOpen className="w-4 h-4 text-amber-400" />, badge: 'A1-A2' },
+        { label: 'Stories for Reproduction', path: '/stories-for-reproduction', icon: <BookOpen className="w-4 h-4 text-rose-400" />, badge: 'Hill' },
         { label: '4000 Words Curriculum', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" />, badge: 'Books 1-6' },
         { label: 'Tactics for Listening', path: '/teacher/listening', icon: <Headphones className="w-4 h-4 text-sky-400" />, badge: '24 Units' },
         { label: 'Reading for Real World', path: '/real-world-reading', icon: <BookOpen className="w-4 h-4 text-indigo-400" /> },
@@ -116,6 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       category: "AKADEMIK BAZA",
       items: [
         { label: 'Essential Grammar (Murphy)', path: '/essential-grammar', icon: <BookOpen className="w-4 h-4 text-amber-400" />, badge: '114 Units' },
+        { label: 'Stories for Reproduction', path: '/stories-for-reproduction', icon: <BookOpen className="w-4 h-4 text-rose-400" />, badge: 'L.A. Hill' },
         { label: '4000 Words Curriculum', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" /> },
         { label: t('manageWords'), path: '/admin/words', icon: <Database className="w-4 h-4" /> },
         { label: 'Tactics for Listening', path: '/teacher/listening', icon: <Headphones className="w-4 h-4 text-sky-400" /> },

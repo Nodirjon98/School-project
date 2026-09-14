@@ -33,6 +33,7 @@ const PodcastsPage = lazy(() => import('./pages/student/PodcastsPage').then(m =>
 const DialoguesPage = lazy(() => import('./pages/student/DialoguesPage').then(m => ({ default: m.DialoguesPage })));
 const AchievementsPage = lazy(() => import('./pages/student/AchievementsPage').then(m => ({ default: m.AchievementsPage })));
 const EssentialGrammarPage = lazy(() => import('./pages/EssentialGrammarPage').then(m => ({ default: m.EssentialGrammarPage })));
+const StoriesForReproductionPage = lazy(() => import('./pages/student/StoriesForReproductionPage').then(m => ({ default: m.StoriesForReproductionPage })));
 const GrammarExamTakePage = lazy(() => import('./pages/student/GrammarExamTakePage').then(m => ({ default: m.GrammarExamTakePage })));
 const GrammarExamBuilder = lazy(() => import('./pages/admin/GrammarExamBuilder').then(m => ({ default: m.GrammarExamBuilder })));
 
@@ -131,6 +132,10 @@ export const AppRouter: React.FC = () => {
           <Route path="/placement-test" element={<PlacementTestPage />} />
           <Route path="/grammar" element={<GrammarPractice />} />
           <Route path="/essential-grammar" element={<EssentialGrammarPage />} />
+          <Route path="/stories-for-reproduction" element={<StoriesForReproductionPage />} />
+          <Route path="/stories" element={<StoriesForReproductionPage />} />
+          <Route path="/teacher/stories" element={<StoriesForReproductionPage />} />
+          <Route path="/admin/stories" element={<StoriesForReproductionPage />} />
           <Route path="/student/grammar-exams" element={<GrammarExamTakePage />} />
           <Route path="/student/grammar-exam/:id" element={<GrammarExamTakePage />} />
           <Route path="/admin/grammar-exams" element={<GrammarExamBuilder />} />
