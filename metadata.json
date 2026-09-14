@@ -1,0 +1,6 @@
+{
+  "name": "Premier School LMS",
+  "description": "Production-ready Learning Management System for Premier School English language center in Tashkent featuring Basic Tactics for Listening 3rd Edition (24 Units), Live Speaking with Mr. Safoyev voice clone, Student Performance Analytics dashboard with Recharts, and comprehensive Teacher/Admin management hubs.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

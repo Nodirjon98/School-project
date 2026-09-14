@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Premier School LMS</title>
+    <meta name="description" content="Production-ready Learning Management System for Premier School English language center in Tashkent featuring Basic Tactics for Listening 3rd Edition (24 Units), Live Speaking with Mr. Safoyev voice clone, Word Pronunciation Lab for Reading units and TOEFL essays, and comprehensive Teacher/Admin management hubs." />
+    <meta property="og:title" content="Premier School LMS" />
+    <meta property="og:description" content="Production-ready Learning Management System for Premier School English language center in Tashkent featuring Basic Tactics for Listening 3rd Edition (24 Units), Live Speaking with Mr. Safoyev voice clone, Word Pronunciation Lab for Reading units and TOEFL essays, and comprehensive Teacher/Admin management hubs." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <script>
+      (function() {
+        try {
+          var _origFetch = window.fetch ? window.fetch.bind(window) : null;
+          var _activeFetch = _origFetch;
+          function defineFetch(target) {
+            if (!target) return;
+            try {
+              Object.defineProperty(target, 'fetch', {
+                configurable: true,
+                enumerable: true,
+                get: function() { return _activeFetch || _origFetch; },
+                set: function(fn) { _activeFetch = fn; }
+              });
+            } catch (_) {}
+          }
+          if (typeof window.Window !== 'undefined' && window.Window.prototype) {
+            defineFetch(window.Window.prototype);
+          }
+          defineFetch(window);
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased font-sans">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
