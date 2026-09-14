@@ -73,178 +73,40 @@ export const SEED_STUDENT_PAYMENTS: StudentPaymentPlan[] = PREMIER_OFFICIAL_STUD
 });
 
 
-export const SEED_STUDENT_ACTIVITIES: StudentActivityMetric[] = [
-  {
-    id: 'act-1',
-    student_id: 'student-official-1',
-    student_name: 'Shahzoda Ilhomova',
-    student_avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop',
-    group_name: "Premier O'quvchisi",
-    level: 'Intermediate B1',
-    status: 'online',
-    device: 'desktop',
-    last_active: 'Ayni paytda faol',
-    total_time_minutes: 2480,
-    today_time_minutes: 145,
-    weekly_time_minutes: 680,
-    module_breakdown: {
-      speaking_minutes: 740,
-      listening_tactics_minutes: 680,
-      vocabulary_4000_minutes: 420,
-      reading_minutes: 290,
-      writing_toefl_minutes: 210,
-      grammar_minutes: 80,
-      homework_minutes: 60
-    },
-    parameter_mastery: {
-      fluency: 7.5,
-      lexical_resource: 8.0,
-      pronunciation: 7.5,
-      grammar_accuracy: 7.0,
-      listening_accuracy_percent: 94
-    },
-    tactics_units_done: 16,
-    words_mastered: 680,
-    speaking_sessions_count: 28,
-    homework_completion_rate: 96
+export const SEED_STUDENT_ACTIVITIES: StudentActivityMetric[] = PREMIER_OFFICIAL_STUDENTS.map((st) => ({
+  id: `act-${st.id}`,
+  student_id: st.id,
+  student_name: st.full_name,
+  student_avatar: st.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(st.full_name)}&background=4f46e5&color=fff`,
+  group_name: st.group_name || "Premier O'quvchisi",
+  level: st.level || 'B1',
+  status: 'offline',
+  device: 'desktop',
+  last_active: 'Hali kirmagan',
+  total_time_minutes: 0,
+  today_time_minutes: 0,
+  weekly_time_minutes: 0,
+  module_breakdown: {
+    speaking_minutes: 0,
+    listening_tactics_minutes: 0,
+    vocabulary_4000_minutes: 0,
+    reading_minutes: 0,
+    writing_toefl_minutes: 0,
+    grammar_minutes: 0,
+    homework_minutes: 0
   },
-  {
-    id: 'act-2',
-    student_id: 'student-official-2',
-    student_name: 'Shahnoza Kodirova',
-    student_avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop',
-    group_name: "Premier O'quvchisi",
-    level: 'Intermediate B1',
-    status: 'online',
-    device: 'mobile',
-    last_active: '5 daqiqa oldin',
-    total_time_minutes: 2120,
-    today_time_minutes: 110,
-    weekly_time_minutes: 540,
-    module_breakdown: {
-      speaking_minutes: 810,
-      listening_tactics_minutes: 520,
-      vocabulary_4000_minutes: 360,
-      reading_minutes: 210,
-      writing_toefl_minutes: 130,
-      grammar_minutes: 50,
-      homework_minutes: 40
-    },
-    parameter_mastery: {
-      fluency: 8.0,
-      lexical_resource: 7.5,
-      pronunciation: 8.0,
-      grammar_accuracy: 7.5,
-      listening_accuracy_percent: 90
-    },
-    tactics_units_done: 14,
-    words_mastered: 590,
-    speaking_sessions_count: 34,
-    homework_completion_rate: 100
+  parameter_mastery: {
+    fluency: 0,
+    lexical_resource: 0,
+    pronunciation: 0,
+    grammar_accuracy: 0,
+    listening_accuracy_percent: 0
   },
-  {
-    id: 'act-3',
-    student_id: 'student-official-3',
-    student_name: "O'lmas Rasulov",
-    student_avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=120&auto=format&fit=crop',
-    group_name: "Premier O'quvchisi",
-    level: 'Intermediate B1',
-    status: 'idle',
-    device: 'desktop',
-    last_active: '42 daqiqa oldin',
-    total_time_minutes: 1340,
-    today_time_minutes: 45,
-    weekly_time_minutes: 320,
-    module_breakdown: {
-      speaking_minutes: 280,
-      listening_tactics_minutes: 410,
-      vocabulary_4000_minutes: 310,
-      reading_minutes: 160,
-      writing_toefl_minutes: 90,
-      grammar_minutes: 60,
-      homework_minutes: 30
-    },
-    parameter_mastery: {
-      fluency: 6.0,
-      lexical_resource: 6.5,
-      pronunciation: 6.0,
-      grammar_accuracy: 6.5,
-      listening_accuracy_percent: 78
-    },
-    tactics_units_done: 8,
-    words_mastered: 340,
-    speaking_sessions_count: 12,
-    homework_completion_rate: 80
-  },
-  {
-    id: 'act-4',
-    student_id: 'student-official-6',
-    student_name: 'Dilnoza Rajabova',
-    student_avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&auto=format&fit=crop',
-    group_name: "Premier O'quvchisi",
-    level: 'Intermediate B1',
-    status: 'offline',
-    device: 'tablet',
-    last_active: 'Bugun, 11:20 da',
-    total_time_minutes: 1680,
-    today_time_minutes: 75,
-    weekly_time_minutes: 410,
-    module_breakdown: {
-      speaking_minutes: 450,
-      listening_tactics_minutes: 480,
-      vocabulary_4000_minutes: 390,
-      reading_minutes: 180,
-      writing_toefl_minutes: 100,
-      grammar_minutes: 50,
-      homework_minutes: 30
-    },
-    parameter_mastery: {
-      fluency: 6.5,
-      lexical_resource: 7.0,
-      pronunciation: 6.5,
-      grammar_accuracy: 7.0,
-      listening_accuracy_percent: 85
-    },
-    tactics_units_done: 11,
-    words_mastered: 420,
-    speaking_sessions_count: 19,
-    homework_completion_rate: 92
-  },
-  {
-    id: 'act-5',
-    student_id: 'student-official-8',
-    student_name: 'Manzura Sayfullayeva',
-    student_avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop',
-    group_name: "Premier O'quvchisi",
-    level: 'Intermediate B1',
-    status: 'offline',
-    device: 'desktop',
-    last_active: 'Kecha, 21:40 da',
-    total_time_minutes: 1890,
-    today_time_minutes: 0,
-    weekly_time_minutes: 390,
-    module_breakdown: {
-      speaking_minutes: 560,
-      listening_tactics_minutes: 490,
-      vocabulary_4000_minutes: 310,
-      reading_minutes: 270,
-      writing_toefl_minutes: 180,
-      grammar_minutes: 45,
-      homework_minutes: 35
-    },
-    parameter_mastery: {
-      fluency: 7.0,
-      lexical_resource: 7.5,
-      pronunciation: 7.0,
-      grammar_accuracy: 7.5,
-      listening_accuracy_percent: 88
-    },
-    tactics_units_done: 12,
-    words_mastered: 510,
-    speaking_sessions_count: 22,
-    homework_completion_rate: 89
-  }
-];
+  tactics_units_done: 0,
+  words_mastered: 0,
+  speaking_sessions_count: 0,
+  homework_completion_rate: 0
+}));
 
 export const SEED_TEACHER_ACTIVITIES: TeacherActivityMetric[] = [
   {
@@ -382,12 +244,13 @@ export function saveStoredStudentPayments(plans: StudentPaymentPlan[]) {
 
 export function getStoredStudentActivities(): StudentActivityMetric[] {
   const stored = getStorageItem<StudentActivityMetric[]>('premier_student_activities', []);
+  const hasFakeMinutes = stored.some(a => a.total_time_minutes > 500);
   const valid = stored.filter(a => 
     a.student_name !== 'Alisher Usmonov' && 
     a.student_name !== 'Malika Toirova' &&
     a.student_name !== 'Jasur Bekmurodov'
   );
-  if (valid.length === 0) {
+  if (valid.length === 0 || hasFakeMinutes) {
     setStorageItem('premier_student_activities', SEED_STUDENT_ACTIVITIES);
     return SEED_STUDENT_ACTIVITIES;
   }
