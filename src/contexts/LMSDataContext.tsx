@@ -8,6 +8,7 @@ import {
   SEED_DAILY_WORDS, SEED_WORD_PROGRESS, SEED_CHAMPIONSHIP, SEED_BADGES
 } from '../lib/seedData';
 import { getStorageItem, setStorageItem } from '../lib/storage';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from './AuthContext';
 import { playSound } from '../lib/sound';
 import { realtime } from '../lib/realtime';
@@ -74,9 +75,30 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => { setStorageItem('premier_badges', badges); }, [badges]);
   useEffect(() => { setStorageItem('premier_ai_contents', aiContents); }, [aiContents]);
 
-  // Initial data is loaded cleanly from local persistence and verified seeds
+  // Sync with Supabase on mount if configured
   useEffect(() => {
-    setLoading(false);
+    if (isSupabaseConfigured && supabase) {
+      setLoading(true);
+      Promise.all([
+        supabase.from('groups').select('*'),
+        supabase.from('lessons').select('*'),
+        supabase.from('homeworks').select('*'),
+        supabase.from('homework_submissions').select('*'),
+        supabase.from('attendance').select('*'),
+        supabase.from('daily_words').select('*')
+      ]).then(([gRes, lRes, hRes, sRes, aRes, wRes]) => {
+        if (gRes.data && gRes.data.length > 0) setGroups(gRes.data as Group[]);
+        if (lRes.data && lRes.data.length > 0) setLessons(lRes.data as Lesson[]);
+        if (hRes.data && hRes.data.length > 0) setHomeworks(hRes.data as Homework[]);
+        if (sRes.data && sRes.data.length > 0) setSubmissions(sRes.data as HomeworkSubmission[]);
+        if (aRes.data && aRes.data.length > 0) setAttendance(aRes.data as Attendance[]);
+        if (wRes.data && wRes.data.length > 0) setDailyWords(wRes.data as DailyWord[]);
+      }).finally(() => {
+        setLoading(false);
+      });
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   // Update user context for realtime manager
@@ -188,6 +210,14 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       students_count: 0
     };
     setGroups(prev => [item, ...prev]);
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('groups').insert([item]);
+      } catch (e) {
+        console.warn('Supabase addGroup warning:', e);
+      }
+    }
   };
 
   const addLesson = async (newLesson: Omit<Lesson, 'id' | 'created_at'>) => {
@@ -197,6 +227,14 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       created_at: new Date().toISOString(),
     };
     setLessons(prev => [item, ...prev]);
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('lessons').insert([item]);
+      } catch (e) {
+        console.warn('Supabase addLesson warning:', e);
+      }
+    }
   };
 
   const completeLesson = async (lessonId: string) => {
@@ -219,11 +257,13 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const markAttendance = async (lessonId: string, studentId: string, status: AttendanceStatus, note?: string) => {
     const existingIdx = attendance.findIndex(a => a.lesson_id === lessonId && a.student_id === studentId);
     let updated: Attendance[];
+    let record: Attendance;
     if (existingIdx >= 0) {
       updated = [...attendance];
-      updated[existingIdx] = { ...updated[existingIdx], status, note };
+      record = { ...updated[existingIdx], status, note };
+      updated[existingIdx] = record;
     } else {
-      const record: Attendance = {
+      record = {
         id: `att-${Date.now()}`,
         lesson_id: lessonId,
         student_id: studentId,
@@ -234,6 +274,14 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       updated = [record, ...attendance];
     }
     setAttendance(updated);
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('attendance').upsert([record]);
+      } catch (e) {
+        console.warn('Supabase markAttendance warning:', e);
+      }
+    }
 
     const targetLesson = lessons.find(l => l.id === lessonId);
 
@@ -255,6 +303,14 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       created_at: new Date().toISOString()
     };
     setHomeworks(prev => [item, ...prev]);
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('homeworks').insert([item]);
+      } catch (e) {
+        console.warn('Supabase createHomework warning:', e);
+      }
+    }
 
     // Push real-time notification for new homework
     realtime.publish({
@@ -278,6 +334,14 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
     setSubmissions(prev => [item, ...prev.filter(s => s.homework_id !== submission.homework_id)]);
     
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('homework_submissions').upsert([item]);
+      } catch (e) {
+        console.warn('Supabase submitHomework warning:', e);
+      }
+    }
+
     // Reward XP for completing homework!
     addXP(item.score ? Math.round(item.score * 0.5) : 30, 'Submitted homework');
 
@@ -307,6 +371,20 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return s;
     }));
 
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('homework_submissions').update({
+          score,
+          feedback,
+          status: 'graded',
+          graded_at: new Date().toISOString(),
+          graded_by: profile?.id
+        }).eq('id', submissionId);
+      } catch (e) {
+        console.warn('Supabase gradeHomework warning:', e);
+      }
+    }
+
     // Push real-time event to student
     realtime.publish({
       type: 'HOMEWORK_GRADED',
@@ -325,6 +403,14 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       created_at: new Date().toISOString()
     };
     setDailyWords(prev => [item, ...prev]);
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('daily_words').insert([item]);
+      } catch (e) {
+        console.warn('Supabase addDailyWord warning:', e);
+      }
+    }
   };
 
   const updateWordReview = async (wordId: string, remembered: boolean) => {

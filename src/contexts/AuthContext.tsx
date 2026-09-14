@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { SEED_PROFILES } from '../lib/seedData';
 import { getStorageItem, setStorageItem, removeStorageItem } from '../lib/storage';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { Profile, UserRole } from '../types';
 
 interface AuthContextType {
@@ -50,6 +51,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (email: string, _password?: string): Promise<{ error: string | null }> => {
     setLoading(true);
     try {
+      if (isSupabaseConfigured && supabase) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('email', email.toLowerCase())
+          .maybeSingle();
+
+        if (data && !error) {
+          setUser({ id: data.id, email: data.email });
+          saveProfile(data as Profile);
+          setLoading(false);
+          return { error: null };
+        }
+      }
+
       // Look up in known seed profiles
       const matched = SEED_PROFILES.find(p => p.email.toLowerCase() === email.toLowerCase());
       if (matched) {
@@ -100,9 +116,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ): Promise<{ error: string | null }> => {
     setLoading(true);
     try {
-      const customUsers = getStorageItem<Profile[]>('premier_registered_users', []);
       const newProf: Profile = {
-        id: `user-${Date.now()}`,
+        id: `usr-${Date.now()}`,
         email,
         full_name: fullName,
         role,
@@ -112,6 +127,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         streak: 1,
         created_at: new Date().toISOString()
       };
+
+      if (isSupabaseConfigured && supabase) {
+        await supabase.from('profiles').upsert([newProf]);
+      }
+
+      const customUsers = getStorageItem<Profile[]>('premier_registered_users', []);
       setStorageItem('premier_registered_users', [...customUsers, newProf]);
       saveProfile(newProf);
       setUser({ id: newProf.id, email: newProf.email });
@@ -132,6 +153,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!profile) return { error: 'No active profile found' };
     const updated: Profile = { ...profile, ...updates, updated_at: new Date().toISOString() };
     saveProfile(updated);
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('profiles').update(updates).eq('id', profile.id);
+      } catch (e) {
+        console.warn('Supabase profile update warning:', e);
+      }
+    }
+
     return { error: null };
   };
 
