@@ -118,6 +118,8 @@ CREATE TABLE IF NOT EXISTS public.daily_words (
 INSERT INTO public.profiles (id, email, full_name, role, level, onboarding_completed, xp)
 VALUES 
   ('usr-admin-1', 'admin@premier.uz', 'Nodirjon Safoyev (Admin)', 'admin', 'C2', true, 5000),
+  ('usr-admin-2', 'nodirjon98@gmail.com', 'Nodirjon Safoyev (Admin)', 'admin', 'C2', true, 5000),
+  ('usr-admin-3', 'safoyevnodirjon@gmail.com', 'Nodirjon Safoyev (Admin)', 'admin', 'C2', true, 5000),
   ('usr-teacher-1', 'teacher@premier.uz', 'Malika Karimova (Teacher)', 'teacher', 'C1', true, 3200),
   ('usr-student-1', 'student@premier.uz', 'Jasur Rustamov (Student)', 'student', 'B2', true, 1450)
 ON CONFLICT (email) DO NOTHING;
