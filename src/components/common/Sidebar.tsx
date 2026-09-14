@@ -42,6 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     {
       category: "O'QUV DASTURI",
       items: [
+        { label: 'Essential Grammar (Murphy)', path: '/essential-grammar', icon: <BookOpen className="w-4 h-4 text-amber-400" />, badge: 'A1-A2' },
         { label: '4000 Words & Reading', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" />, badge: 'A1-C2' },
         { label: 'Tactics for Listening', path: '/listening', icon: <Headphones className="w-4 h-4 text-sky-400" />, badge: 'Oxford' },
         { label: 'Karaoke & Podkastlar', path: '/karaoke', icon: <Music className="w-4 h-4 text-purple-400" />, badge: 'Audio' },
@@ -53,6 +54,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       items: [
         { label: 'Speaking w/ Mr. Safoyev', path: '/speaking', icon: <Mic className="w-4 h-4 text-emerald-400" />, badge: 'Live AI' },
         { label: 'IELTS Writing AI', path: '/ielts-writing', icon: <PenTool className="w-4 h-4 text-indigo-400" />, badge: 'Band 9' },
+        { label: 'Grammatika Imtihonlari', path: '/admin/grammar-exams', icon: <Sparkles className="w-4 h-4 text-indigo-400" />, badge: 'Exams' },
         { label: 'CEFR Diagnostic', path: '/placement-test', icon: <Award className="w-4 h-4 text-amber-400" />, badge: 'Cert' },
       ]
     },
