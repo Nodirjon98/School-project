@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { 
@@ -28,6 +28,20 @@ interface NavSection {
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { role, profile } = useAuth();
   const { t } = useLanguage();
+  const location = useLocation();
+
+  const isItemActive = (itemPath: string, isExactActive: boolean) => {
+    if (isExactActive) return true;
+    if (itemPath === '/admin/analytics') {
+      return (
+        location.pathname.startsWith('/admin/analytics') ||
+        location.pathname.startsWith('/admin/monitoring') ||
+        location.pathname.startsWith('/admin/performance') ||
+        location.pathname.startsWith('/admin/activity')
+      );
+    }
+    return false;
+  };
 
   const studentSections: NavSection[] = [
     {
@@ -109,8 +123,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       category: "BOSHQARUV & MOLIYA",
       items: [
         { label: t('adminAnalytics'), path: '/admin/dashboard', icon: <BarChart3 className="w-4 h-4" /> },
-        { label: "O'quvchilar Nazorati", path: '/admin/monitoring', icon: <ShieldCheck className="w-4 h-4 text-emerald-400" />, badge: 'Live' },
-        { label: "O'zlashtirish Analytics", path: '/admin/performance', icon: <TrendingUp className="w-4 h-4 text-emerald-400" /> },
+        { label: "Analitika & Nazorat Hubi", path: '/admin/analytics', icon: <ShieldCheck className="w-4 h-4 text-emerald-400" />, badge: 'Live' },
         { label: "To'lovlar & Kassa", path: '/admin/payments', icon: <CreditCard className="w-4 h-4 text-emerald-400" />, badge: 'Moliya' },
         { label: t('manageGroups'), path: '/admin/groups', icon: <Users className="w-4 h-4" /> },
         { label: 'Grammatika Imtihonlari Builder', path: '/admin/grammar-exams', icon: <Sparkles className="w-4 h-4 text-indigo-400" />, badge: 'Exams' },
@@ -130,7 +143,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     {
       category: "NAZORAT & AI",
       items: [
-        { label: "Faoliyat Audit Log", path: '/admin/activity', icon: <Clock className="w-4 h-4 text-indigo-400" /> },
         { label: 'Speaking & Voice Hub', path: '/admin/speaking-hub', icon: <Mic className="w-4 h-4 text-emerald-400" /> },
         { label: t('aiStudio'), path: '/ai-studio', icon: <BrainCircuit className="w-4 h-4 text-indigo-400" /> },
         { label: t('championship'), path: '/championship', icon: <Trophy className="w-4 h-4 text-amber-400" /> },
@@ -207,33 +219,37 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   onClick={() => {
                     if (window.innerWidth < 1024) onClose();
                   }}
-                  className={({ isActive }) =>
-                    `flex items-center justify-between px-3 py-2 transition-colors text-xs font-medium rounded-lg ${
-                      isActive
+                  className={({ isActive }) => {
+                    const active = isItemActive(item.path, isActive);
+                    return `flex items-center justify-between px-3 py-2 transition-colors text-xs font-medium rounded-lg ${
+                      active
                         ? 'bg-indigo-600/20 text-indigo-300 font-bold border-l-2 border-indigo-500'
                         : 'text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer'
-                    }`
-                  }
+                    }`;
+                  }}
                 >
-                  {({ isActive }) => (
-                    <>
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <span className={isActive ? 'text-indigo-400' : 'opacity-70'}>
-                          {item.icon}
-                        </span>
-                        <span className="truncate">{item.label}</span>
-                      </div>
-                      {item.badge && (
-                        <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold uppercase tracking-wide flex-shrink-0 ${
-                          isActive 
-                            ? 'bg-indigo-500/30 text-indigo-200 border border-indigo-500/50' 
-                            : 'bg-slate-800 text-slate-400 border border-slate-700'
-                        }`}>
-                          {item.badge}
-                        </span>
-                      )}
-                    </>
-                  )}
+                  {({ isActive }) => {
+                    const active = isItemActive(item.path, isActive);
+                    return (
+                      <>
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span className={active ? 'text-indigo-400' : 'opacity-70'}>
+                            {item.icon}
+                          </span>
+                          <span className="truncate">{item.label}</span>
+                        </div>
+                        {item.badge && (
+                          <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold uppercase tracking-wide flex-shrink-0 ${
+                            active 
+                              ? 'bg-indigo-500/30 text-indigo-200 border border-indigo-500/50' 
+                              : 'bg-slate-800 text-slate-400 border border-slate-700'
+                          }`}>
+                            {item.badge}
+                          </span>
+                        )}
+                      </>
+                    );
+                  }}
                 </NavLink>
               ))}
             </div>

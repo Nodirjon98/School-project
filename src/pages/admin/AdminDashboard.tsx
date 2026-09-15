@@ -52,7 +52,7 @@ export const AdminDashboard: React.FC = () => {
 
           <div className="flex flex-wrap gap-2.5 mt-6">
             <Link
-              to="/admin/monitoring"
+              to="/admin/analytics?tab=monitoring"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-400 text-slate-950 font-black text-xs hover:bg-emerald-300 transition shadow-sm"
             >
               <span className={`w-2 h-2 rounded-full ${onlineCount > 0 ? 'bg-emerald-950 animate-ping' : idleCount > 0 ? 'bg-amber-600 animate-pulse' : 'bg-emerald-800'}`} />
@@ -64,17 +64,17 @@ export const AdminDashboard: React.FC = () => {
               </span>
             </Link>
             <Link
-              to="/admin/performance"
+              to="/admin/analytics?tab=performance"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-500 transition shadow-sm"
             >
               <TrendingUp className="w-4 h-4" />
               <span>📊 Performance Analytics</span>
             </Link>
             <Link
-              to="/admin/activity"
+              to="/admin/analytics?tab=audit"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-700 text-white font-bold text-xs hover:bg-purple-600 transition shadow-sm"
             >
-              <span>⏱️ Faoliyat & Nazorat (Audit)</span>
+              <span>🛡️ Xavfsizlik & Audit Log</span>
             </Link>
             <Link
               to="/teacher/listening"
@@ -207,7 +207,7 @@ export const AdminDashboard: React.FC = () => {
                 Jonli O'quvchilar Telemetriyasi — Yaqinda kirganlar ({recentlyActiveStudents.length})
               </h3>
             </div>
-            <Link to="/admin/monitoring" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+            <Link to="/admin/analytics?tab=monitoring" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
               <span>Batafsil nazorat</span>
               <ArrowRight className="w-3 h-3" />
             </Link>
@@ -221,7 +221,7 @@ export const AdminDashboard: React.FC = () => {
               return (
                 <Link
                   key={st.student_id}
-                  to="/admin/monitoring"
+                  to="/admin/analytics?tab=monitoring"
                   className="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs hover:shadow-md transition flex items-center gap-3 group"
                 >
                   <div className="relative shrink-0">

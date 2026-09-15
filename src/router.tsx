@@ -253,7 +253,7 @@ export const AppRouter: React.FC = () => {
             path="/admin/activity"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <AdminActivityAnalytics />
+                <StudentMonitoringPage />
               </ProtectedRoute>
             }
           />
@@ -261,7 +261,7 @@ export const AppRouter: React.FC = () => {
             path="/admin/performance"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <StudentPerformanceAnalytics />
+                <StudentMonitoringPage />
               </ProtectedRoute>
             }
           />
@@ -269,7 +269,7 @@ export const AppRouter: React.FC = () => {
             path="/admin/performance-analytics"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <StudentPerformanceAnalytics />
+                <StudentMonitoringPage />
               </ProtectedRoute>
             }
           />
@@ -277,7 +277,7 @@ export const AppRouter: React.FC = () => {
             path="/admin/analytics"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <StudentPerformanceAnalytics />
+                <StudentMonitoringPage />
               </ProtectedRoute>
             }
           />

@@ -22,7 +22,11 @@ import {
   calculateAnalyticsMetrics
 } from '../../data/studentPerformanceData';
 
-export const StudentPerformanceAnalytics: React.FC = () => {
+export interface StudentPerformanceAnalyticsProps {
+  isEmbedded?: boolean;
+}
+
+export const StudentPerformanceAnalytics: React.FC<StudentPerformanceAnalyticsProps> = ({ isEmbedded = false }) => {
   const { students, groups, telemetryLogs, actionEvents, examSubmissions } = useLMSData();
 
   // Filters & controls
@@ -432,46 +436,129 @@ export const StudentPerformanceAnalytics: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-16">
-      {/* Top Banner & Title */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white border border-indigo-500/20 shadow-xl relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-black uppercase tracking-wider flex items-center gap-1.5">
-                <BarChart3 className="w-3.5 h-3.5" />
-                Recharts Analytics Suite
-              </span>
-              <span className="text-slate-400 text-xs">•</span>
-              <span className="text-xs text-indigo-300 font-semibold">Administrator Paneli</span>
+    <div className="space-y-6 pb-16">
+      {/* Top Banner & Title (Only when standalone) */}
+      {!isEmbedded ? (
+        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white border border-indigo-500/20 shadow-xl relative overflow-hidden">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-black uppercase tracking-wider flex items-center gap-1.5">
+                  <BarChart3 className="w-3.5 h-3.5" />
+                  Recharts Analytics Suite
+                </span>
+                <span className="text-slate-400 text-xs">•</span>
+                <span className="text-xs text-indigo-300 font-semibold">Administrator Paneli</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+                O'quvchilar O'zlashtirish Analitikasi (Performance Dashboard)
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                O'quvchilarning platformadagi kunlik o'rganish vaqti, o'quv modullarini tugatish sur'ati va test sinovlaridagi o'rtacha ballarini dinamik vizuallash.
+              </p>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-              O'quvchilar O'zlashtirish Analitikasi (Performance Dashboard)
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-              O'quvchilarning platformadagi kunlik o'rganish vaqti, o'quv modullarini tugatish sur'ati va test sinovlaridagi o'rtacha ballarini dinamik vizuallash.
-            </p>
+
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                onClick={handleExportCSV}
+                className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs border border-white/20 transition flex items-center gap-2 cursor-pointer shadow-sm"
+              >
+                <Download className="w-4 h-4 text-emerald-400" />
+                <span>Eksport (CSV Hisobot)</span>
+              </button>
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            <button
-              onClick={handleExportCSV}
-              className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs border border-white/20 transition flex items-center gap-2 cursor-pointer shadow-sm"
-            >
-              <Download className="w-4 h-4 text-emerald-400" />
-              <span>Eksport (CSV Hisobot)</span>
-            </button>
+          {/* Global Controls Bar */}
+          <div className="mt-6 pt-5 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
+              <button
+                onClick={() => setActiveMetricTab('all')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  activeMetricTab === 'all' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Barcha Ko'rsatkichlar
+              </button>
+              <button
+                onClick={() => setActiveMetricTab('time')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  activeMetricTab === 'time' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Kunlik Vaqt (Daily Time)
+              </button>
+              <button
+                onClick={() => setActiveMetricTab('modules')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  activeMetricTab === 'modules' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Modullar Tugallanishi
+              </button>
+              <button
+                onClick={() => setActiveMetricTab('quizzes')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  activeMetricTab === 'quizzes' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Test Ballari (Quiz Scores)
+              </button>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
+                <Users className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                <select
+                  value={selectedGroup}
+                  onChange={(e) => setSelectedGroup(e.target.value)}
+                  className="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer"
+                >
+                  {groupOptions.map(g => (
+                    <option key={g.value} value={g.value} className="bg-slate-900 text-white">
+                      {g.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700">
+                <button
+                  onClick={() => setTimeRange('7d')}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
+                    timeRange === '7d' ? 'bg-emerald-500 text-slate-950 shadow-xs' : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  7 kun
+                </button>
+                <button
+                  onClick={() => setTimeRange('14d')}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
+                    timeRange === '14d' ? 'bg-emerald-500 text-slate-950 shadow-xs' : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  14 kun
+                </button>
+                <button
+                  onClick={() => setTimeRange('30d')}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
+                    timeRange === '30d' ? 'bg-emerald-500 text-slate-950 shadow-xs' : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  30 kun
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Global Controls Bar */}
-        <div className="mt-6 pt-5 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-          {/* Metric View Tabs */}
-          <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
+      ) : (
+        /* Embedded Sleek Controls Bar */
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200">
             <button
               onClick={() => setActiveMetricTab('all')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
-                activeMetricTab === 'all' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                activeMetricTab === 'all' ? 'bg-white text-indigo-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Barcha Ko'rsatkichlar
@@ -479,53 +566,50 @@ export const StudentPerformanceAnalytics: React.FC = () => {
             <button
               onClick={() => setActiveMetricTab('time')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
-                activeMetricTab === 'time' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                activeMetricTab === 'time' ? 'bg-white text-indigo-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Kunlik Vaqt (Daily Time)
+              Kunlik Vaqt
             </button>
             <button
               onClick={() => setActiveMetricTab('modules')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
-                activeMetricTab === 'modules' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                activeMetricTab === 'modules' ? 'bg-white text-indigo-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Modullar Tugallanishi
+              Modullar
             </button>
             <button
               onClick={() => setActiveMetricTab('quizzes')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
-                activeMetricTab === 'quizzes' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                activeMetricTab === 'quizzes' ? 'bg-white text-indigo-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Test Ballari (Quiz Scores)
+              Test Ballari
             </button>
           </div>
 
-          {/* Group & Time Range Filters */}
           <div className="flex flex-wrap items-center gap-3">
-            {/* Group Selector */}
-            <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
-              <Users className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+            <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+              <Users className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
               <select
                 value={selectedGroup}
                 onChange={(e) => setSelectedGroup(e.target.value)}
-                className="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer"
+                className="bg-transparent text-xs font-semibold text-slate-800 focus:outline-none cursor-pointer"
               >
                 {groupOptions.map(g => (
-                  <option key={g.value} value={g.value} className="bg-slate-900 text-white">
+                  <option key={g.value} value={g.value} className="bg-white text-slate-900">
                     {g.label}
                   </option>
                 ))}
               </select>
             </div>
 
-            {/* Time Range Selector */}
-            <div className="flex items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700">
+            <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
               <button
                 onClick={() => setTimeRange('7d')}
                 className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
-                  timeRange === '7d' ? 'bg-emerald-500 text-slate-950 shadow-xs' : 'text-slate-400 hover:text-white'
+                  timeRange === '7d' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 7 kun
@@ -533,7 +617,7 @@ export const StudentPerformanceAnalytics: React.FC = () => {
               <button
                 onClick={() => setTimeRange('14d')}
                 className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
-                  timeRange === '14d' ? 'bg-emerald-500 text-slate-950 shadow-xs' : 'text-slate-400 hover:text-white'
+                  timeRange === '14d' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 14 kun
@@ -541,15 +625,23 @@ export const StudentPerformanceAnalytics: React.FC = () => {
               <button
                 onClick={() => setTimeRange('30d')}
                 className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
-                  timeRange === '30d' ? 'bg-emerald-500 text-slate-950 shadow-xs' : 'text-slate-400 hover:text-white'
+                  timeRange === '30d' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 30 kun
               </button>
             </div>
+
+            <button
+              onClick={handleExportCSV}
+              className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            >
+              <Download className="w-3.5 h-3.5 text-emerald-400" />
+              <span>CSV Yuklash</span>
+            </button>
           </div>
         </div>
-      </div>
+      )}
 
       {/* 4 Key Executive Performance KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

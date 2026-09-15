@@ -1,19 +1,47 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { 
   Users, Clock, ShieldCheck, AlertTriangle, Search, Filter, 
   Eye, CheckCircle2, PauseCircle, Monitor, Smartphone, Tablet, 
   BookOpen, Layers, Headphones, FileEdit, Mic, Sparkles, ChevronRight,
   TrendingUp, Download, RefreshCw, X, MessageSquare, PhoneCall, Calendar,
-  KeyRound, Copy, Check, ExternalLink, ShieldAlert, FileSpreadsheet
+  KeyRound, Copy, Check, ExternalLink, ShieldAlert, FileSpreadsheet, Activity
 } from 'lucide-react';
 import { useLMSData } from '../../contexts/LMSDataContext';
 import { StudentTelemetryLog, StudentActionEvent, TelemetryModule } from '../../types';
 import { Modal } from '../../components/common/Modal';
+import { StudentPerformanceAnalytics } from '../admin/StudentPerformanceAnalytics';
+import { TeachersAuditSection, PlatformAuditSection } from '../admin/AdminActivityAnalytics';
+
+export type AnalyticsHubTab = 'monitoring' | 'performance' | 'teachers' | 'audit' | 'credentials';
 
 export const StudentMonitoringPage: React.FC = () => {
   const { telemetryLogs, actionEvents, groups, students, saveTeacherNote, refreshTelemetry } = useLMSData();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
-  const [mainTab, setMainTab] = useState<'monitoring' | 'credentials'>('monitoring');
+  const currentTabFromUrl = useMemo((): AnalyticsHubTab => {
+    const qTab = searchParams.get('tab') as AnalyticsHubTab | null;
+    if (qTab && ['monitoring', 'performance', 'teachers', 'audit', 'credentials'].includes(qTab)) {
+      return qTab;
+    }
+    if (location.pathname.includes('performance')) return 'performance';
+    if (location.pathname.includes('activity')) return 'audit';
+    if (location.pathname.includes('teachers')) return 'teachers';
+    if (location.pathname.includes('credentials')) return 'credentials';
+    return 'monitoring';
+  }, [searchParams, location.pathname]);
+
+  const [mainTab, setMainTabState] = useState<AnalyticsHubTab>(currentTabFromUrl);
+
+  useEffect(() => {
+    setMainTabState(currentTabFromUrl);
+  }, [currentTabFromUrl]);
+
+  const handleTabChange = (tab: AnalyticsHubTab) => {
+    setMainTabState(tab);
+    setSearchParams({ tab });
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGroup, setSelectedGroup] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'online' | 'idle' | 'not_logged_in'>('all');
@@ -263,47 +291,89 @@ export const StudentMonitoringPage: React.FC = () => {
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-black tracking-wide uppercase flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Jonli Nazorat Markazi
+              Markaziy Analitika va Jonli Nazorat Hubi
             </span>
             <span className="text-slate-400 text-xs">•</span>
-            <span className="text-xs font-semibold text-slate-500">Real Vaqt & Telemetriya</span>
+            <span className="text-xs font-semibold text-slate-500">Real Vaqt • Grafiklar • Xavfsizlik</span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            O'quvchilar Nazorati va Login-Parollar
+            Markaziy Analitika va Jonli Nazorat
           </h1>
           <p className="text-sm text-slate-600 mt-1 max-w-2xl">
-            Real o'quvchilar faoliyati, darsga sarflagan aniq daqiqalari, ekrandan uzoqlashgan bo'sh vaqtlari hamda o'quvchilarga tarqatiladigan kirish ma'lumotlari.
+            O'quvchilar real telemetriyasi, o'zlashtirish grafiklari, o'qituvchilar faoliyati, tizim xavfsizlik auditi va kirish parollarini yagona markazdan boshqaring.
           </p>
         </div>
 
-        {/* Tab Controls */}
-        <div className="flex items-center p-1 rounded-2xl bg-slate-100 border border-slate-200 shadow-2xs self-start sm:self-auto">
+        {/* Tab Controls (5-in-1 Executive Hub) */}
+        <div className="flex items-center gap-1 p-1 rounded-2xl bg-slate-100 border border-slate-200 shadow-2xs self-start sm:self-auto overflow-x-auto max-w-full">
           <button
-            onClick={() => setMainTab('monitoring')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+            onClick={() => handleTabChange('monitoring')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 ${
               mainTab === 'monitoring'
                 ? 'bg-white text-indigo-700 shadow-2xs font-black'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Clock className="w-3.5 h-3.5" />
-            <span>Faoliyat & Nazorat ({totalStudents})</span>
+            <Activity className="w-3.5 h-3.5 text-emerald-500" />
+            <span>Jonli Nazorat</span>
+            {onlineCount > 0 && (
+              <span className="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black">
+                {onlineCount}
+              </span>
+            )}
           </button>
+
           <button
-            onClick={() => setMainTab('credentials')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+            onClick={() => handleTabChange('performance')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 ${
+              mainTab === 'performance'
+                ? 'bg-white text-indigo-700 shadow-2xs font-black'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <TrendingUp className="w-3.5 h-3.5 text-indigo-600" />
+            <span>O'zlashtirish & Grafiklar</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange('teachers')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 ${
+              mainTab === 'teachers'
+                ? 'bg-white text-indigo-700 shadow-2xs font-black'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Users className="w-3.5 h-3.5 text-amber-600" />
+            <span>O'qituvchilar</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange('audit')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 ${
+              mainTab === 'audit'
+                ? 'bg-white text-indigo-700 shadow-2xs font-black'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <ShieldAlert className="w-3.5 h-3.5 text-purple-600" />
+            <span>Audit Jurnali</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange('credentials')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 ${
               mainTab === 'credentials'
                 ? 'bg-white text-emerald-700 shadow-2xs font-black'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <KeyRound className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Login & Parollar (Tarqatish)</span>
+            <span>Login & Parollar ({totalStudents})</span>
           </button>
         </div>
       </div>
 
-      {mainTab === 'credentials' ? (
+      {mainTab === 'credentials' && (
         /* ========================================================
            TAB 2: CREDENTIALS DISTRIBUTION (LOGIN & PAROLLAR)
            ======================================================== */
@@ -472,10 +542,12 @@ export const StudentMonitoringPage: React.FC = () => {
             </div>
           </div>
         </div>
-      ) : (
-        /* ========================================================
-           TAB 1: LIVE ACTIVITY & SURVEILLANCE
-           ======================================================== */
+      )}
+
+      {/* ========================================================
+         TAB 1: LIVE ACTIVITY & SURVEILLANCE
+         ======================================================== */}
+      {mainTab === 'monitoring' && (
         <>
           {/* Real-time Live Synchronization Banner */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border border-emerald-200/80 shadow-2xs">
@@ -938,6 +1010,53 @@ export const StudentMonitoringPage: React.FC = () => {
             </div>
           </div>
         </>
+      )}
+
+      {/* ========================================================
+         TAB 2: STUDENT PERFORMANCE ANALYTICS (RECHARTS & CEFR)
+         ======================================================== */}
+      {mainTab === 'performance' && (
+        <StudentPerformanceAnalytics isEmbedded={true} />
+      )}
+
+      {/* ========================================================
+         TAB 3: TEACHERS EFFICIENCY & GRADING TURNAROUND
+         ======================================================== */}
+      {mainTab === 'teachers' && (
+        <div className="space-y-4">
+          <div className="p-5 rounded-2xl bg-indigo-50 border border-indigo-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
+                <Users className="w-5 h-5 text-indigo-600" />
+                O'qituvchilar Pedagogik Faoliyati va Samaradorligi
+              </h2>
+              <p className="text-xs text-slate-600 mt-1 max-w-2xl">
+                O'qituvchilarning dars soatlari, vazifalarni tekshirish tezligi (turnaround), o'quvchilar bilan ishlash reytingi va davomat kiritish intizomi.
+              </p>
+            </div>
+          </div>
+          <TeachersAuditSection />
+        </div>
+      )}
+
+      {/* ========================================================
+         TAB 4: REAL-TIME SYSTEM AUDIT STREAM
+         ======================================================== */}
+      {mainTab === 'audit' && (
+        <div className="space-y-4">
+          <div className="p-5 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-base font-black text-white flex items-center gap-2">
+                <ShieldAlert className="w-5 h-5 text-indigo-400" />
+                Tizim Xavfsizlik va Harakatlar Jurnali (Platform Audit)
+              </h2>
+              <p className="text-xs text-slate-300 mt-1 max-w-2xl">
+                Platformadagi har bir kirish, login, dars almashish va test urinishlarining to'liq xronologik qaydlari.
+              </p>
+            </div>
+          </div>
+          <PlatformAuditSection />
+        </div>
       )}
 
       {/* Student Dossier Modal */}

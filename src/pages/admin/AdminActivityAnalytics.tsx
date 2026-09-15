@@ -687,3 +687,180 @@ export const AdminActivityAnalytics: React.FC = () => {
     </div>
   );
 };
+
+export const TeachersAuditSection: React.FC<{ teachers?: TeacherActivityMetric[] }> = ({ teachers: propTeachers }) => {
+  const [teachers, setTeachers] = useState<TeacherActivityMetric[]>(() => propTeachers || getStoredTeacherActivities());
+  useEffect(() => {
+    if (propTeachers) setTeachers(propTeachers);
+  }, [propTeachers]);
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {teachers.map((t) => (
+        <div
+          key={t.id}
+          className="bg-white rounded-3xl border border-slate-200 shadow-2xs p-6 space-y-5"
+        >
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-3.5">
+              <img
+                src={t.avatar_url}
+                alt={t.teacher_name}
+                className="w-14 h-14 rounded-2xl object-cover border border-slate-200 shadow-2xs"
+              />
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-black text-lg text-slate-900">{t.teacher_name}</h3>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300 text-[10px] font-black uppercase">
+                    Faol
+                  </span>
+                </div>
+                <p className="text-xs text-indigo-600 font-bold">{t.teacher_title}</p>
+                <p className="text-[11px] text-slate-400 mt-0.5">{t.last_active}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-xs">
+            <div>
+              <span className="text-slate-400 block uppercase font-bold text-[10px]">O'qitish Vaqti:</span>
+              <span className="font-black text-slate-900 text-base mt-0.5 block">{t.total_teaching_hours} soat</span>
+              <span className="text-[10px] text-emerald-600 font-bold">Bugun: {t.today_hours}s</span>
+            </div>
+            <div>
+              <span className="text-slate-400 block uppercase font-bold text-[10px]">Guruh & O'quvchilar:</span>
+              <span className="font-black text-slate-900 text-base mt-0.5 block">{t.active_groups_count} ta guruh</span>
+              <span className="text-[10px] text-slate-500 font-semibold">{t.total_students_count} talaba</span>
+            </div>
+            <div>
+              <span className="text-slate-400 block uppercase font-bold text-[10px]">Reyting / Fikrlar:</span>
+              <span className="font-black text-amber-600 text-base mt-0.5 block">★ {t.feedback_quality_score}</span>
+              <span className="text-[10px] text-slate-500">Ijobiy baholash</span>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-slate-600 font-bold">Vazifalarni tekshirish tezligi (Turnaround):</span>
+              <span className="font-extrabold text-emerald-700">~{t.avg_grading_turnaround_hours} soat ichida</span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-slate-600 font-bold">Jami tekshirilgan ishlar:</span>
+              <span className="font-extrabold text-slate-900">{t.homeworks_graded} ta topshiriq</span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-slate-600 font-bold">Davomat kiritish intizomi:</span>
+              <span className="font-extrabold text-indigo-700">{t.attendance_logging_rate}%</span>
+            </div>
+            <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div
+                className="h-full bg-indigo-600 rounded-full"
+                style={{ width: `${t.attendance_logging_rate}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const PlatformAuditSection: React.FC<{ auditLogs?: PlatformAuditAction[] }> = ({ auditLogs: propLogs }) => {
+  const { actionEvents } = useLMSData();
+  const logs = useMemo(() => {
+    if (propLogs) return propLogs;
+    const baseAudit = getStoredPlatformAudit();
+    const liveAudit = (actionEvents || []).map(ev => {
+      const isLogin = ev.action_type === 'LOGIN';
+      const isIdle = ev.action_type === 'IDLE_PAUSE';
+      const isResume = ev.action_type === 'RESUME_ACTIVE';
+      const isPage = ev.action_type === 'PAGE_VIEW';
+      
+      const desc = 
+        isLogin ? "Platformaga muvaffaqiyatli kirdi" :
+        isIdle ? "Avto-Pauza (Ekrandan uzoqlashdi)" :
+        isResume ? "Darsga qaytdi (Faoliyat tiklandi)" :
+        isPage ? (ev.details?.title || "Dars sahifasi ochildi") :
+        (ev.details?.title || ev.action_type);
+
+      return {
+        id: ev.id,
+        timestamp: new Date(ev.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        actor_name: ev.student_name,
+        actor_role: 'student' as const,
+        user_avatar: undefined,
+        action_type: ev.action_type,
+        action_description: desc,
+        module: ev.module,
+        ip_address: '178.218.201.24',
+        device_info: ev.details?.extra_info || 'Smartfon / Kompyuter',
+        status: 'success' as const
+      };
+    });
+    return [...liveAudit, ...baseAudit];
+  }, [propLogs, actionEvents]);
+
+  return (
+    <div className="bg-white rounded-3xl border border-slate-200 shadow-2xs overflow-hidden">
+      <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+        <h3 className="font-extrabold text-slate-900 text-sm">
+          Xronologik Harakatlar Jurnali (Real-Time Activity Audit)
+        </h3>
+        <span className="text-xs text-slate-500 font-semibold">
+          Barcha o'quvchi, o'qituvchi va tizim hodisalari saqlanadi ({logs.length} ta yozuv)
+        </span>
+      </div>
+
+      <div className="divide-y divide-slate-100">
+        {logs.map((log) => (
+          <div key={log.id} className="p-4 hover:bg-slate-50 transition flex items-start gap-3.5">
+            <div className={`p-2.5 rounded-xl shrink-0 ${
+              log.module === 'speaking' ? 'bg-indigo-50 text-indigo-600' :
+              log.module === 'listening' ? 'bg-amber-50 text-amber-600' :
+              log.module === 'vocabulary' || log.module === 'vocab' ? 'bg-emerald-50 text-emerald-600' :
+              log.module === 'payment' ? 'bg-purple-50 text-purple-600' :
+              'bg-blue-50 text-blue-600'
+            }`}>
+              {log.module === 'speaking' ? <Mic className="w-4 h-4" /> :
+               log.module === 'listening' ? <Headphones className="w-4 h-4" /> :
+               log.module === 'vocabulary' || log.module === 'vocab' ? <BookOpen className="w-4 h-4" /> :
+               log.module === 'payment' ? <CreditCard className="w-4 h-4" /> :
+               <Activity className="w-4 h-4" />}
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-slate-900 text-xs">{log.actor_name}</span>
+                <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase ${
+                  log.actor_role === 'student' ? 'bg-slate-100 text-slate-700' :
+                  log.actor_role === 'teacher' ? 'bg-indigo-100 text-indigo-800' :
+                  'bg-purple-100 text-purple-800'
+                }`}>
+                  {log.actor_role}
+                </span>
+                <span className="text-[11px] text-slate-400">• {log.timestamp}</span>
+              </div>
+
+              <p className="text-xs text-slate-700 mt-1 leading-relaxed">{log.action_description}</p>
+
+              <div className="flex flex-wrap items-center gap-3 mt-1.5 text-[11px] text-slate-400">
+                {log.duration_minutes && (
+                  <span className="flex items-center gap-1 text-slate-500 font-semibold">
+                    <Clock className="w-3 h-3" />
+                    <span>{log.duration_minutes} daqiqa sarflandi</span>
+                  </span>
+                )}
+                {log.device_info && (
+                  <span className="text-slate-400">{log.device_info}</span>
+                )}
+                {log.ip_address && (
+                  <span className="text-slate-300 font-mono text-[10px]">{log.ip_address}</span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
