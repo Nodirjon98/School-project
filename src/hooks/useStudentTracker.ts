@@ -56,6 +56,26 @@ export function useStudentTracker() {
     }
   }, [studentId, isStudent, recordActiveTime, location.pathname]);
 
+  // Immediate initial heartbeat when student opens app
+  useEffect(() => {
+    if (!studentId || !isStudent) return;
+    const isMobile = typeof navigator !== 'undefined' && /android|iphone|ipad|mobile/i.test(navigator.userAgent);
+    fetch('/api/telemetry/heartbeat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        student_id: studentId,
+        student_name: profile?.full_name,
+        module: currentModuleRef.current,
+        active_seconds: 1,
+        idle_seconds: 0,
+        current_page: location.pathname,
+        is_idle: false,
+        device: isMobile ? 'mobile' : 'desktop'
+      })
+    }).catch(() => {});
+  }, [studentId, isStudent]);
+
   // Handle interaction events (tap, click, keypress, scroll)
   const handleUserActivity = useCallback(() => {
     const now = Date.now();

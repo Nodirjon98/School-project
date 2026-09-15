@@ -130,35 +130,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   });
 
   const [telemetryLogs, setTelemetryLogs] = useState<Record<string, StudentTelemetryLog>>(() => {
-    const stored = getStorageItem<Record<string, StudentTelemetryLog>>('premier_student_telemetry', {});
-    const cleaned: Record<string, StudentTelemetryLog> = {};
-    Object.entries(stored).forEach(([k, v]) => {
-      if (v.last_active_label?.includes('oldin') || v.last_active_label === 'Ayni paytda faol') {
-        cleaned[k] = {
-          ...v,
-          online_status: 'offline',
-          last_active_at: '',
-          last_active_label: 'Hali kirmagan',
-          total_active_seconds: 0,
-          today_active_seconds: 0,
-          weekly_active_seconds: 0,
-          idle_paused_seconds: 0,
-          verified_tasks_count: 0,
-          module_breakdown: {
-            stories_seconds: 0,
-            vocab_seconds: 0,
-            listening_seconds: 0,
-            grammar_seconds: 0,
-            homework_seconds: 0,
-            speaking_seconds: 0,
-            other_seconds: 0
-          }
-        };
-      } else {
-        cleaned[k] = v;
-      }
-    });
-    return cleaned;
+    return getStorageItem<Record<string, StudentTelemetryLog>>('premier_student_telemetry', {});
   });
   const [actionEvents, setActionEvents] = useState<StudentActionEvent[]>(() => {
     return getStorageItem<StudentActionEvent[]>('premier_student_action_events', []);
@@ -314,6 +286,115 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setLoading(false);
     }
   }, []);
+
+  // --------------------------------------------------------------------------
+  // LIVE TELEMETRY CROSS-DEVICE REAL-TIME SYNCHRONIZATION
+  // --------------------------------------------------------------------------
+  const syncTelemetryFromServer = useCallback(async () => {
+    try {
+      const res = await fetch('/api/telemetry/status', {
+        headers: { 'Cache-Control': 'no-cache' }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.success && data.telemetryLogs) {
+        setTelemetryLogs(prev => {
+          const merged = { ...prev };
+          Object.entries(data.telemetryLogs as Record<string, StudentTelemetryLog>).forEach(([id, log]) => {
+            if (!merged[id]) {
+              merged[id] = log;
+            } else {
+              merged[id] = {
+                ...merged[id],
+                ...log,
+                total_active_seconds: Math.max(merged[id].total_active_seconds || 0, log.total_active_seconds || 0),
+                today_active_seconds: Math.max(merged[id].today_active_seconds || 0, log.today_active_seconds || 0),
+                weekly_active_seconds: Math.max(merged[id].weekly_active_seconds || 0, log.weekly_active_seconds || 0),
+                idle_paused_seconds: Math.max(merged[id].idle_paused_seconds || 0, log.idle_paused_seconds || 0),
+                online_status: log.online_status || merged[id].online_status,
+                last_active_at: log.last_active_at || merged[id].last_active_at,
+                last_active_label: log.last_active_label || merged[id].last_active_label,
+                current_page: log.current_page || merged[id].current_page,
+                current_module: log.current_module || merged[id].current_module,
+                device: log.device || merged[id].device
+              };
+            }
+          });
+          return merged;
+        });
+      }
+
+      if (data.success && Array.isArray(data.actionEvents) && data.actionEvents.length > 0) {
+        setActionEvents(prev => {
+          const existingIds = new Set(prev.map(a => a.id));
+          const newOnes = data.actionEvents.filter((a: any) => !existingIds.has(a.id));
+          if (newOnes.length === 0) return prev;
+          return [...newOnes, ...prev].slice(0, 200);
+        });
+      }
+    } catch {
+      // Non-blocking network catch
+    }
+  }, []);
+
+  // Continuous 4-second polling for immediate multi-device visibility
+  useEffect(() => {
+    syncTelemetryFromServer();
+    const pollTimer = setInterval(() => {
+      syncTelemetryFromServer();
+    }, 4000);
+
+    return () => clearInterval(pollTimer);
+  }, [syncTelemetryFromServer]);
+
+  // Supabase Realtime Channel for instant 100ms peer broadcast between devices
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+
+    try {
+      const channel = supabase.channel('premier-telemetry-live');
+      channel
+        .on('broadcast', { event: 'student_login' }, (payload: any) => {
+          if (payload?.payload?.student_id) {
+            const sid = payload.payload.student_id;
+            setTelemetryLogs(prev => {
+              const cur = prev[sid];
+              if (!cur) return prev;
+              return {
+                ...prev,
+                [sid]: {
+                  ...cur,
+                  online_status: 'online',
+                  last_active_at: new Date().toISOString(),
+                  last_active_label: 'Ayni paytda faol',
+                  device: payload.payload.device || cur.device
+                }
+              };
+            });
+            syncTelemetryFromServer();
+          }
+        })
+        .on('broadcast', { event: 'student_heartbeat' }, (payload: any) => {
+          if (payload?.payload?.studentId) {
+            syncTelemetryFromServer();
+          }
+        })
+        .on('broadcast', { event: 'student_action' }, (payload: any) => {
+          if (payload?.payload) {
+            const ev = payload.payload;
+            setActionEvents(prev => [ev, ...prev.filter(x => x.id !== ev.id)].slice(0, 200));
+            syncTelemetryFromServer();
+          }
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    } catch {
+      // Non-blocking
+    }
+  }, [syncTelemetryFromServer]);
 
   // Update user context for realtime manager
   useEffect(() => {
@@ -974,6 +1055,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     idleSeconds: number, 
     currentPage?: string
   ) => {
+    const isMobile = /android|iphone|ipad|mobile/i.test(navigator.userAgent);
+
     setTelemetryLogs(prev => {
       const current = prev[studentId];
       if (!current) return prev;
@@ -993,6 +1076,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
           last_active_label: 'Ayni paytda faol',
           current_page: currentPage || current.current_page,
           current_module: module,
+          device: isMobile ? 'mobile' : 'desktop',
           total_active_seconds: current.total_active_seconds + activeSeconds,
           today_active_seconds: current.today_active_seconds + activeSeconds,
           weekly_active_seconds: current.weekly_active_seconds + activeSeconds,
@@ -1001,6 +1085,40 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
       };
     });
+
+    // 1. Send heartbeat to Central Server API
+    fetch('/api/telemetry/heartbeat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        student_id: studentId,
+        module,
+        active_seconds: activeSeconds,
+        idle_seconds: idleSeconds,
+        current_page: currentPage,
+        is_idle: idleSeconds > 0 && activeSeconds === 0,
+        device: isMobile ? 'mobile' : 'desktop'
+      })
+    }).catch(() => {});
+
+    // 2. Broadcast to Supabase Realtime channel
+    if (supabase) {
+      try {
+        const channel = supabase.channel('premier-telemetry-live');
+        channel.send({
+          type: 'broadcast',
+          event: 'student_heartbeat',
+          payload: {
+            studentId,
+            module,
+            activeSeconds,
+            idleSeconds,
+            currentPage,
+            timestamp: new Date().toISOString()
+          }
+        });
+      } catch {}
+    }
   }, []);
 
   const logStudentAction = useCallback((event: Omit<StudentActionEvent, 'id' | 'timestamp'>) => {
@@ -1024,6 +1142,31 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
           }
         };
       });
+    }
+
+    // 1. Send action to Central Server API
+    fetch('/api/telemetry/action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        student_id: event.student_id,
+        student_name: event.student_name,
+        action_type: event.action_type,
+        module: event.module,
+        details: event.details
+      })
+    }).catch(() => {});
+
+    // 2. Broadcast to Supabase Realtime channel
+    if (supabase) {
+      try {
+        const channel = supabase.channel('premier-telemetry-live');
+        channel.send({
+          type: 'broadcast',
+          event: 'student_action',
+          payload: newEvent
+        });
+      } catch {}
     }
   }, []);
 

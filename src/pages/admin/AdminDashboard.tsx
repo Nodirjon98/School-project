@@ -11,10 +11,11 @@ import {
 export const AdminDashboard: React.FC = () => {
   const { profile } = useAuth();
   const { t } = useLanguage();
-  const { groups, homeworks, submissions, dailyWords, students, attendance, actionEvents } = useLMSData();
+  const { groups, homeworks, submissions, dailyWords, students, attendance, actionEvents, telemetryLogs } = useLMSData();
 
   const activeStudentsCount = students.filter(s => s.status === 'active').length;
   const unassignedCount = students.filter(s => !s.group_id && s.status !== 'left').length;
+  const onlineCount = Object.values(telemetryLogs || {}).filter(s => s.online_status === 'online').length;
 
   const attendanceRate = attendance.length > 0
     ? Math.round((attendance.filter(a => a.status === 'present').length / attendance.length) * 100)
@@ -41,15 +42,22 @@ export const AdminDashboard: React.FC = () => {
 
           <div className="flex flex-wrap gap-2.5 mt-6">
             <Link
-              to="/admin/performance"
+              to="/admin/monitoring"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-400 text-slate-950 font-black text-xs hover:bg-emerald-300 transition shadow-sm"
             >
+              <span className={`w-2 h-2 rounded-full ${onlineCount > 0 ? 'bg-emerald-950 animate-ping' : 'bg-emerald-800'}`} />
+              <span>🟢 Jonli Nazorat ({onlineCount} Onlayn)</span>
+            </Link>
+            <Link
+              to="/admin/performance"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-500 transition shadow-sm"
+            >
               <TrendingUp className="w-4 h-4" />
-              <span>📊 Performance Analytics (Recharts)</span>
+              <span>📊 Performance Analytics</span>
             </Link>
             <Link
               to="/admin/activity"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-500 transition shadow-sm"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-700 text-white font-bold text-xs hover:bg-purple-600 transition shadow-sm"
             >
               <span>⏱️ Faoliyat & Nazorat (Audit)</span>
             </Link>
@@ -109,9 +117,16 @@ export const AdminDashboard: React.FC = () => {
             <Users className="w-4 h-4 text-blue-600" />
           </div>
           <div className="text-2xl font-black text-slate-900">{students.length} nafar</div>
-          <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1 mt-1">
-            <TrendingUp className="w-3 h-3" /> {activeStudentsCount} faol o'quvchi
-          </span>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
+              <TrendingUp className="w-3 h-3" /> {activeStudentsCount} ro'yxatda
+            </span>
+            {onlineCount > 0 && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-black border border-emerald-200">
+                🟢 {onlineCount} onlayn
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">

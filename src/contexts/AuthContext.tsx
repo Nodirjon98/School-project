@@ -25,6 +25,43 @@ const ADMIN_EMAILS = [
   'safoyevnodirjon@gmail.com'
 ];
 
+export const notifyStudentLogin = (studProfile: Profile) => {
+  if (studProfile.role !== 'student') return;
+
+  const isMobile = typeof navigator !== 'undefined' && /android|iphone|ipad|mobile/i.test(navigator.userAgent);
+  const payload = {
+    student_id: studProfile.id,
+    student_name: studProfile.full_name,
+    email: studProfile.email,
+    device: isMobile ? 'mobile' : 'desktop',
+    group_name: studProfile.group_name || 'Guruhga biriktirilmagan',
+    group_id: studProfile.group_id,
+    level: studProfile.level || 'B1',
+    student_avatar: studProfile.avatar_url
+  };
+
+  fetch('/api/telemetry/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const channel = supabase.channel('premier-telemetry-live');
+      channel.subscribe(status => {
+        if (status === 'SUBSCRIBED') {
+          channel.send({
+            type: 'broadcast',
+            event: 'student_login',
+            payload
+          });
+        }
+      });
+    } catch {}
+  }
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [profile, setProfile] = useState<Profile | null>(() => {
     return getStorageItem<Profile | null>('premier_lms_profile', null);
@@ -99,6 +136,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         setUser({ id: officialMatched.id, email: officialMatched.email });
         saveProfile(officialMatched);
+        notifyStudentLogin(officialMatched);
         setLoading(false);
         return { error: null };
       }
@@ -114,6 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (data && !error && data.role !== 'admin') {
           setUser({ id: data.id, email: data.email });
           saveProfile(data as Profile);
+          notifyStudentLogin(data as Profile);
           setLoading(false);
           return { error: null };
         }
@@ -128,6 +167,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         setUser({ id: matched.id, email: matched.email });
         saveProfile(matched);
+        if (matched.role === 'student') {
+          notifyStudentLogin(matched);
+        }
         setLoading(false);
         return { error: null };
       }
@@ -140,6 +182,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const safeProfile: Profile = { ...customMatched, role: (customMatched.role === 'admin' ? 'student' : customMatched.role) as UserRole };
         setUser({ id: safeProfile.id, email: safeProfile.email });
         saveProfile(safeProfile);
+        notifyStudentLogin(safeProfile);
         setLoading(false);
         return { error: null };
       }
@@ -159,6 +202,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setStorageItem('premier_registered_users', [...customUsers, newCustomProfile]);
       setUser({ id: newCustomProfile.id, email: newCustomProfile.email });
       saveProfile(newCustomProfile);
+      notifyStudentLogin(newCustomProfile);
       setLoading(false);
       return { error: null };
     } catch (err: any) {
