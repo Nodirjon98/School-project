@@ -32,6 +32,7 @@ const KaraokePage = lazy(() => import('./pages/student/KaraokePage').then(m => (
 const PodcastsPage = lazy(() => import('./pages/student/PodcastsPage').then(m => ({ default: m.PodcastsPage })));
 const DialoguesPage = lazy(() => import('./pages/student/DialoguesPage').then(m => ({ default: m.DialoguesPage })));
 const AchievementsPage = lazy(() => import('./pages/student/AchievementsPage').then(m => ({ default: m.AchievementsPage })));
+const WordGamesHubPage = lazy(() => import('./pages/student/WordGamesHubPage').then(m => ({ default: m.WordGamesHubPage })));
 const EssentialGrammarPage = lazy(() => import('./pages/EssentialGrammarPage').then(m => ({ default: m.EssentialGrammarPage })));
 const StoriesForReproductionPage = lazy(() => import('./pages/student/StoriesForReproductionPage').then(m => ({ default: m.StoriesForReproductionPage })));
 const GrammarExamTakePage = lazy(() => import('./pages/student/GrammarExamTakePage').then(m => ({ default: m.GrammarExamTakePage })));
@@ -130,6 +131,8 @@ export const AppRouter: React.FC = () => {
           <Route path="/podcasts" element={<PodcastsPage />} />
           <Route path="/dialogues" element={<DialoguesPage />} />
           <Route path="/achievements" element={<AchievementsPage />} />
+          <Route path="/word-games" element={<WordGamesHubPage />} />
+          <Route path="/games" element={<WordGamesHubPage />} />
           <Route path="/placement-test" element={<PlacementTestPage />} />
           <Route path="/grammar" element={<GrammarPractice />} />
           <Route path="/essential-grammar" element={<EssentialGrammarPage />} />

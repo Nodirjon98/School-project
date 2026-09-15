@@ -5,7 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { 
   LayoutDashboard, BookOpen, CheckSquare, Sparkles, 
   Trophy, ClipboardCheck, Users, BrainCircuit, BarChart3, 
-  Layers, Database, X, PenTool, Mic, Award, Swords, FileText, Headphones, CreditCard, Clock, TrendingUp, Music, Radio, MessagesSquare, ShieldCheck
+  Layers, Database, X, PenTool, Mic, Award, Swords, FileText, Headphones, CreditCard, Clock, TrendingUp, Music, Radio, MessagesSquare, ShieldCheck, Gamepad2
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -77,6 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       category: "BELLASHUV & YUTUQLAR",
       items: [
         { label: 'Vocab Contest Arena', path: '/vocab-contest', icon: <Swords className="w-4 h-4 text-amber-400" />, badge: '1v1 Live' },
+        { label: "So'z O'yinlari Arenasi", path: '/word-games', icon: <Gamepad2 className="w-4 h-4 text-emerald-400" />, badge: '4 O\'yin' },
         { label: t('dailyWords'), path: '/daily-words', icon: <Layers className="w-4 h-4" />, badge: 'SRS' },
         { label: t('championship'), path: '/championship', icon: <Trophy className="w-4 h-4 text-amber-400" /> },
         { label: 'Yutuqlar & Sertifikatlar', path: '/achievements', icon: <Award className="w-4 h-4 text-amber-300" /> },
@@ -112,6 +113,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         { label: 'Grammatika Imtihonlari', path: '/admin/grammar-exams', icon: <Sparkles className="w-4 h-4 text-indigo-400" />, badge: 'Exams' },
         { label: 'Speaking & Voice Hub', path: '/teacher/speaking-hub', icon: <Mic className="w-4 h-4 text-emerald-400" />, badge: 'Mr Safoyev' },
         { label: t('aiStudio'), path: '/ai-studio', icon: <BrainCircuit className="w-4 h-4 text-indigo-400" />, badge: 'Gemini 3.8' },
+        { label: "So'z O'yinlari Arenasi", path: '/word-games', icon: <Gamepad2 className="w-4 h-4 text-emerald-400" />, badge: 'O\'yinlar' },
         { label: 'Vocab Contest Arena', path: '/vocab-contest', icon: <Swords className="w-4 h-4 text-amber-400" /> },
         { label: t('championship'), path: '/championship', icon: <Trophy className="w-4 h-4" /> },
       ]
@@ -143,6 +145,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     {
       category: "NAZORAT & AI",
       items: [
+        { label: "So'z O'yinlari Arenasi", path: '/word-games', icon: <Gamepad2 className="w-4 h-4 text-emerald-400" />, badge: 'O\'yinlar' },
         { label: 'Speaking & Voice Hub', path: '/admin/speaking-hub', icon: <Mic className="w-4 h-4 text-emerald-400" /> },
         { label: t('aiStudio'), path: '/ai-studio', icon: <BrainCircuit className="w-4 h-4 text-indigo-400" /> },
         { label: t('championship'), path: '/championship', icon: <Trophy className="w-4 h-4 text-amber-400" /> },
