@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Clock, Activity, Users, UserCheck, BarChart3, TrendingUp, 
   Search, Filter, ShieldCheck, CheckCircle2, Headphones, Mic, 
