@@ -15,7 +15,17 @@ export const AdminDashboard: React.FC = () => {
 
   const activeStudentsCount = students.filter(s => s.status === 'active').length;
   const unassignedCount = students.filter(s => !s.group_id && s.status !== 'left').length;
-  const onlineCount = Object.values(telemetryLogs || {}).filter(s => s.online_status === 'online').length;
+  const telemetryList = Object.values(telemetryLogs || {});
+  const onlineCount = telemetryList.filter(s => s.online_status === 'online').length;
+  const idleCount = telemetryList.filter(s => s.online_status === 'idle').length;
+  const activeTodayCount = telemetryList.filter(s => (s.today_active_seconds || 0) > 0 || (s.last_active_at && s.last_active_label !== 'Hali kirmagan')).length;
+  const recentlyActiveStudents = telemetryList
+    .filter(s => s.online_status === 'online' || s.online_status === 'idle' || (s.today_active_seconds || 0) > 0 || (s.last_active_at && s.last_active_label !== 'Hali kirmagan'))
+    .sort((a, b) => {
+      const timeB = b.last_active_at ? new Date(b.last_active_at).getTime() : 0;
+      const timeA = a.last_active_at ? new Date(a.last_active_at).getTime() : 0;
+      return timeB - timeA;
+    });
 
   const attendanceRate = attendance.length > 0
     ? Math.round((attendance.filter(a => a.status === 'present').length / attendance.length) * 100)
@@ -45,8 +55,13 @@ export const AdminDashboard: React.FC = () => {
               to="/admin/monitoring"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-400 text-slate-950 font-black text-xs hover:bg-emerald-300 transition shadow-sm"
             >
-              <span className={`w-2 h-2 rounded-full ${onlineCount > 0 ? 'bg-emerald-950 animate-ping' : 'bg-emerald-800'}`} />
-              <span>🟢 Jonli Nazorat ({onlineCount} Onlayn)</span>
+              <span className={`w-2 h-2 rounded-full ${onlineCount > 0 ? 'bg-emerald-950 animate-ping' : idleCount > 0 ? 'bg-amber-600 animate-pulse' : 'bg-emerald-800'}`} />
+              <span>
+                {onlineCount > 0 ? `🟢 Jonli Nazorat (${onlineCount} Onlayn)` :
+                 idleCount > 0 ? `🟡 Jonli Nazorat (${idleCount} Pauzada)` :
+                 activeTodayCount > 0 ? `🔵 Jonli Nazorat (${activeTodayCount} Bugun Faol)` :
+                 `🟢 Jonli Nazorat (0 Onlayn)`}
+              </span>
             </Link>
             <Link
               to="/admin/performance"
@@ -121,11 +136,21 @@ export const AdminDashboard: React.FC = () => {
             <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
               <TrendingUp className="w-3 h-3" /> {activeStudentsCount} ro'yxatda
             </span>
-            {onlineCount > 0 && (
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-black border border-emerald-200">
-                🟢 {onlineCount} onlayn
+            {onlineCount > 0 ? (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-black border border-emerald-200 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                {onlineCount} onlayn
               </span>
-            )}
+            ) : idleCount > 0 ? (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-black border border-amber-200 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                {idleCount} pauzada
+              </span>
+            ) : activeTodayCount > 0 ? (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-bold border border-blue-200">
+                {activeTodayCount} bugun kirgan
+              </span>
+            ) : null}
           </div>
         </div>
 
@@ -168,6 +193,59 @@ export const AdminDashboard: React.FC = () => {
           </span>
         </div>
       </div>
+
+      {/* Recently Active Students Banner */}
+      {recentlyActiveStudents.length > 0 && (
+        <div className="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border border-emerald-200/80 rounded-2xl p-5 shadow-2xs">
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </span>
+              <h3 className="text-sm font-black text-slate-900">
+                Jonli O'quvchilar Telemetriyasi — Yaqinda kirganlar ({recentlyActiveStudents.length})
+              </h3>
+            </div>
+            <Link to="/admin/monitoring" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+              <span>Batafsil nazorat</span>
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {recentlyActiveStudents.slice(0, 4).map(st => {
+              const isCurOnline = st.online_status === 'online';
+              const isCurIdle = st.online_status === 'idle';
+
+              return (
+                <Link
+                  key={st.student_id}
+                  to="/admin/monitoring"
+                  className="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs hover:shadow-md transition flex items-center gap-3 group"
+                >
+                  <div className="relative shrink-0">
+                    <div className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 font-black flex items-center justify-center text-xs">
+                      {st.student_name.slice(0, 2).toUpperCase()}
+                    </div>
+                    <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
+                      isCurOnline ? 'bg-emerald-500 animate-pulse' :
+                      isCurIdle ? 'bg-amber-400' : 'bg-slate-400'
+                    }`} />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-extrabold text-slate-900 group-hover:text-indigo-600 transition text-xs truncate">{st.student_name}</div>
+                    <div className="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5">
+                      <span>{st.device === 'desktop' ? '💻' : '📱'}</span>
+                      <span className="font-bold text-indigo-600 truncate">{st.last_active_label || 'Faol'}</span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Grid: Groups Distribution & Real-time Activity Feed */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -237,18 +315,45 @@ export const AdminDashboard: React.FC = () => {
               </p>
             </div>
           ) : (
-            <div className="space-y-3 text-xs">
-              {actionEvents.slice(0, 4).map((evt) => (
-                <div key={evt.id} className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start justify-between gap-3">
-                  <div>
-                    <span className="font-bold text-slate-900 block">{evt.action_type}</span>
-                    <span className="text-slate-600">{evt.student_name}: {evt.target_title || evt.module}</span>
+            <div className="space-y-2.5 text-xs">
+              {actionEvents.slice(0, 6).map((evt) => {
+                const isLogin = evt.action_type === 'LOGIN';
+                const isIdle = evt.action_type === 'IDLE_PAUSE';
+                const isResume = evt.action_type === 'RESUME_ACTIVE';
+                const isPage = evt.action_type === 'PAGE_VIEW';
+                
+                const title = 
+                  isLogin ? "Platformaga kirdi" :
+                  isIdle ? "Avto-Pauza (Ekrandan uzoqlashdi)" :
+                  isResume ? "Darsga qaytdi" :
+                  isPage ? (evt.details?.title || "Sahifani ko'rdi") :
+                  evt.action_type;
+
+                const badgeBg = 
+                  isLogin ? "bg-emerald-100 text-emerald-800" :
+                  isIdle ? "bg-amber-100 text-amber-800" :
+                  isResume ? "bg-teal-100 text-teal-800" :
+                  "bg-indigo-100 text-indigo-800";
+
+                return (
+                  <div key={evt.id} className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start justify-between gap-3 hover:bg-slate-100/70 transition">
+                    <div className="flex items-start gap-2.5 min-w-0">
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase shrink-0 mt-0.5 ${badgeBg}`}>
+                        {isLogin ? "🔑 Kirish" : isIdle ? "⏸️ Pauza" : isResume ? "▶️ Faol" : "📄 Sahifa"}
+                      </span>
+                      <div className="min-w-0">
+                        <span className="font-extrabold text-slate-900 block truncate">{evt.student_name}</span>
+                        <span className="text-slate-600 text-[11px] block truncate mt-0.5">
+                          {evt.details?.extra_info || title}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-semibold text-slate-400 shrink-0 mt-0.5">
+                      {new Date(evt.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    </span>
                   </div>
-                  <span className="text-[10px] text-slate-400 shrink-0">
-                    {new Date(evt.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

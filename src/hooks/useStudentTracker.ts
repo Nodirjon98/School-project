@@ -72,7 +72,8 @@ export function useStudentTracker() {
         current_page: location.pathname,
         is_idle: false,
         device: isMobile ? 'mobile' : 'desktop'
-      })
+      }),
+      keepalive: true
     }).catch(() => {});
   }, [studentId, isStudent]);
 
@@ -127,25 +128,11 @@ export function useStudentTracker() {
       }
     };
 
-    const handleWindowBlur = () => {
-      isTabHidden.current = true;
-      flushTime();
-    };
-
-    const handleWindowFocus = () => {
-      isTabHidden.current = false;
-      lastInteractionTime.current = Date.now();
-    };
-
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('blur', handleWindowBlur);
-    window.addEventListener('focus', handleWindowFocus);
 
     return () => {
       events.forEach(ev => window.removeEventListener(ev, throttledHandler));
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('blur', handleWindowBlur);
-      window.removeEventListener('focus', handleWindowFocus);
       if (throttleTimeout) clearTimeout(throttleTimeout);
     };
   }, [isStudent, handleUserActivity, flushTime]);

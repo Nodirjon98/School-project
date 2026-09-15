@@ -11,12 +11,12 @@ import { StudentTelemetryLog, StudentActionEvent, TelemetryModule } from '../../
 import { Modal } from '../../components/common/Modal';
 
 export const StudentMonitoringPage: React.FC = () => {
-  const { telemetryLogs, actionEvents, groups, students, saveTeacherNote } = useLMSData();
+  const { telemetryLogs, actionEvents, groups, students, saveTeacherNote, refreshTelemetry } = useLMSData();
 
   const [mainTab, setMainTab] = useState<'monitoring' | 'credentials'>('monitoring');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGroup, setSelectedGroup] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'online' | 'idle' | 'not_logged_in'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'online' | 'idle' | 'not_logged_in'>('all');
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const [teacherNoteInput, setTeacherNoteInput] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -37,13 +37,11 @@ export const StudentMonitoringPage: React.FC = () => {
   const handleManualRefresh = async () => {
     setIsRefreshing(true);
     try {
-      const res = await fetch('/api/telemetry/status', {
-        headers: { 'Cache-Control': 'no-cache' }
-      });
-      if (res.ok) {
-        setLastSyncedTime(new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }));
-        showToast("O'quvchilar ma'lumotlari serverdan yangilandi!");
+      if (refreshTelemetry) {
+        await refreshTelemetry();
       }
+      setLastSyncedTime(new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }));
+      showToast("O'quvchilar ma'lumotlari serverdan yangilandi!");
     } catch {
       showToast("Server bilan aloqa tekshirildi");
     } finally {
@@ -78,6 +76,7 @@ export const StudentMonitoringPage: React.FC = () => {
   const totalStudents = students.length;
   const onlineCount = telemetryList.filter(s => s.online_status === 'online').length;
   const idleCount = telemetryList.filter(s => s.online_status === 'idle').length;
+  const activeOrIdleCount = onlineCount + idleCount;
   const notLoggedInCount = telemetryList.filter(s => !s.last_active_at || s.last_active_label === 'Hali kirmagan').length;
 
   const totalActiveSeconds = telemetryList.reduce((acc, s) => acc + s.today_active_seconds, 0);
@@ -86,22 +85,57 @@ export const StudentMonitoringPage: React.FC = () => {
   const totalIdleSeconds = telemetryList.reduce((acc, s) => acc + s.idle_paused_seconds, 0);
   const totalBlockedIdleMins = Math.round(totalIdleSeconds / 60);
 
-  // Filtered students for monitoring
+  // Active / recently active radar list (for live highlight banner)
+  const activeRadarStudents = useMemo(() => {
+    return telemetryList
+      .filter(s => s.online_status === 'online' || s.online_status === 'idle' || (s.today_active_seconds || 0) > 0 || (s.last_active_at && s.last_active_label !== 'Hali kirmagan'))
+      .sort((a, b) => {
+        const timeB = b.last_active_at ? new Date(b.last_active_at).getTime() : 0;
+        const timeA = a.last_active_at ? new Date(a.last_active_at).getTime() : 0;
+        return timeB - timeA;
+      });
+  }, [telemetryList]);
+
+  // Filtered students for monitoring - ALWAYS SORTS ACTIVE / ONLINE STUDENTS FIRST
   const filteredStudents = useMemo(() => {
-    return telemetryList.filter(st => {
+    const list = telemetryList.filter(st => {
       const matchesSearch = 
         st.student_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        st.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (st.phone && st.phone.includes(searchQuery));
       
       const matchesGroup = selectedGroup === 'all' || st.group_id === selectedGroup || st.group_name === selectedGroup;
 
       const matchesStatus = 
         statusFilter === 'all' ? true :
+        statusFilter === 'active' ? (st.online_status === 'online' || st.online_status === 'idle' || (st.today_active_seconds || 0) > 0) :
         statusFilter === 'online' ? st.online_status === 'online' :
         statusFilter === 'idle' ? st.online_status === 'idle' :
         statusFilter === 'not_logged_in' ? (!st.last_active_at || st.last_active_label === 'Hali kirmagan') : true;
 
       return matchesSearch && matchesGroup && matchesStatus;
+    });
+
+    // Intelligent Sorting:
+    // Priority 1: 🟢 Online students (most recently active first)
+    // Priority 2: 🟡 Idle students (most recently active first)
+    // Priority 3: Offline with study minutes today / logged in (most recently active first)
+    // Priority 4: Never logged in
+    return list.sort((a, b) => {
+      const getRank = (s: typeof a) => {
+        if (s.online_status === 'online') return 4;
+        if (s.online_status === 'idle') return 3;
+        if ((s.today_active_seconds || 0) > 0 || (s.last_active_at && s.last_active_label !== 'Hali kirmagan')) return 2;
+        return 1;
+      };
+      const rankDiff = getRank(b) - getRank(a);
+      if (rankDiff !== 0) return rankDiff;
+
+      const timeB = b.last_active_at ? new Date(b.last_active_at).getTime() : 0;
+      const timeA = a.last_active_at ? new Date(a.last_active_at).getTime() : 0;
+      if (timeB !== timeA) return timeB - timeA;
+
+      return (b.today_active_seconds || 0) - (a.today_active_seconds || 0);
     });
   }, [telemetryList, searchQuery, selectedGroup, statusFilter]);
 
@@ -116,6 +150,7 @@ export const StudentMonitoringPage: React.FC = () => {
 
   const formatMinutes = (seconds: number) => {
     if (!seconds || seconds === 0) return '0 daqiqa';
+    if (seconds < 60) return `${seconds} soniya`;
     const mins = Math.floor(seconds / 60);
     const hours = Math.floor(mins / 60);
     const remMins = mins % 60;
@@ -469,6 +504,88 @@ export const StudentMonitoringPage: React.FC = () => {
             </div>
           </div>
 
+          {/* Live Active Students Radar Highlights */}
+          {activeRadarStudents.length > 0 && (
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-indigo-500/15 border-2 border-emerald-300 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-3.5 w-3.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
+                  </span>
+                  <h3 className="text-sm font-black text-slate-900 flex items-center gap-1.5">
+                    <span>⚡ Jonli Faoliyat Radari — Kirgan va Faol O'quvchilar</span>
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-black">
+                      {activeRadarStudents.length} nafar
+                    </span>
+                  </h3>
+                </div>
+                <span className="text-[11px] font-medium text-slate-500">
+                  O'quvchilar login qilishi bilan shu yerda jonli ko'rinadi
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {activeRadarStudents.slice(0, 6).map((st) => {
+                  const isCurOnline = st.online_status === 'online';
+                  const isCurIdle = st.online_status === 'idle';
+
+                  return (
+                    <div
+                      key={st.student_id}
+                      onClick={() => handleOpenDossier(st)}
+                      className={`p-3.5 rounded-xl border transition cursor-pointer flex items-center justify-between gap-3 bg-white shadow-xs hover:shadow-md ${
+                        isCurOnline ? 'border-emerald-300 ring-2 ring-emerald-400/30' :
+                        isCurIdle ? 'border-amber-300' : 'border-slate-200'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="relative shrink-0">
+                          <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 font-black flex items-center justify-center text-xs">
+                            {st.student_name.slice(0, 2).toUpperCase()}
+                          </div>
+                          <span
+                            className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white ${
+                              isCurOnline ? 'bg-emerald-500 animate-pulse' :
+                              isCurIdle ? 'bg-amber-400' : 'bg-slate-400'
+                            }`}
+                          />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="font-black text-slate-900 text-xs truncate">
+                            {st.student_name}
+                          </div>
+                          <div className="text-[11px] flex items-center gap-1 mt-0.5">
+                            {isCurOnline ? (
+                              <span className="text-emerald-700 font-extrabold flex items-center gap-1">
+                                🟢 Onlayn (Ayni paytda)
+                              </span>
+                            ) : isCurIdle ? (
+                              <span className="text-amber-700 font-bold flex items-center gap-1">
+                                🟡 {st.last_active_label || 'Pauzada'}
+                              </span>
+                            ) : (
+                              <span className="text-slate-600 font-medium">
+                                ⏱️ {st.last_active_label || 'Oflayn'}
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[10px] text-slate-400 flex items-center gap-2 mt-0.5">
+                            <span>{st.device === 'desktop' ? '💻 Kompyuter' : '📱 Smartfon'}</span>
+                            <span>•</span>
+                            <span className="font-bold text-indigo-600">{formatMinutes(st.today_active_seconds)}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* KPI Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Onlayn o'quvchilar */}
@@ -576,11 +693,25 @@ export const StudentMonitoringPage: React.FC = () => {
                   Barchasi ({totalStudents})
                 </button>
                 <button
+                  onClick={() => setStatusFilter('active')}
+                  className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1 ${statusFilter === 'active' ? 'bg-white text-emerald-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'}`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                  Faollar ({activeRadarStudents.length})
+                </button>
+                <button
                   onClick={() => setStatusFilter('online')}
                   className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1 ${statusFilter === 'online' ? 'bg-white text-emerald-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'}`}
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   Onlayn ({onlineCount})
+                </button>
+                <button
+                  onClick={() => setStatusFilter('idle')}
+                  className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1 ${statusFilter === 'idle' ? 'bg-white text-amber-700 shadow-2xs font-black' : 'text-slate-600 hover:text-slate-900'}`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  Pauzada ({idleCount})
                 </button>
                 <button
                   onClick={() => setStatusFilter('not_logged_in')}
@@ -626,9 +757,20 @@ export const StudentMonitoringPage: React.FC = () => {
                       const listeningMins = Math.round((st.module_breakdown?.listening_seconds || 0) / 60);
                       const grammarMins = Math.round((st.module_breakdown?.grammar_seconds || 0) / 60);
                       const isNotLoggedIn = !st.last_active_at || st.last_active_label === 'Hali kirmagan';
+                      const isCurOnline = st.online_status === 'online';
+                      const isCurIdle = st.online_status === 'idle';
+                      const isRecentlyActive = (st.today_active_seconds || 0) > 0 || (st.last_active_at && st.last_active_label !== 'Hali kirmagan');
 
                       return (
-                        <tr key={st.student_id} className="hover:bg-slate-50/60 transition group">
+                        <tr 
+                          key={st.student_id} 
+                          className={`transition group ${
+                            isCurOnline ? 'bg-emerald-50/40 hover:bg-emerald-50/70 border-l-4 border-l-emerald-500' :
+                            isCurIdle ? 'bg-amber-50/30 hover:bg-amber-50/60 border-l-4 border-l-amber-400' :
+                            isRecentlyActive ? 'bg-slate-50/40 hover:bg-slate-100/60' :
+                            'hover:bg-slate-50/60'
+                          }`}
+                        >
                           {/* Student Info */}
                           <td className="py-3.5 px-4">
                             <div className="flex items-center gap-3">

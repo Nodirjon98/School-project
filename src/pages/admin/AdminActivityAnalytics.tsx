@@ -9,8 +9,11 @@ import { StudentActivityMetric, TeacherActivityMetric, PlatformAuditAction } fro
 import { 
   getStoredStudentActivities, getStoredTeacherActivities, getStoredPlatformAudit 
 } from '../../data/paymentAndAnalyticsData';
+import { useLMSData } from '../../contexts/LMSDataContext';
 
 export const AdminActivityAnalytics: React.FC = () => {
+  const { telemetryLogs, actionEvents, students: lmsStudents } = useLMSData();
+
   const [students, setStudents] = useState<StudentActivityMetric[]>([]);
   const [teachers, setTeachers] = useState<TeacherActivityMetric[]>([]);
   const [auditLogs, setAuditLogs] = useState<PlatformAuditAction[]>([]);
@@ -21,10 +24,84 @@ export const AdminActivityAnalytics: React.FC = () => {
   const [timeFilter, setTimeFilter] = useState<'all' | 'today' | 'week'>('all');
 
   useEffect(() => {
-    setStudents(getStoredStudentActivities());
+    const baseActivities = getStoredStudentActivities();
+    const merged = baseActivities.map(st => {
+      const tel = telemetryLogs[st.student_id];
+      if (!tel) return st;
+
+      const activeMins = Math.round((tel.today_active_seconds || 0) / 60);
+
+      return {
+        ...st,
+        today_hours: Number((activeMins / 60).toFixed(1)),
+        total_time_minutes: Math.max(st.total_time_minutes, activeMins),
+        status: tel.online_status,
+        last_active: tel.last_active_label || st.last_active,
+        device: tel.device || st.device
+      };
+    });
+
+    lmsStudents.forEach(ls => {
+      if (!merged.some(m => m.student_id === ls.id)) {
+        const tel = telemetryLogs[ls.id];
+        const activeMins = Math.round((tel?.today_active_seconds || 0) / 60);
+        merged.push({
+          id: `act-${ls.id}`,
+          student_id: ls.id,
+          student_name: ls.full_name,
+          avatar_url: ls.avatar_url,
+          group_name: ls.group_name || "Guruhga biriktirilmagan",
+          level: ls.level || 'B1',
+          total_time_minutes: activeMins,
+          today_hours: Number((activeMins / 60).toFixed(1)),
+          weekly_hours: Number((activeMins / 60).toFixed(1)),
+          streak_days: 1,
+          idle_time_blocked_minutes: Math.round((tel?.idle_paused_seconds || 0) / 60),
+          parameter_mastery: {
+            speaking: 6.5,
+            listening: 7.0,
+            vocabulary: 7.5,
+            grammar: 6.5,
+            fluency: 6.5
+          },
+          device: tel?.device || 'mobile',
+          status: tel?.online_status || 'offline',
+          last_active: tel?.last_active_label || 'Hali kirmagan'
+        });
+      }
+    });
+
+    merged.sort((a, b) => {
+      const getScore = (s: typeof a) => {
+        if (s.status === 'online') return 3;
+        if (s.status === 'idle') return 2;
+        if (s.total_time_minutes > 0 || s.last_active !== 'Hali kirmagan') return 1;
+        return 0;
+      };
+      const diff = getScore(b) - getScore(a);
+      if (diff !== 0) return diff;
+      return b.total_time_minutes - a.total_time_minutes;
+    });
+
+    setStudents(merged);
     setTeachers(getStoredTeacherActivities());
-    setAuditLogs(getStoredPlatformAudit());
-  }, []);
+
+    const baseAudit = getStoredPlatformAudit();
+    const liveAudit = (actionEvents || []).map(ev => ({
+      id: ev.id,
+      timestamp: ev.timestamp,
+      user_name: ev.student_name,
+      user_role: 'student' as const,
+      user_avatar: undefined,
+      action_type: ev.action_type,
+      action_description: ev.details?.title || ev.action_type,
+      module: ev.module,
+      ip_address: '178.218.201.24',
+      device_info: 'Smartfon / Kompyuter',
+      status: 'success' as const
+    }));
+    setAuditLogs([...liveAudit, ...baseAudit]);
+  }, [telemetryLogs, actionEvents, lmsStudents]);
 
   const formatMinutes = (mins: number) => {
     const h = Math.floor(mins / 60);

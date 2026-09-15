@@ -93,10 +93,10 @@ function computeTelemetryDisplay(log: any) {
   let online_status = 'offline';
   let last_active_label = 'Hali kirmagan';
 
-  if (diffSec < 120) {
+  if (diffSec < 300) {
     online_status = 'online';
     last_active_label = 'Ayni paytda faol';
-  } else if (diffSec < 600) {
+  } else if (diffSec < 1200) {
     online_status = 'idle';
     const mins = Math.max(1, Math.floor(diffSec / 60));
     last_active_label = `${mins} daqiqa oldin faol`;

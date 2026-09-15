@@ -37,6 +37,7 @@ interface LMSDataContextType {
   loading: boolean;
   
   // Actions
+  refreshTelemetry: () => Promise<void>;
   recordActiveTime: (studentId: string, module: TelemetryModule, activeSeconds: number, idleSeconds: number, currentPage?: string) => void;
   logStudentAction: (event: Omit<StudentActionEvent, 'id' | 'timestamp'>) => void;
   updateStudentTelemetry: (studentId: string, updates: Partial<StudentTelemetryLog>) => void;
@@ -304,6 +305,10 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
             if (!merged[id]) {
               merged[id] = log;
             } else {
+              const serverTime = log.last_active_at ? new Date(log.last_active_at).getTime() : 0;
+              const localTime = merged[id].last_active_at ? new Date(merged[id].last_active_at).getTime() : 0;
+              const useServerActive = serverTime >= localTime;
+
               merged[id] = {
                 ...merged[id],
                 ...log,
@@ -311,15 +316,16 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 today_active_seconds: Math.max(merged[id].today_active_seconds || 0, log.today_active_seconds || 0),
                 weekly_active_seconds: Math.max(merged[id].weekly_active_seconds || 0, log.weekly_active_seconds || 0),
                 idle_paused_seconds: Math.max(merged[id].idle_paused_seconds || 0, log.idle_paused_seconds || 0),
-                online_status: log.online_status || merged[id].online_status,
-                last_active_at: log.last_active_at || merged[id].last_active_at,
-                last_active_label: log.last_active_label || merged[id].last_active_label,
-                current_page: log.current_page || merged[id].current_page,
-                current_module: log.current_module || merged[id].current_module,
+                online_status: useServerActive ? log.online_status : merged[id].online_status,
+                last_active_at: useServerActive ? (log.last_active_at || merged[id].last_active_at) : merged[id].last_active_at,
+                last_active_label: useServerActive ? (log.last_active_label || merged[id].last_active_label) : merged[id].last_active_label,
+                current_page: useServerActive ? (log.current_page || merged[id].current_page) : merged[id].current_page,
+                current_module: useServerActive ? (log.current_module || merged[id].current_module) : merged[id].current_module,
                 device: log.device || merged[id].device
               };
             }
           });
+          setStorageItem('premier_student_telemetry', merged);
           return merged;
         });
       }
@@ -329,7 +335,9 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
           const existingIds = new Set(prev.map(a => a.id));
           const newOnes = data.actionEvents.filter((a: any) => !existingIds.has(a.id));
           if (newOnes.length === 0) return prev;
-          return [...newOnes, ...prev].slice(0, 200);
+          const next = [...newOnes, ...prev].slice(0, 200);
+          setStorageItem('premier_student_action_events', next);
+          return next;
         });
       }
     } catch {
@@ -337,12 +345,12 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
-  // Continuous 4-second polling for immediate multi-device visibility
+  // Continuous 3-second polling for immediate multi-device visibility
   useEffect(() => {
     syncTelemetryFromServer();
     const pollTimer = setInterval(() => {
       syncTelemetryFromServer();
-    }, 4000);
+    }, 3000);
 
     return () => clearInterval(pollTimer);
   }, [syncTelemetryFromServer]);
@@ -1204,6 +1212,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         telemetryLogs,
         actionEvents,
         loading,
+        refreshTelemetry: syncTelemetryFromServer,
         recordActiveTime,
         logStudentAction,
         updateStudentTelemetry,
