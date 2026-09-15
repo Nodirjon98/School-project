@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 import { GoogleGenAI } from '@google/genai';
-import { createServer as createViteServer } from 'vite';
 import { MASTER_UZBEK_DICTIONARY } from './src/data/masterDictionaryData';
 import { BASIC_TACTICS_FOR_LISTENING_UNITS } from './src/data/tacticsForListeningData';
 import { PREMIER_OFFICIAL_STUDENTS } from './src/data/premierStudentsData';
@@ -1733,6 +1732,7 @@ app.get('/api/health', (req: Request, res: Response) => {
 // ============================================================================
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
