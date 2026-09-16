@@ -23,11 +23,11 @@ export function useStudentTracker() {
   // Map route to academic module
   const getModuleFromPath = useCallback((pathname: string): TelemetryModule => {
     if (pathname.includes('/stories')) return 'stories';
-    if (pathname.includes('/daily-words') || pathname.includes('/vocab')) return 'vocab';
-    if (pathname.includes('/listening') || pathname.includes('/tactics')) return 'listening';
-    if (pathname.includes('/grammar') || pathname.includes('/essential-grammar')) return 'grammar';
+    if (pathname.includes('/daily-words') || pathname.includes('/vocab') || pathname.includes('/curriculum') || pathname.includes('/word-games') || pathname.includes('/games') || pathname.includes('/words')) return 'vocab';
+    if (pathname.includes('/listening') || pathname.includes('/tactics') || pathname.includes('/podcasts')) return 'listening';
+    if (pathname.includes('/grammar') || pathname.includes('/essential-grammar') || pathname.includes('/exam')) return 'grammar';
     if (pathname.includes('/homework')) return 'homework';
-    if (pathname.includes('/speaking') || pathname.includes('/ielts-writing')) return 'speaking';
+    if (pathname.includes('/speaking') || pathname.includes('/ielts-writing') || pathname.includes('/dialogues') || pathname.includes('/karaoke')) return 'speaking';
     return 'system';
   }, []);
 
@@ -56,9 +56,11 @@ export function useStudentTracker() {
     }
   }, [studentId, isStudent, recordActiveTime, location.pathname]);
 
-  // Immediate initial heartbeat when student opens app
+  // Immediate initial heartbeat and active session registration when student opens app
   useEffect(() => {
     if (!studentId || !isStudent) return;
+    recordActiveTime(studentId, currentModuleRef.current, 5, 0, location.pathname);
+
     const isMobile = typeof navigator !== 'undefined' && /android|iphone|ipad|mobile/i.test(navigator.userAgent);
     fetch('/api/telemetry/heartbeat', {
       method: 'POST',
@@ -67,7 +69,7 @@ export function useStudentTracker() {
         student_id: studentId,
         student_name: profile?.full_name,
         module: currentModuleRef.current,
-        active_seconds: 1,
+        active_seconds: 5,
         idle_seconds: 0,
         current_page: location.pathname,
         is_idle: false,
@@ -75,7 +77,7 @@ export function useStudentTracker() {
       }),
       keepalive: true
     }).catch(() => {});
-  }, [studentId, isStudent]);
+  }, [studentId, isStudent, recordActiveTime]);
 
   // Handle interaction events (tap, click, keypress, scroll)
   const handleUserActivity = useCallback(() => {

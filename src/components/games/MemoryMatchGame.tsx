@@ -6,7 +6,7 @@ import {
 import confetti from 'canvas-confetti';
 import { TargetWord } from '../../types';
 import { 
-  gameSounds, speakGameWord, recordGameVictory, GameWordFilter, getRandomCurriculumWords 
+  gameSounds, speakGameWord, recordGameVictory, GameWordFilter, getRandomCurriculumWords, maskWordInClue 
 } from '../../lib/wordGameUtils';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -62,7 +62,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ filter, onXpEa
         id: `c-${pairId}-match`,
         pairId,
         type: 'match',
-        text: mode === 'word_uzbek' ? w.translationUz : w.definition,
+        text: mode === 'word_uzbek' ? w.translationUz : maskWordInClue(w.definition, w.word),
         wordRaw: w.word
       });
     });

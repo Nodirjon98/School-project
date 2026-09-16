@@ -7,10 +7,11 @@ import {
   Flame, Zap, Trophy, BookOpen, Clock, 
   CheckCircle2, AlertCircle, ArrowRight, Sparkles, 
   Layers, ChevronRight, FileText, Award, Radio, Music, Headphones, Mic, PenTool,
-  Calendar, MapPin
+  Calendar, MapPin, Camera
 } from 'lucide-react';
 import { AIStudyAssistant } from '../../components/student/AIStudyAssistant';
 import { WeeklyTimetable } from '../../components/schedule/WeeklyTimetable';
+import { ProfilePhotoModal } from '../../components/student/ProfilePhotoModal';
 
 export const StudentDashboard: React.FC = () => {
   const { profile } = useAuth();
@@ -21,6 +22,7 @@ export const StudentDashboard: React.FC = () => {
   } = useLMSData();
 
   const [showTimetable, setShowTimetable] = useState(false);
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const myGroup = groups.find(g => g.id === profile?.group_id) || (profile?.group_id ? groups[0] : groups[0]);
 
   // Find user's championship rank & top scorers
@@ -47,6 +49,66 @@ export const StudentDashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Student Profile Quick Bar with Avatar Upload Trigger */}
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="relative group shrink-0">
+            <button
+              type="button"
+              onClick={() => setIsPhotoModalOpen(true)}
+              className="w-16 h-16 rounded-full border-2 border-indigo-100 overflow-hidden shadow-xs bg-indigo-50 flex items-center justify-center font-black text-indigo-700 text-lg hover:ring-2 hover:ring-indigo-500 transition cursor-pointer"
+              title="Profil rasmini yuklash yoki o'zgartirish"
+            >
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt={profile.full_name || 'Talaba'} className="w-full h-full object-cover" />
+              ) : (
+                <span>{profile?.full_name ? profile.full_name.slice(0, 2).toUpperCase() : 'ST'}</span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsPhotoModalOpen(true)}
+              className="absolute -bottom-1 -right-1 p-1.5 rounded-full bg-indigo-600 text-white shadow-xs border-2 border-white hover:bg-indigo-700 transition cursor-pointer"
+              title="Rasm yuklash"
+            >
+              <Camera className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-lg font-black text-slate-900 tracking-tight">
+                Xush kelibsiz, {profile?.full_name || 'Talaba'}! 👋
+              </h2>
+              <span className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-bold text-[10px] border border-indigo-200">
+                CEFR {profile?.level || 'B1'}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Guruh: <strong className="text-slate-800">{myGroup ? myGroup.name : 'Guruh biriktirilmagan'}</strong> • Dars: <span className="text-slate-700">{myGroup ? myGroup.schedule : '—'}</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => setIsPhotoModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer"
+          >
+            <Camera className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Rasmni O'zgartirish</span>
+          </button>
+          <Link
+            to="/student/grammar-exams"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs transition"
+          >
+            <Award className="w-3.5 h-3.5 text-amber-300" />
+            <span>Yakuniy Imtihonlar</span>
+          </Link>
+        </div>
+      </div>
+
       {/* 12-Column Responsive Layout matching Professional Polish */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
@@ -629,8 +691,12 @@ export const StudentDashboard: React.FC = () => {
                 <span className="w-6 text-center font-black text-indigo-600 text-sm">
                   {userRank}
                 </span>
-                <div className="w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center font-bold text-indigo-700 text-[10px]">
-                  {profile?.full_name?.slice(0, 2).toUpperCase() || 'AK'}
+                <div className="w-8 h-8 rounded-full overflow-hidden bg-indigo-200 flex items-center justify-center font-bold text-indigo-700 text-[10px]">
+                  {profile?.avatar_url ? (
+                    <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    profile?.full_name?.slice(0, 2).toUpperCase() || 'AK'
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-bold text-indigo-900 truncate">
@@ -719,6 +785,11 @@ export const StudentDashboard: React.FC = () => {
         </div>
 
       </div>
+
+      <ProfilePhotoModal
+        isOpen={isPhotoModalOpen}
+        onClose={() => setIsPhotoModalOpen(false)}
+      />
     </div>
   );
 };

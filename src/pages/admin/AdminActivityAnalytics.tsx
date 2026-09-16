@@ -29,15 +29,35 @@ export const AdminActivityAnalytics: React.FC = () => {
       const tel = telemetryLogs[st.student_id];
       if (!tel) return st;
 
-      const activeMins = Math.round((tel.today_active_seconds || 0) / 60);
+      const todayMins = Math.round((tel.today_active_seconds || 0) / 60);
+      const totalMins = Math.round((tel.total_active_seconds || 0) / 60);
+      const weeklyMins = Math.round((tel.weekly_active_seconds || 0) / 60);
+
+      const mod = tel.module_breakdown || ({} as any);
+      const speakingMins = Math.round((mod.speaking_seconds || 0) / 60);
+      const listeningMins = Math.round((mod.listening_seconds || 0) / 60);
+      const vocabMins = Math.round((mod.vocab_seconds || 0) / 60);
+      const readingMins = Math.round((mod.stories_seconds || 0) / 60);
+      const grammarMins = Math.round((mod.grammar_seconds || 0) / 60);
+      const homeworkMins = Math.round((mod.homework_seconds || 0) / 60);
 
       return {
         ...st,
-        today_hours: Number((activeMins / 60).toFixed(1)),
-        total_time_minutes: Math.max(st.total_time_minutes, activeMins),
+        today_time_minutes: todayMins,
+        weekly_time_minutes: Math.max(st.weekly_time_minutes || 0, weeklyMins),
+        total_time_minutes: Math.max(st.total_time_minutes, totalMins),
         status: tel.online_status,
         last_active: tel.last_active_label || st.last_active,
-        device: tel.device || st.device
+        device: tel.device || st.device,
+        module_breakdown: {
+          speaking_minutes: Math.max(st.module_breakdown.speaking_minutes, speakingMins),
+          listening_tactics_minutes: Math.max(st.module_breakdown.listening_tactics_minutes, listeningMins),
+          vocabulary_4000_minutes: Math.max(st.module_breakdown.vocabulary_4000_minutes, vocabMins),
+          reading_minutes: Math.max(st.module_breakdown.reading_minutes, readingMins),
+          writing_toefl_minutes: st.module_breakdown.writing_toefl_minutes || 0,
+          grammar_minutes: Math.max(st.module_breakdown.grammar_minutes, grammarMins),
+          homework_minutes: Math.max(st.module_breakdown.homework_minutes, homeworkMins)
+        }
       };
     });
 
@@ -49,21 +69,32 @@ export const AdminActivityAnalytics: React.FC = () => {
           id: `act-${ls.id}`,
           student_id: ls.id,
           student_name: ls.full_name,
-          avatar_url: ls.avatar_url,
+          student_avatar: ls.avatar_url,
           group_name: ls.group_name || "Guruhga biriktirilmagan",
           level: ls.level || 'B1',
-          total_time_minutes: activeMins,
-          today_hours: Number((activeMins / 60).toFixed(1)),
-          weekly_hours: Number((activeMins / 60).toFixed(1)),
-          streak_days: 1,
-          idle_time_blocked_minutes: Math.round((tel?.idle_paused_seconds || 0) / 60),
-          parameter_mastery: {
-            speaking: 6.5,
-            listening: 7.0,
-            vocabulary: 7.5,
-            grammar: 6.5,
-            fluency: 6.5
+          total_time_minutes: Math.round((tel?.total_active_seconds || 0) / 60),
+          today_time_minutes: activeMins,
+          weekly_time_minutes: Math.round((tel?.weekly_active_seconds || 0) / 60),
+          module_breakdown: {
+            speaking_minutes: Math.round((tel?.module_breakdown?.speaking_seconds || 0) / 60),
+            listening_tactics_minutes: Math.round((tel?.module_breakdown?.listening_seconds || 0) / 60),
+            vocabulary_4000_minutes: Math.round((tel?.module_breakdown?.vocab_seconds || 0) / 60),
+            reading_minutes: Math.round((tel?.module_breakdown?.stories_seconds || 0) / 60),
+            writing_toefl_minutes: 0,
+            grammar_minutes: Math.round((tel?.module_breakdown?.grammar_seconds || 0) / 60),
+            homework_minutes: Math.round((tel?.module_breakdown?.homework_seconds || 0) / 60)
           },
+          parameter_mastery: {
+            fluency: 6.5,
+            lexical_resource: 7.0,
+            pronunciation: 6.5,
+            grammar_accuracy: 6.5,
+            listening_accuracy_percent: 75
+          },
+          tactics_units_done: 0,
+          words_mastered: 0,
+          speaking_sessions_count: 0,
+          homework_completion_rate: 0,
           device: tel?.device || 'mobile',
           status: tel?.online_status || 'offline',
           last_active: tel?.last_active_label || 'Hali kirmagan'
@@ -87,15 +118,17 @@ export const AdminActivityAnalytics: React.FC = () => {
     setTeachers(getStoredTeacherActivities());
 
     const baseAudit = getStoredPlatformAudit();
-    const liveAudit = (actionEvents || []).map(ev => ({
+    const liveAudit: PlatformAuditAction[] = (actionEvents || []).map(ev => ({
       id: ev.id,
       timestamp: ev.timestamp,
+      actor_name: ev.student_name,
+      actor_role: 'student' as const,
       user_name: ev.student_name,
       user_role: 'student' as const,
-      user_avatar: undefined,
       action_type: ev.action_type,
       action_description: ev.details?.title || ev.action_type,
       module: ev.module,
+      duration_minutes: ev.details?.duration_seconds ? Math.round(ev.details.duration_seconds / 60) : 0,
       ip_address: '178.218.201.24',
       device_info: 'Smartfon / Kompyuter',
       status: 'success' as const
@@ -290,11 +323,17 @@ export const AdminActivityAnalytics: React.FC = () => {
                       {/* Name and Group */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <img
-                            src={s.student_avatar}
-                            alt={s.student_name}
-                            className="w-9 h-9 rounded-xl object-cover border border-slate-200"
-                          />
+                          <div className="w-9 h-9 rounded-xl overflow-hidden border border-slate-200 bg-indigo-50 flex items-center justify-center shrink-0 font-black text-xs text-indigo-700">
+                            {s.student_avatar ? (
+                              <img
+                                src={s.student_avatar}
+                                alt={s.student_name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <span>{s.student_name.slice(0, 2).toUpperCase()}</span>
+                            )}
+                          </div>
                           <div>
                             <span className="font-extrabold text-slate-900 block">{s.student_name}</span>
                             <span className="text-[11px] text-slate-500">{s.group_name}</span>
@@ -792,6 +831,7 @@ export const PlatformAuditSection: React.FC<{ auditLogs?: PlatformAuditAction[] 
         action_type: ev.action_type,
         action_description: desc,
         module: ev.module,
+        duration_minutes: ev.details?.duration_seconds ? Math.round(ev.details.duration_seconds / 60) : 0,
         ip_address: '178.218.201.24',
         device_info: ev.details?.extra_info || 'Smartfon / Kompyuter',
         status: 'success' as const

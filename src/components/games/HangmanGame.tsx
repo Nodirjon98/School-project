@@ -6,7 +6,7 @@ import {
 import confetti from 'canvas-confetti';
 import { TargetWord } from '../../types';
 import { 
-  gameSounds, speakGameWord, recordGameVictory, recordGameLoss, GameWordFilter, getRandomCurriculumWords 
+  gameSounds, speakGameWord, recordGameVictory, recordGameLoss, GameWordFilter, getRandomCurriculumWords, maskWordInClue 
 } from '../../lib/wordGameUtils';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -297,12 +297,17 @@ export const HangmanGame: React.FC<HangmanGameProps> = ({ filter, onXpEarned }) 
           <div className="w-full flex items-center justify-between pt-4 border-t border-slate-800 text-xs">
             <span className="text-slate-400">Harflar: {targetClean.length} ta</span>
             <button
-              onClick={() => speakGameWord(currentTarget.word)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition cursor-pointer"
-              title="Talaffuzni eshitish"
+              onClick={() => status !== 'playing' && speakGameWord(currentTarget.word)}
+              disabled={status === 'playing'}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold transition ${
+                status === 'playing'
+                  ? 'bg-white/5 text-slate-500 cursor-not-allowed border border-white/5'
+                  : 'bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer shadow-xs'
+              }`}
+              title={status === 'playing' ? "So'z topilgach talaffuz faollashadi" : "Talaffuzni eshitish"}
             >
-              <Volume2 className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Talaffuz</span>
+              <Volume2 className={`w-3.5 h-3.5 ${status === 'playing' ? 'text-slate-500' : 'text-indigo-200'}`} />
+              <span>{status === 'playing' ? "Talaffuz 🔒" : "Talaffuz"}</span>
             </button>
           </div>
         </div>
@@ -316,13 +321,13 @@ export const HangmanGame: React.FC<HangmanGameProps> = ({ filter, onXpEarned }) 
                 {currentTarget.partOfSpeech || 'Target Word'}
               </span>
               <span className="text-xs font-mono text-slate-400">
-                {currentTarget.phonetic}
+                {status === 'playing' ? '••••••' : currentTarget.phonetic}
               </span>
             </div>
 
             <div>
               <p className="text-sm font-semibold text-slate-800 leading-relaxed">
-                📖 <strong>Ta'rif:</strong> {currentTarget.definition}
+                📖 <strong>Ta'rif:</strong> {status === 'playing' ? maskWordInClue(currentTarget.definition, currentTarget.word) : currentTarget.definition}
               </p>
             </div>
 

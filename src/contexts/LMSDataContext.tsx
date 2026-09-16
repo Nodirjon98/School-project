@@ -12,6 +12,7 @@ import {
 } from '../lib/seedData';
 import { PREMIER_OFFICIAL_STUDENTS } from '../data/premierStudentsData';
 import { SEED_GRAMMAR_EXAMS } from '../data/seedGrammarExams';
+import { SEED_BOOK_FINAL_EXAMS, assignBookFinalExamToGroup } from '../data/bookFinalExamsData';
 import { getStorageItem, setStorageItem } from '../lib/storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from './AuthContext';
@@ -64,6 +65,7 @@ interface LMSDataContextType {
   createGrammarExam: (exam: Omit<GrammarExam, 'id' | 'createdAt'>) => Promise<GrammarExam>;
   deleteGrammarExam: (examId: string) => Promise<void>;
   submitGrammarExam: (submission: Omit<GrammarExamSubmission, 'id' | 'submittedAt'>) => Promise<void>;
+  assignBookExamToGroup: (bookNumber: number, groupId: string) => Promise<GrammarExam>;
   addXP: (amount: number, reason?: string) => void;
   awardXp: (amount: number, reason?: string) => void;
   awardBadge: (badgeKey: string, title: string, description: string, icon: string) => void;
@@ -86,7 +88,17 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [championshipScores, setChampionshipScores] = useState<ChampionshipScore[]>(() => getStorageItem('premier_championship', SEED_CHAMPIONSHIP));
   const [badges, setBadges] = useState<Badge[]>(() => getStorageItem('premier_badges', SEED_BADGES));
   const [aiContents, setAIContents] = useState<AIContent[]>(() => getStorageItem('premier_ai_contents', []));
-  const [grammarExams, setGrammarExams] = useState<GrammarExam[]>(() => getStorageItem('premier_grammar_exams', SEED_GRAMMAR_EXAMS));
+  const [grammarExams, setGrammarExams] = useState<GrammarExam[]>(() => {
+    const stored = getStorageItem<GrammarExam[]>('premier_grammar_exams', []);
+    const combined = [...stored];
+    SEED_GRAMMAR_EXAMS.forEach(se => {
+      if (!combined.some(e => e.id === se.id)) combined.push(se);
+    });
+    SEED_BOOK_FINAL_EXAMS.forEach(be => {
+      if (!combined.some(e => e.id === be.id)) combined.push(be);
+    });
+    return combined;
+  });
   const [examSubmissions, setExamSubmissions] = useState<GrammarExamSubmission[]>(() => getStorageItem('premier_grammar_submissions', []));
   const [students, setStudents] = useState<Profile[]>(() => {
     const stored = getStorageItem<Profile[]>('premier_all_students', []);
@@ -307,7 +319,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
             } else {
               const serverTime = log.last_active_at ? new Date(log.last_active_at).getTime() : 0;
               const localTime = merged[id].last_active_at ? new Date(merged[id].last_active_at).getTime() : 0;
-              const useServerActive = serverTime >= localTime;
+              const isLocallyFreshOnline = merged[id].online_status === 'online' && (Date.now() - localTime < 180000);
+              const useServerActive = !isLocallyFreshOnline && (serverTime > localTime);
 
               merged[id] = {
                 ...merged[id],
@@ -316,11 +329,11 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 today_active_seconds: Math.max(merged[id].today_active_seconds || 0, log.today_active_seconds || 0),
                 weekly_active_seconds: Math.max(merged[id].weekly_active_seconds || 0, log.weekly_active_seconds || 0),
                 idle_paused_seconds: Math.max(merged[id].idle_paused_seconds || 0, log.idle_paused_seconds || 0),
-                online_status: useServerActive ? log.online_status : merged[id].online_status,
-                last_active_at: useServerActive ? (log.last_active_at || merged[id].last_active_at) : merged[id].last_active_at,
-                last_active_label: useServerActive ? (log.last_active_label || merged[id].last_active_label) : merged[id].last_active_label,
-                current_page: useServerActive ? (log.current_page || merged[id].current_page) : merged[id].current_page,
-                current_module: useServerActive ? (log.current_module || merged[id].current_module) : merged[id].current_module,
+                online_status: isLocallyFreshOnline ? 'online' : (useServerActive ? log.online_status : merged[id].online_status),
+                last_active_at: isLocallyFreshOnline ? merged[id].last_active_at : (useServerActive ? (log.last_active_at || merged[id].last_active_at) : merged[id].last_active_at),
+                last_active_label: isLocallyFreshOnline ? 'Ayni paytda faol' : (useServerActive ? (log.last_active_label || merged[id].last_active_label) : merged[id].last_active_label),
+                current_page: isLocallyFreshOnline ? merged[id].current_page : (useServerActive ? (log.current_page || merged[id].current_page) : merged[id].current_page),
+                current_module: isLocallyFreshOnline ? merged[id].current_module : (useServerActive ? (log.current_module || merged[id].current_module) : merged[id].current_module),
                 device: log.device || merged[id].device
               };
             }
@@ -403,6 +416,58 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // Non-blocking
     }
   }, [syncTelemetryFromServer]);
+
+  // Cross-tab BroadcastChannel listener for instant peer updates
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('BroadcastChannel' in window)) return;
+    try {
+      const channel = new BroadcastChannel('premier_lms_bus');
+      channel.onmessage = (event) => {
+        const msg = event.data;
+        if (!msg || !msg.type) return;
+
+        if (msg.type === 'STUDENT_LOGIN' && msg.studentId) {
+          setTelemetryLogs(prev => {
+            const cur = prev[msg.studentId];
+            if (!cur) return prev;
+            const updated: StudentTelemetryLog = {
+              ...cur,
+              online_status: 'online',
+              last_active_at: msg.timestamp || new Date().toISOString(),
+              last_active_label: 'Ayni paytda faol',
+              today_active_seconds: (cur.today_active_seconds || 0) + 5,
+              total_active_seconds: (cur.total_active_seconds || 0) + 5,
+              current_page: msg.page || cur.current_page || '/dashboard',
+              current_module: msg.module || cur.current_module || 'vocab'
+            };
+            const next = { ...prev, [msg.studentId]: updated };
+            setStorageItem('premier_student_telemetry', next);
+            return next;
+          });
+        } else if (msg.type === 'TELEMETRY_SYNC' && msg.telemetry) {
+          const t = msg.telemetry as StudentTelemetryLog;
+          setTelemetryLogs(prev => {
+            const next = { ...prev, [t.student_id]: t };
+            setStorageItem('premier_student_telemetry', next);
+            return next;
+          });
+        } else if (msg.type === 'ACTION_EVENT' && msg.event) {
+          setActionEvents(prev => {
+            const ev = msg.event as StudentActionEvent;
+            const next = [ev, ...prev.filter(x => x.id !== ev.id)].slice(0, 200);
+            setStorageItem('premier_student_action_events', next);
+            return next;
+          });
+        }
+      };
+
+      return () => {
+        channel.close();
+      };
+    } catch {
+      // Non-blocking if unsupported
+    }
+  }, []);
 
   // Update user context for realtime manager
   useEffect(() => {
@@ -903,6 +968,33 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   };
 
+  const assignBookExamToGroup = async (bookNumber: number, groupId: string): Promise<GrammarExam> => {
+    const group = groups.find(g => g.id === groupId);
+    if (!group) throw new Error("Guruh topilmadi");
+
+    const newExam = assignBookFinalExamToGroup(bookNumber, group);
+    newExam.id = `book-exam-${bookNumber}-${groupId}-${Date.now()}`;
+    newExam.createdBy = profile?.full_name || 'Admin';
+
+    setGrammarExams(prev => {
+      const filtered = prev.filter(e => !(e.examType === 'book_final' && e.bookNumber === bookNumber && e.targetGroupId === groupId));
+      const updated = [newExam, ...filtered];
+      setStorageItem('premier_grammar_exams', updated);
+      return updated;
+    });
+
+    realtime.publish({
+      type: 'EXAM_PUBLISHED',
+      title: `Yangi Kitob Yakuniy Imtihoni: Book ${bookNumber}`,
+      message: `"${newExam.title}" ${group.name} guruhiga muvaffaqiyatli biriktirildi! (30 ta savol, ${newExam.durationMinutes} daqiqa)`,
+      actor: { id: profile?.id || 'admin', name: profile?.full_name || 'Admin', role: profile?.role || 'admin' },
+      data: { exam: newExam, groupId }
+    });
+
+    playSound('fanfare');
+    return newExam;
+  };
+
   const assignStudentToGroup = async (studentId: string, groupId: string): Promise<void> => {
     const targetGroup = groups.find(g => g.id === groupId);
     if (!targetGroup) return;
@@ -1239,6 +1331,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         createGrammarExam,
         deleteGrammarExam,
         submitGrammarExam,
+        assignBookExamToGroup,
         addXP,
         awardXp: addXP,
         awardBadge,

@@ -6,7 +6,7 @@ import {
 import confetti from 'canvas-confetti';
 import { TargetWord } from '../../types';
 import { 
-  gameSounds, speakGameWord, recordGameVictory, recordGameLoss, GameWordFilter, getRandomCurriculumWords 
+  gameSounds, speakGameWord, recordGameVictory, recordGameLoss, GameWordFilter, getRandomCurriculumWords, maskWordInClue 
 } from '../../lib/wordGameUtils';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -244,17 +244,23 @@ export const WordScrambleGame: React.FC<WordScrambleGameProps> = ({ filter, onXp
           </span>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => speakGameWord(currentTarget.word)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+              onClick={() => isSolved && speakGameWord(currentTarget.word)}
+              disabled={!isSolved}
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold transition ${
+                !isSolved
+                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed opacity-60'
+                  : 'bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer shadow-xs'
+              }`}
+              title={isSolved ? "Talaffuzni eshitish" : "So'z yig'ilgach talaffuz faollashadi"}
             >
-              <Volume2 className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Eshitish</span>
+              <Volume2 className="w-3.5 h-3.5" />
+              <span>{isSolved ? "Talaffuz" : "Talaffuz 🔒"}</span>
             </button>
           </div>
         </div>
 
         <p className="text-sm font-semibold text-slate-800 leading-relaxed">
-          📖 <strong>Ta'rif:</strong> {currentTarget.definition}
+          📖 <strong>Ta'rif:</strong> {isSolved ? currentTarget.definition : maskWordInClue(currentTarget.definition, currentTarget.word)}
         </p>
 
         {showUzbekHint && (

@@ -9,14 +9,16 @@ import {
   Users, Plus, Clock, MapPin, 
   UserPlus, Search, Phone, Mail, CheckCircle2,
   Calendar, CreditCard, AlertCircle, ArrowRight, Sparkles, X, ChevronRight,
-  Trash2, KeyRound, Copy, Check, UserX, UserCheck, Eye, Edit3
+  Trash2, KeyRound, Copy, Check, UserX, UserCheck, Eye, Edit3, Award, BookOpen, GraduationCap
 } from 'lucide-react';
+import { BOOK_EXAMS_META } from '../../data/bookFinalExamsData';
 
 export const GroupManager: React.FC = () => {
   const { t } = useLanguage();
   const { 
     groups, createGroup, updateGroup, deleteGroup, students, 
-    assignStudentToGroup, removeStudentFromGroup, deleteStudent, registerStudentByAdmin 
+    assignStudentToGroup, removeStudentFromGroup, deleteStudent, registerStudentByAdmin,
+    assignBookExamToGroup, grammarExams
   } = useLMSData();
 
   // Tab navigation
@@ -28,6 +30,8 @@ export const GroupManager: React.FC = () => {
   const [selectedGroupForDetail, setSelectedGroupForDetail] = useState<Group | null>(null);
   const [selectedStudentForAssign, setSelectedStudentForAssign] = useState<Profile | null>(null);
   const [selectedStudentForCredentials, setSelectedStudentForCredentials] = useState<Profile | null>(null);
+  const [selectedGroupForBookExam, setSelectedGroupForBookExam] = useState<Group | null>(null);
+  const [assigningBookNumber, setAssigningBookNumber] = useState<number | null>(null);
   const [copiedField, setCopiedField] = useState<'login' | 'password' | 'all' | null>(null);
   const [assignTargetGroupId, setAssignTargetGroupId] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -233,6 +237,34 @@ export const GroupManager: React.FC = () => {
       }
     } catch (err: any) {
       alert(`Xatolik: ${err.message}`);
+    }
+  };
+
+  const handleAssignBookExam = async (bookNum: number) => {
+    if (!selectedGroupForBookExam) return;
+    try {
+      setAssigningBookNumber(bookNum);
+      const exam = await assignBookExamToGroup(bookNum, selectedGroupForBookExam.id);
+      showToast(`"${exam.title}" ${selectedGroupForBookExam.name} guruhiga muvaffaqiyatli kiritildi!`);
+    } catch (err: any) {
+      showToast(`Xatolik yuz berdi: ${err.message || 'Biriktirilmadi'}`);
+    } finally {
+      setAssigningBookNumber(null);
+    }
+  };
+
+  const handleAssignAllBooks = async () => {
+    if (!selectedGroupForBookExam) return;
+    try {
+      setAssigningBookNumber(999);
+      for (let b = 1; b <= 6; b++) {
+        await assignBookExamToGroup(b, selectedGroupForBookExam.id);
+      }
+      showToast(`Barcha 6 ta kitob yakuniy imtihonlari ${selectedGroupForBookExam.name} guruhiga kiritildi!`);
+    } catch (err: any) {
+      showToast(`Xatolik: ${err.message || 'Xato'}`);
+    } finally {
+      setAssigningBookNumber(null);
     }
   };
 
@@ -532,10 +564,14 @@ export const GroupManager: React.FC = () => {
                           {/* Student Name & Avatar */}
                           <td className="py-3 px-4 whitespace-nowrap">
                             <div className="flex items-center gap-2.5">
-                              <div className={`w-8 h-8 rounded-full text-white font-bold text-xs flex items-center justify-center shrink-0 ${
+                              <div className={`w-8 h-8 rounded-full text-white font-bold text-xs flex items-center justify-center shrink-0 overflow-hidden ${
                                 isLeft ? 'bg-slate-400' : 'bg-gradient-to-tr from-indigo-500 to-purple-600'
                               }`}>
-                                {st.full_name.charAt(0)}
+                                {st.avatar_url ? (
+                                  <img src={st.avatar_url} alt="" className="w-full h-full object-cover" />
+                                ) : (
+                                  st.full_name.charAt(0)
+                                )}
                               </div>
                               <div>
                                 <div className="font-bold text-slate-900 flex items-center gap-1.5">
@@ -793,6 +829,15 @@ export const GroupManager: React.FC = () => {
                         <span>Tahrirlash</span>
                       </button>
                     </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedGroupForBookExam(g)}
+                      className="w-full mt-2 py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-indigo-600 hover:from-amber-600 hover:to-indigo-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <Award className="w-3.5 h-3.5 text-amber-200" />
+                      <span>Kitob Yakuniy Imtihonini Biriktirish</span>
+                    </button>
                   </div>
                 </div>
               );
@@ -1431,6 +1476,129 @@ export const GroupManager: React.FC = () => {
               </div>
             </div>
           </form>
+        )}
+      </Modal>
+
+      {/* MODAL: ASSIGN BOOK FINAL EXAM */}
+      <Modal
+        isOpen={!!selectedGroupForBookExam}
+        onClose={() => setSelectedGroupForBookExam(null)}
+        title="Kitob Yakuniy Imtihonini Guruhga Biriktirish (Books 1-6)"
+      >
+        {selectedGroupForBookExam && (
+          <div className="space-y-4">
+            <div className="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 p-4 rounded-2xl border border-indigo-100">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h4 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                    <GraduationCap className="w-4 h-4 text-indigo-600" />
+                    <span>{selectedGroupForBookExam.name}</span>
+                  </h4>
+                  <p className="text-xs text-slate-600 mt-0.5">
+                    Guruh darajasi: <span className="font-bold text-indigo-700">{selectedGroupForBookExam.level}</span> • Jami o'quvchilar: <span className="font-bold text-slate-800">{students.filter(s => s.group_id === selectedGroupForBookExam.id).length} nafar</span>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAssignAllBooks}
+                  disabled={assigningBookNumber !== null}
+                  className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Barcha 6 kitobni kiritish</span>
+                </button>
+              </div>
+              <p className="text-[11px] text-slate-500 mt-2.5">
+                Har bir kitob yakuniy imtihoni 30 ta savoldan iborat: 15 ta so'zlar tarjimasi (Eng ↔ Uz) va 15 ta kontekstual gaplar tarjimasi. O'quvchi kitobni tugatgach ushbu test orqali o'z darajasini tasdiqlaydi va maxsus bitiruv nishoniga ega bo'ladi.
+              </p>
+            </div>
+
+            <div className="space-y-2.5 max-h-[55vh] overflow-y-auto pr-1">
+              {[1, 2, 3, 4, 5, 6].map(bookNum => {
+                const meta = BOOK_EXAMS_META[bookNum];
+                const alreadyAssigned = grammarExams.some(e => 
+                  e.examType === 'book_final' && 
+                  e.bookNumber === bookNum && 
+                  (e.targetGroupId === selectedGroupForBookExam.id || !e.targetGroupId)
+                );
+                const isAssigning = assigningBookNumber === bookNum;
+
+                return (
+                  <div
+                    key={bookNum}
+                    className={`p-3.5 rounded-xl border transition flex items-center justify-between gap-3 ${
+                      alreadyAssigned 
+                        ? 'bg-emerald-50/60 border-emerald-200' 
+                        : 'bg-white border-slate-200 hover:border-indigo-200'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3 min-w-0">
+                      <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 font-black text-sm flex items-center justify-center shrink-0 shadow-2xs">
+                        {meta.badgeIcon}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h5 className="font-bold text-xs text-slate-900">
+                            Book {bookNum}: {meta.level} ({meta.cefr})
+                          </h5>
+                          {alreadyAssigned && (
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-extrabold flex items-center gap-1">
+                              <CheckCircle2 className="w-3 h-3" /> Guruhga kiritilgan
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-slate-500 mt-0.5 truncate max-w-[280px] sm:max-w-md">
+                          {meta.description}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1 text-[10px] text-slate-400">
+                          <span>30 ta savol</span>
+                          <span>•</span>
+                          <span>15 so'z + 15 gap tarjimasi</span>
+                          <span>•</span>
+                          <span>30 daqiqa</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleAssignBookExam(bookNum)}
+                      disabled={assigningBookNumber !== null}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 flex items-center gap-1.5 cursor-pointer ${
+                        alreadyAssigned
+                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                          : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                      } disabled:opacity-50`}
+                    >
+                      {isAssigning ? (
+                        <span>Yuklanmoqda...</span>
+                      ) : alreadyAssigned ? (
+                        <>
+                          <Check className="w-3.5 h-3.5" />
+                          <span>Qayta kiritish</span>
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>Guruhga kiritish</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedGroupForBookExam(null)}
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer"
+              >
+                Yopish
+              </button>
+            </div>
+          </div>
         )}
       </Modal>
     </div>

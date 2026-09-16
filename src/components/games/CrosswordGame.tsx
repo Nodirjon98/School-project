@@ -428,11 +428,17 @@ export const CrosswordGame: React.FC<CrosswordGameProps> = ({ filter, onXpEarned
                   {currentActiveWord.number}. {currentActiveWord.direction === 'across' ? 'Gorizontal' : 'Vertikal'} ({currentActiveWord.length} harf)
                 </span>
                 <button
-                  onClick={() => speakGameWord(currentActiveWord.word)}
-                  className="p-1 rounded-lg hover:bg-indigo-100 text-indigo-700 transition"
-                  title="Talaffuz"
+                  onClick={() => solvedWordIds.has(currentActiveWord.id) && speakGameWord(currentActiveWord.word)}
+                  disabled={!solvedWordIds.has(currentActiveWord.id)}
+                  className={`p-1.5 rounded-lg transition text-xs font-bold flex items-center gap-1 ${
+                    solvedWordIds.has(currentActiveWord.id)
+                      ? 'hover:bg-indigo-100 text-indigo-700 cursor-pointer'
+                      : 'text-slate-400 cursor-not-allowed opacity-50'
+                  }`}
+                  title={solvedWordIds.has(currentActiveWord.id) ? "Talaffuzni eshitish" : "So'z topilgach talaffuz faollashadi"}
                 >
                   <Volume2 className="w-3.5 h-3.5" />
+                  {!solvedWordIds.has(currentActiveWord.id) && <span className="text-[10px]">🔒</span>}
                 </button>
               </div>
               <p className="text-xs font-semibold text-slate-800 mt-1 leading-relaxed">

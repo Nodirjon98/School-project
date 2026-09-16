@@ -26,14 +26,15 @@ export function speakWord(text: string, lang = 'en-US') {
 }
 
 // Synthesized sound effects without needing external MP3s
-export function playSound(type: 'correct' | 'wrong' | 'levelup' | 'click') {
+export function playSound(type: 'correct' | 'wrong' | 'levelup' | 'click' | 'bell' | 'fanfare' | 'pop' | 'tap') {
   if (typeof window === 'undefined') return;
+  const resolvedType = type === 'bell' ? 'correct' : type === 'fanfare' ? 'levelup' : (type === 'pop' || type === 'tap') ? 'click' : type;
   try {
     const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
     if (!AudioCtx) return;
     const ctx = new AudioCtx();
 
-    if (type === 'correct') {
+    if (resolvedType === 'correct') {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
@@ -49,7 +50,7 @@ export function playSound(type: 'correct' | 'wrong' | 'levelup' | 'click') {
 
       osc.start(now);
       osc.stop(now + 0.35);
-    } else if (type === 'wrong') {
+    } else if (resolvedType === 'wrong') {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sawtooth';
@@ -58,13 +59,13 @@ export function playSound(type: 'correct' | 'wrong' | 'levelup' | 'click') {
 
       const now = ctx.currentTime;
       osc.frequency.setValueAtTime(220, now);
-      osc.frequency.setValueAtTime(196, now + 0.1);
+      osc.frequency.setValueAtTime(180, now + 0.1);
       gain.gain.setValueAtTime(0.15, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
 
       osc.start(now);
       osc.stop(now + 0.25);
-    } else if (type === 'levelup') {
+    } else if (resolvedType === 'levelup') {
       const notes = [440, 554.37, 659.25, 880];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
@@ -78,7 +79,7 @@ export function playSound(type: 'correct' | 'wrong' | 'levelup' | 'click') {
         osc.start(startTime);
         osc.stop(startTime + 0.2);
       });
-    } else if (type === 'click') {
+    } else if (resolvedType === 'click') {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';

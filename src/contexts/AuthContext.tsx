@@ -29,6 +29,7 @@ export const notifyStudentLogin = (studProfile: Profile) => {
   if (studProfile.role !== 'student') return;
 
   const isMobile = typeof navigator !== 'undefined' && /android|iphone|ipad|mobile/i.test(navigator.userAgent);
+  const nowIso = new Date().toISOString();
   const payload = {
     student_id: studProfile.id,
     student_name: studProfile.full_name,
@@ -37,9 +38,51 @@ export const notifyStudentLogin = (studProfile: Profile) => {
     group_name: studProfile.group_name || 'Guruhga biriktirilmagan',
     group_id: studProfile.group_id,
     level: studProfile.level || 'B1',
-    student_avatar: studProfile.avatar_url
+    student_avatar: studProfile.avatar_url,
+    timestamp: nowIso
   };
 
+  // 1. Instantly update localStorage telemetry and action logs!
+  try {
+    const storedTelemetry = getStorageItem<Record<string, any>>('premier_student_telemetry', {});
+    if (storedTelemetry[studProfile.id]) {
+      storedTelemetry[studProfile.id] = {
+        ...storedTelemetry[studProfile.id],
+        online_status: 'online',
+        last_active_at: nowIso,
+        last_active_label: 'Ayni paytda faol',
+        device: isMobile ? 'mobile' : 'desktop',
+        student_avatar: studProfile.avatar_url || storedTelemetry[studProfile.id].student_avatar
+      };
+      setStorageItem('premier_student_telemetry', storedTelemetry);
+    }
+
+    const storedActions = getStorageItem<any[]>('premier_student_action_events', []);
+    const loginAction = {
+      id: `act-login-${studProfile.id}-${Date.now()}`,
+      student_id: studProfile.id,
+      student_name: studProfile.full_name,
+      action_type: 'LOGIN',
+      module: 'system',
+      timestamp: nowIso,
+      details: {
+        title: 'Platformaga muvaffaqiyatli kirdi',
+        extra_info: `Qurilma: ${isMobile ? 'Mobil telefon' : 'Kompyuter'}`
+      }
+    };
+    setStorageItem('premier_student_action_events', [loginAction, ...storedActions.filter(x => x.id !== loginAction.id)].slice(0, 200));
+  } catch {}
+
+  // 2. Broadcast immediately via BroadcastChannel to all other browser tabs
+  try {
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      const bus = new BroadcastChannel('premier_lms_bus');
+      bus.postMessage({ type: 'STUDENT_LOGIN', payload });
+      bus.close();
+    }
+  } catch {}
+
+  // 3. Send to Serverless API
   fetch('/api/telemetry/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -47,9 +90,12 @@ export const notifyStudentLogin = (studProfile: Profile) => {
     keepalive: true
   }).catch(() => {});
 
+  // 4. Send to Supabase Realtime broadcast channel
   if (isSupabaseConfigured && supabase) {
     try {
-      const channel = supabase.channel('premier-telemetry-live');
+      const channel = supabase.channel('premier-telemetry-live', {
+        config: { broadcast: { self: true, ack: true } }
+      });
       channel.subscribe(status => {
         if (status === 'SUBSCRIBED') {
           channel.send({
@@ -276,6 +322,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!profile) return { error: 'No active profile found' };
     const updated: Profile = { ...profile, ...updates, updated_at: new Date().toISOString() };
     saveProfile(updated);
+
+    // Sync into premier_registered_users and premier_all_students
+    try {
+      const registered = getStorageItem<Profile[]>('premier_registered_users', []);
+      const regIdx = registered.findIndex(u => u.id === profile.id || u.email.toLowerCase() === profile.email.toLowerCase());
+      if (regIdx >= 0) {
+        registered[regIdx] = { ...registered[regIdx], ...updated };
+        setStorageItem('premier_registered_users', registered);
+      }
+
+      const allStudents = getStorageItem<Profile[]>('premier_all_students', []);
+      const stIdx = allStudents.findIndex(s => s.id === profile.id || s.email.toLowerCase() === profile.email.toLowerCase());
+      if (stIdx >= 0) {
+        allStudents[stIdx] = { ...allStudents[stIdx], ...updated };
+        setStorageItem('premier_all_students', allStudents);
+      }
+
+      // Broadcast update across tabs
+      if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+        const ch = new BroadcastChannel('premier_lms_bus');
+        ch.postMessage({ type: 'PROFILE_UPDATED', profile: updated });
+        ch.close();
+      }
+    } catch {}
 
     if (isSupabaseConfigured && supabase) {
       try {

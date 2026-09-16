@@ -231,7 +231,9 @@ export type RealtimeEventType =
   | 'EXAM_PUBLISHED'
   | 'EXAM_COMPLETED'
   | 'STUDENT_REGISTERED'
-  | 'GROUP_ASSIGNED';
+  | 'GROUP_ASSIGNED'
+  | 'GROUP_UPDATED'
+  | 'GROUP_DELETED';
 
 export interface GrammarExamQuestion {
   id: string;
@@ -240,6 +242,7 @@ export interface GrammarExamQuestion {
   correctAnswer: string;
   explanationUz: string;
   points: number;
+  questionType?: 'word_translation' | 'sentence_translation' | 'grammar';
 }
 
 export interface GrammarExam {
@@ -251,6 +254,9 @@ export interface GrammarExam {
   passPercentage: number;
   maxScore: number;
   targetGroupId?: string;
+  targetGroupName?: string;
+  examType?: 'grammar' | 'book_final';
+  bookNumber?: number;
   questions: GrammarExamQuestion[];
   createdAt: string;
   createdBy?: string;
@@ -889,10 +895,16 @@ export interface PlatformAuditAction {
   timestamp: string;
   actor_name: string;
   actor_role: 'admin' | 'teacher' | 'student';
-  module: 'speaking' | 'listening' | 'vocabulary' | 'payment' | 'homework' | 'auth';
+  module: 'speaking' | 'listening' | 'vocabulary' | 'payment' | 'homework' | 'auth' | string;
   action_description: string;
   duration_minutes?: number;
   device?: string;
+  user_name?: string;
+  user_role?: 'admin' | 'teacher' | 'student';
+  action_type?: string;
+  ip_address?: string;
+  device_info?: string;
+  status?: 'success' | 'warning' | 'error';
 }
 
 export interface KaraokeLine {
@@ -1222,16 +1234,22 @@ export interface StudentActionEvent {
     | 'LISTENING_PLAY'
     | 'HOMEWORK_SUBMIT'
     | 'GRAMMAR_EXAM_SUBMIT'
+    | 'GAME_VICTORY'
+    | 'quiz_completed'
+    | 'retelling_submitted'
     | 'IDLE_PAUSE'
-    | 'RESUME_ACTIVE';
+    | 'RESUME_ACTIVE'
+    | string;
   module: TelemetryModule;
-  details: {
+  score?: number;
+  details?: {
     title?: string;
     score?: number;
     max_score?: number;
     duration_seconds?: number;
     is_verified_productive?: boolean;
     extra_info?: string;
+    unit?: number | string;
   };
   timestamp: string;
 }
@@ -1241,6 +1259,7 @@ export interface StudentTelemetryLog {
   student_id: string;
   student_name: string;
   student_avatar?: string;
+  email?: string;
   group_name: string;
   group_id?: string;
   phone?: string;

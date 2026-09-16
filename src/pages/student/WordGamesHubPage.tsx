@@ -226,7 +226,7 @@ export const WordGamesHubPage: React.FC = () => {
               <option value="all">Barcha 6 ta Kitob (A1-C2)</option>
               {CURRICULUM_BOOKS.map(b => (
                 <option key={b.id} value={b.id}>
-                  {b.title} ({b.level})
+                  {b.title} ({b.cefrLevel || b.levelName})
                 </option>
               ))}
             </select>

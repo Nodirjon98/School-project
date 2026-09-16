@@ -249,8 +249,9 @@ export const StoriesForReproductionPage: React.FC = () => {
     addDailyWord({
       word,
       definition: translationUz,
-      translation: translationUz,
-      level: activeStory.cefrLevel
+      translation_uz: translationUz,
+      example: `Vocabulary from ${activeStory.title}`,
+      cefr_level: activeStory.cefrLevel
     });
     setAddedWords(prev => new Set(prev).add(word));
     playSound('bell');

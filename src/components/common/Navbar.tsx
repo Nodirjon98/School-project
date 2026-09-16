@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { 
   Flame, Zap, LogOut, Menu, User, 
-  Award, ShieldCheck, GraduationCap, BookOpen 
+  Award, ShieldCheck, GraduationCap, BookOpen, Camera 
 } from 'lucide-react';
 import { NotificationBell } from './NotificationBell';
+import { ProfilePhotoModal } from '../student/ProfilePhotoModal';
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -37,6 +38,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   const initials = profile?.full_name 
     ? profile.full_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
     : 'PS';
+
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
 
   return (
     <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-8 flex-shrink-0 z-20">
@@ -135,20 +138,48 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
             </p>
           </div>
 
-          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-slate-200 rounded-full border-2 border-white shadow-xs flex items-center justify-center font-bold text-slate-600 text-xs sm:text-sm">
-            {initials}
+          <div className="relative group">
+            <button
+              type="button"
+              onClick={() => setIsPhotoModalOpen(true)}
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-xs overflow-hidden bg-indigo-100 flex items-center justify-center font-bold text-slate-700 text-xs sm:text-sm hover:ring-2 hover:ring-indigo-500 transition cursor-pointer"
+              title="Profil rasmini o'zgartirish"
+            >
+              {profile?.avatar_url ? (
+                <img 
+                  src={profile.avatar_url} 
+                  alt={profile.full_name || 'User'} 
+                  className="w-full h-full object-cover" 
+                />
+              ) : (
+                <span>{initials}</span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsPhotoModalOpen(true)}
+              className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-xs border border-white hover:bg-indigo-700 cursor-pointer"
+              title="Rasm yuklash"
+            >
+              <Camera className="w-2.5 h-2.5" />
+            </button>
           </div>
 
           <button
             type="button"
             onClick={() => signOut()}
-            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer"
             title={t('logout')}
           >
             <LogOut className="w-4 h-4" />
           </button>
         </div>
       </div>
+
+      <ProfilePhotoModal 
+        isOpen={isPhotoModalOpen} 
+        onClose={() => setIsPhotoModalOpen(false)} 
+      />
     </header>
   );
 };

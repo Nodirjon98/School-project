@@ -10,6 +10,7 @@ import {
 import confetti from 'canvas-confetti';
 
 import { GrammarExam, GrammarExamQuestion, GrammarExamSubmission } from '../../types';
+import { BOOK_EXAMS_META } from '../../data/bookFinalExamsData';
 
 export const GrammarExamTakePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,6 +19,7 @@ export const GrammarExamTakePage: React.FC = () => {
   const { t } = useLanguage();
   const { grammarExams, examSubmissions, submitGrammarExam, awardXp } = useLMSData();
 
+  const [examCategory, setExamCategory] = useState<'all' | 'book_final' | 'grammar'>('book_final');
   const [activeExam, setActiveExam] = useState<GrammarExam | null>(() => {
     return grammarExams.find(e => e.id === id) || null;
   });
@@ -107,10 +109,11 @@ export const GrammarExamTakePage: React.FC = () => {
       });
     }
 
+    const xpAmount = activeExam.examType === 'book_final' ? 250 : 150;
     if (isPass) {
-      awardXp(150, `Passed Grammar Exam: ${activeExam.title}`);
+      awardXp(xpAmount, `Passed ${activeExam.examType === 'book_final' ? 'Book Final' : 'Grammar'} Exam: ${activeExam.title}`);
       try {
-        confetti({ particleCount: 75, spread: 80, origin: { y: 0.6 } });
+        confetti({ particleCount: 85, spread: 90, origin: { y: 0.6 } });
       } catch {}
     }
   };
@@ -124,6 +127,18 @@ export const GrammarExamTakePage: React.FC = () => {
   // Student's past exam submissions
   const mySubmissions = examSubmissions.filter(s => s.studentId === profile?.id);
 
+  const bookFinalExams = grammarExams.filter(e => e.examType === 'book_final');
+  const grammarTypeExams = grammarExams.filter(e => e.examType !== 'book_final');
+
+  const visibleExams = grammarExams.filter(exam => {
+    if (exam.targetGroupId && profile?.group_id && exam.targetGroupId !== profile.group_id) {
+      return false;
+    }
+    if (examCategory === 'book_final') return exam.examType === 'book_final';
+    if (examCategory === 'grammar') return exam.examType !== 'book_final';
+    return true;
+  });
+
   // If no exam selected, show Exam Selection Hub
   if (!activeExam) {
     return (
@@ -133,83 +148,154 @@ export const GrammarExamTakePage: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold border border-indigo-500/30 mb-2">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Raymond Murphy Essential Grammar Examination Arena</span>
+              <span>Premier School Rasmiy Bitiruv & Imtihonlar Arenasi</span>
             </div>
             <h1 className="text-2xl font-black text-white tracking-tight">
-              O'quvchilar Uchun Grammatika Imtihonlari
+              Kitob Yakuniy & Grammatika Imtihonlari
             </h1>
             <p className="text-xs text-indigo-200/90 mt-1 max-w-xl">
-              Vaqtli va avtomatik tekshiriladigan imtihonlarni topshirib, o'z bilim darajangizni tasdiqlang hamda XP ballarini qo'lga kiriting.
+              Har bir kitobni (Books 1-6) tugatgach so'zlar va gaplar tarjimasi bo'yicha yakuniy imtihon topshiring, o'z sertifikat va XP yutuqlaringizga ega bo'ling.
             </p>
           </div>
-          <Link
-            to="/essential-grammar"
-            className="px-4 py-2.5 bg-indigo-600/80 hover:bg-indigo-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-2 border border-indigo-400/30"
+          <div className="flex items-center gap-2">
+            <Link
+              to="/curriculum"
+              className="px-3.5 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-amber-500/30"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>4000 Words</span>
+            </Link>
+            <Link
+              to="/essential-grammar"
+              className="px-3.5 py-2 bg-indigo-600/80 hover:bg-indigo-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-indigo-400/30"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Murphy Grammar</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Category Navigation Tabs */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3">
+          <button
+            type="button"
+            onClick={() => setExamCategory('book_final')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              examCategory === 'book_final'
+                ? 'bg-amber-500 text-white shadow-sm'
+                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+            }`}
           >
-            <BookOpen className="w-4 h-4" />
-            <span>114 Ta Darslik</span>
-          </Link>
+            <Award className="w-4 h-4" />
+            <span>Kitob Yakuniy Imtihonlari ({bookFinalExams.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setExamCategory('grammar')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              examCategory === 'grammar'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+            }`}
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>Grammatika Imtihonlari ({grammarTypeExams.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setExamCategory('all')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              examCategory === 'all'
+                ? 'bg-slate-800 text-white shadow-sm'
+                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+            }`}
+          >
+            <span>Barchasi ({grammarExams.length})</span>
+          </button>
         </div>
 
         {/* Exam Cards Grid */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
-              Mavjud Rasmiy Imtihonlar ({grammarExams.length})
-            </h3>
-          </div>
-
-          {grammarExams.length === 0 ? (
+          {visibleExams.length === 0 ? (
             <div className="bg-white rounded-2xl p-8 border border-slate-200 text-center space-y-2">
               <AlertCircle className="w-8 h-8 text-slate-400 mx-auto" />
-              <h4 className="text-sm font-bold text-slate-700">Hozircha imtihonlar e'lon qilinmagan</h4>
-              <p className="text-xs text-slate-500">O'qituvchi yoki administrator yangi test qo'shganida bu yerda paydo bo'ladi.</p>
+              <h4 className="text-sm font-bold text-slate-700">Ushbu toifada imtihonlar mavjud emas</h4>
+              <p className="text-xs text-slate-500">Administrator yoki o'qituvchi guruhga yangi imtihon biriktirganda bu yerda ko'rinadi.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {grammarExams.map(exam => (
-                <div 
-                  key={exam.id}
-                  className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-indigo-300 transition flex flex-col justify-between space-y-4"
-                >
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
-                        {exam.targetLevel}
-                      </span>
-                      <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
-                        O'tish bali: {exam.passPercentage}%
-                      </span>
+              {visibleExams.map(exam => {
+                const isBookExam = exam.examType === 'book_final';
+                const meta = isBookExam && exam.bookNumber ? BOOK_EXAMS_META[exam.bookNumber] : null;
+
+                return (
+                  <div 
+                    key={exam.id}
+                    className={`rounded-2xl p-5 border shadow-xs hover:border-indigo-400 transition flex flex-col justify-between space-y-4 ${
+                      isBookExam ? 'bg-gradient-to-b from-white to-amber-50/20 border-amber-200/80' : 'bg-white border-slate-200'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                            isBookExam ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                          }`}>
+                            {isBookExam ? `Book ${exam.bookNumber} • ${exam.targetLevel}` : exam.targetLevel}
+                          </span>
+                          {exam.targetGroupName && (
+                            <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                              {exam.targetGroupName}
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+                          O'tish: {exam.passPercentage}%
+                        </span>
+                      </div>
+
+                      <div className="flex items-start gap-2.5">
+                        {meta && (
+                          <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-xl shrink-0">
+                            {meta.badgeIcon}
+                          </div>
+                        )}
+                        <div>
+                          <h3 className="text-base font-bold text-slate-900 leading-snug">{exam.title}</h3>
+                          <p className="text-xs text-slate-500 line-clamp-2 mt-1 leading-relaxed">{exam.description}</p>
+                        </div>
+                      </div>
                     </div>
 
-                    <h3 className="text-base font-bold text-slate-900">{exam.title}</h3>
-                    <p className="text-xs text-slate-500 line-clamp-2 mt-1 leading-relaxed">{exam.description}</p>
-                  </div>
+                    <div className="pt-3 border-t border-slate-100 space-y-3">
+                      <div className="flex items-center justify-between text-xs text-slate-500 font-semibold">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" /> {exam.durationMinutes} Daqiqa
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <FileText className="w-3.5 h-3.5 text-slate-400" /> {exam.questions.length} ta Savol
+                        </span>
+                        <span className="font-bold text-amber-600">
+                          +{isBookExam ? 250 : 150} XP
+                        </span>
+                      </div>
 
-                  <div className="pt-3 border-t border-slate-100 space-y-3">
-                    <div className="flex items-center justify-between text-xs text-slate-500 font-semibold">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-slate-400" /> {exam.durationMinutes} Daqiqa
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <FileText className="w-3.5 h-3.5 text-slate-400" /> {exam.questions.length} ta Savol
-                      </span>
-                      <span className="font-bold text-amber-600">
-                        +150 XP
-                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleStartExam(exam)}
+                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs shadow-sm transition cursor-pointer text-white ${
+                          isBookExam ? 'bg-amber-600 hover:bg-amber-700' : 'bg-indigo-600 hover:bg-indigo-700'
+                        }`}
+                      >
+                        <Play className="w-4 h-4 fill-white" />
+                        <span>Imtihonni Boshlash</span>
+                      </button>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => handleStartExam(exam)}
-                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition"
-                    >
-                      <Play className="w-4 h-4 fill-white" />
-                      <span>Imtihonni Boshlash</span>
-                    </button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -309,9 +395,31 @@ export const GrammarExamTakePage: React.FC = () => {
 
           {/* Question Card */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-6">
-            <h3 className="text-base font-bold text-slate-900 leading-relaxed">
-              {currentQ.question}
-            </h3>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                {currentQ.questionType === 'word_translation' && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-200">
+                    📖 So'zlar Tarjimasi
+                  </span>
+                )}
+                {currentQ.questionType === 'sentence_translation' && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-[10px] font-bold border border-purple-200">
+                    💬 Gaplar Tarjimasi
+                  </span>
+                )}
+                {(!currentQ.questionType || currentQ.questionType === 'grammar') && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold border border-amber-200">
+                    ⚡ Grammatika Qoidasi
+                  </span>
+                )}
+                <span className="text-[11px] text-slate-400 font-semibold">
+                  Savol {currentIdx + 1}
+                </span>
+              </div>
+              <h3 className="text-base font-bold text-slate-900 leading-relaxed">
+                {currentQ.question}
+              </h3>
+            </div>
 
             <div className="grid grid-cols-1 gap-2.5">
               {currentQ.options.map((opt, i) => {
@@ -386,8 +494,15 @@ export const GrammarExamTakePage: React.FC = () => {
           </div>
 
           {passed && (
-            <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-emerald-800 text-xs font-semibold max-w-md mx-auto">
-              🏆 +150 XP sizning profilingizga qo'shildi va Grammatika bo'yicha darajangiz tasdiqlandi!
+            <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-emerald-800 text-xs font-semibold max-w-md mx-auto space-y-1">
+              <div className="font-bold text-sm text-emerald-900">
+                {activeExam.examType === 'book_final' 
+                  ? `🎓 Book ${activeExam.bookNumber || ''} Bitiruv Imtihoni Muvaffaqiyatli Topshirildi!`
+                  : `🏆 Grammatika Imtihoni Muvaffaqiyatli Topshirildi!`}
+              </div>
+              <p>
+                +{activeExam.examType === 'book_final' ? 250 : 150} XP sizning profilingizga qo'shildi va bilim darajangiz rasman tasdiqlandi!
+              </p>
             </div>
           )}
 
@@ -400,19 +515,27 @@ export const GrammarExamTakePage: React.FC = () => {
               const uAns = userAnswers[q.id] || '';
               const isCorrect = uAns.trim().toLowerCase() === q.correctAnswer.trim().toLowerCase();
               return (
-                <div key={q.id} className={`p-3 rounded-xl border text-xs space-y-1 ${
+                <div key={q.id} className={`p-3.5 rounded-xl border text-xs space-y-1.5 ${
                   isCorrect ? 'bg-emerald-50/70 border-emerald-200' : 'bg-rose-50/70 border-rose-200'
                 }`}>
                   <div className="flex items-center justify-between font-bold">
-                    <span>{idx + 1}. {q.question}</span>
-                    <span className={isCorrect ? 'text-emerald-700' : 'text-rose-700'}>
-                      {isCorrect ? 'To\'g\'ri' : 'Noto\'g\'ri'}
+                    <div className="flex items-center gap-1.5">
+                      {q.questionType === 'word_translation' && (
+                        <span className="px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 text-[9px] font-bold">So'z</span>
+                      )}
+                      {q.questionType === 'sentence_translation' && (
+                        <span className="px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[9px] font-bold">Gap</span>
+                      )}
+                      <span>{idx + 1}. {q.question}</span>
+                    </div>
+                    <span className={isCorrect ? 'text-emerald-700 shrink-0' : 'text-rose-700 shrink-0'}>
+                      {isCorrect ? 'To\'g\'ri ✓' : 'Noto\'g\'ri ✗'}
                     </span>
                   </div>
                   <div className="text-slate-600">
-                    Sizning javobingiz: <strong>{uAns || 'Belgilanmagan'}</strong> • To'g'ri javob: <strong>{q.correctAnswer}</strong>
+                    Sizning javobingiz: <strong className={isCorrect ? 'text-emerald-700' : 'text-rose-700'}>{uAns || 'Belgilanmagan'}</strong> • To'g'ri javob: <strong className="text-slate-900">{q.correctAnswer}</strong>
                   </div>
-                  <p className="text-[11px] text-slate-500 italic">💡 {q.explanationUz}</p>
+                  <p className="text-[11px] text-slate-500 italic bg-white/60 p-2 rounded-lg border border-slate-200/50">💡 {q.explanationUz}</p>
                 </div>
               );
             })}

@@ -53,7 +53,7 @@ export const StudentPerformanceAnalytics: React.FC<StudentPerformanceAnalyticsPr
       const totalHours = Number(((tel?.total_active_seconds || 0) / 3600).toFixed(1));
       
       const stActions = actionEvents.filter(ev => ev.student_id === st.id && (ev.action_type === 'quiz_completed' || ev.action_type === 'retelling_submitted'));
-      const stExams = examSubmissions.filter(es => es.student_id === st.id);
+      const stExams = examSubmissions.filter(es => es.studentId === st.id || (es as any).student_id === st.id);
       const quizzesCompleted = (tel?.verified_tasks_count || 0) + stActions.length + stExams.length;
 
       let totalScore = 0;
@@ -111,7 +111,7 @@ export const StudentPerformanceAnalytics: React.FC<StudentPerformanceAnalyticsPr
         },
         recentQuizzes: stActions.slice(0, 3).map((a, i) => ({
           id: `q-${a.id || i}`,
-          name: a.details || a.module,
+          name: a.details?.title || String(a.module),
           module: a.module,
           score: a.score || 0,
           date: a.timestamp ? a.timestamp.slice(0, 10) : new Date().toISOString().slice(0, 10),

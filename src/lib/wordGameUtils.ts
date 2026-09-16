@@ -69,6 +69,25 @@ export function getRandomCurriculumWords(filter: GameWordFilter = {}, count: num
   return shuffled.slice(0, count);
 }
 
+/**
+ * Masks the mystery/target word and its morphological variants in definitions or examples
+ * so that players cannot see the answer before solving.
+ * E.g. "To agree is to say yes" -> "To [ ... ] is to say yes"
+ */
+export function maskWordInClue(text: string, targetWord: string): string {
+  if (!text || !targetWord) return text || '';
+  const cleanWord = targetWord.trim().replace(/[^a-zA-Z]/g, '');
+  if (cleanWord.length < 2) return text;
+
+  // Escape special regex chars
+  const escaped = cleanWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const stem = cleanWord.length > 4 ? cleanWord.slice(0, -1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : escaped;
+
+  // Match word, plurals, past tense, gerunds, possessives (e.g. agree, agrees, agreed, agreeing)
+  const regex = new RegExp(`\\b${escaped}(?:'s|s|ed|ing|d|es)?\\b|\\b${stem}[a-zA-Z]{0,4}\\b`, 'gi');
+  return text.replace(regex, '[ ... ]');
+}
+
 // ============================================================================
 // 2. SYNTHESIZED WEB AUDIO SOUND EFFECTS (Zero external network dependencies)
 // ============================================================================
@@ -216,9 +235,9 @@ export function generateCrosswordPuzzle(words: TargetWord[], size = 11): Crosswo
     .map(w => ({
       raw: w,
       word: w.word.toUpperCase().replace(/[^A-Z]/g, ''),
-      clue: w.definition,
+      clue: maskWordInClue(w.definition, w.word),
       clueUz: w.translationUz,
-      example: w.example
+      example: maskWordInClue(w.example || '', w.word)
     }))
     .filter(c => c.word.length >= 3 && c.word.length <= Math.min(size - 1, 9));
 
