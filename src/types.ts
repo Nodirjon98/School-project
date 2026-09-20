@@ -805,7 +805,7 @@ export interface StudentPaymentPlan {
   group_name: string;
   course_title: string;
   plan_type: PaymentPlanType;
-  base_monthly_fee: number; // e.g. 1,200,000 UZS
+  base_monthly_fee: number; // e.g. 500,000 UZS or agreed fee
   total_course_fee: number;
   discount_percent: number; // 0 - 100%
   discount_reason?: string;
@@ -816,6 +816,11 @@ export interface StudentPaymentPlan {
   next_due_date: string;
   created_at: string;
   schedules: PaymentScheduleItem[];
+  contract_number?: string;
+  contract_date?: string;
+  passport_id?: string;
+  parent_name?: string;
+  agreed_fee?: number;
 }
 
 export interface PaymentReceipt {

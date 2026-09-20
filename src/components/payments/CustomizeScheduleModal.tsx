@@ -14,8 +14,12 @@ export const CustomizeScheduleModal: React.FC<CustomizeScheduleModalProps> = ({
   onClose,
 }) => {
   const [planType, setPlanType] = useState<PaymentPlanType>(plan.plan_type);
+  const [baseMonthlyFee, setBaseMonthlyFee] = useState<number>(plan.agreed_fee || plan.base_monthly_fee || 500000);
   const [discountPercent, setDiscountPercent] = useState<number>(plan.discount_percent);
   const [discountReason, setDiscountReason] = useState<string>(plan.discount_reason || '');
+  const [contractNumber, setContractNumber] = useState<string>(plan.contract_number || `PS-2026/09-${plan.id.replace(/\D/g, '').slice(-3).padStart(3, '0')}`);
+  const [passportId, setPassportId] = useState<string>(plan.passport_id || '');
+  const [parentName, setParentName] = useState<string>(plan.parent_name || '');
   const [schedules, setSchedules] = useState<PaymentScheduleItem[]>(plan.schedules);
 
   const calculateTotals = () => {
@@ -26,6 +30,13 @@ export const CustomizeScheduleModal: React.FC<CustomizeScheduleModalProps> = ({
   };
 
   const { totalOriginal, discountAmount, finalTotal } = calculateTotals();
+
+  const handleApplyAgreedFee = (newFee: number) => {
+    setBaseMonthlyFee(newFee);
+    setSchedules(prev => prev.map(item => 
+      item.status === 'paid' ? item : { ...item, amount: newFee }
+    ));
+  };
 
   const handleUpdateItem = (id: string, field: keyof PaymentScheduleItem, val: any) => {
     setSchedules(prev => prev.map(item => {
@@ -42,7 +53,7 @@ export const CustomizeScheduleModal: React.FC<CustomizeScheduleModalProps> = ({
       id: `sch-${Date.now()}-${nextNum}`,
       installment_number: nextNum,
       title: `${nextNum}-oy to'lovi`,
-      amount: 1200000,
+      amount: baseMonthlyFee,
       due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000 * nextNum).toISOString().split('T')[0],
       status: 'pending'
     };
@@ -56,7 +67,7 @@ export const CustomizeScheduleModal: React.FC<CustomizeScheduleModalProps> = ({
 
   const handleQuickPreset = (type: PaymentPlanType) => {
     setPlanType(type);
-    const baseMonthly = plan.base_monthly_fee || 1200000;
+    const fee = baseMonthlyFee || 500000;
 
     if (type === 'monthly') {
       const today = new Date();
@@ -67,9 +78,9 @@ export const CustomizeScheduleModal: React.FC<CustomizeScheduleModalProps> = ({
           id: `sch-m-${monthNum}-${Date.now()}`,
           installment_number: monthNum,
           title: `${monthNum}-oy to'lovi`,
-          amount: baseMonthly,
+          amount: fee,
           due_date: d.toISOString().split('T')[0],
-          status: monthNum === 1 && plan.paid_amount >= baseMonthly ? 'paid' : 'pending'
+          status: monthNum === 1 && plan.paid_amount >= fee ? 'paid' : 'pending'
         };
       });
       setSchedules(generated);
@@ -81,7 +92,7 @@ export const CustomizeScheduleModal: React.FC<CustomizeScheduleModalProps> = ({
           id: `sch-full-${Date.now()}`,
           installment_number: 1,
           title: "To'liq kurs to'lovi",
-          amount: baseMonthly * 3,
+          amount: fee * 3,
           due_date: new Date().toISOString().split('T')[0],
           status: 'pending'
         }
@@ -98,8 +109,13 @@ export const CustomizeScheduleModal: React.FC<CustomizeScheduleModalProps> = ({
     const updated: StudentPaymentPlan = {
       ...plan,
       plan_type: planType,
+      base_monthly_fee: baseMonthlyFee,
+      agreed_fee: baseMonthlyFee,
       discount_percent: discountPercent,
       discount_reason: discountReason,
+      contract_number: contractNumber,
+      passport_id: passportId,
+      parent_name: parentName,
       total_course_fee: totalOriginal,
       final_total_fee: finalTotal,
       paid_amount: paidAmount,
@@ -135,6 +151,87 @@ export const CustomizeScheduleModal: React.FC<CustomizeScheduleModalProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+          {/* Agreed Fee Section */}
+          <div className="bg-indigo-50/80 p-4.5 rounded-2xl border border-indigo-200 space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-black text-indigo-950 uppercase tracking-wider flex items-center gap-1.5">
+                <Calculator className="w-4 h-4 text-indigo-600" />
+                O'quvchi Bilan Kelishilgan Oylik To'lov (Agreed Fee):
+              </label>
+              <span className="text-[10px] text-indigo-700 font-bold bg-white px-2 py-0.5 rounded-md border border-indigo-200">
+                Admin belgilaydigan stavka
+              </span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+              <div className="relative flex-1">
+                <input
+                  type="number"
+                  step="50000"
+                  value={baseMonthlyFee}
+                  onChange={(e) => handleApplyAgreedFee(Number(e.target.value))}
+                  className="w-full px-4 py-2.5 bg-white border border-indigo-300 rounded-xl text-base font-black text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-hidden"
+                />
+                <span className="absolute right-3.5 top-3 text-xs font-bold text-slate-400">UZS / oy</span>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5">
+                {[300000, 350000, 400000, 450000, 500000, 600000].map(feeVal => (
+                  <button
+                    key={feeVal}
+                    type="button"
+                    onClick={() => handleApplyAgreedFee(feeVal)}
+                    className={`px-2.5 py-2 rounded-xl text-xs font-bold border transition cursor-pointer ${
+                      baseMonthlyFee === feeVal
+                        ? 'border-indigo-600 bg-indigo-600 text-white shadow-xs'
+                        : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    {feeVal / 1000}k
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Contract & Student Identity Details */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-indigo-100/80 text-xs">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+                  Shartnoma №:
+                </label>
+                <input
+                  type="text"
+                  value={contractNumber}
+                  onChange={(e) => setContractNumber(e.target.value)}
+                  className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-900"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+                  Pasport / ID №:
+                </label>
+                <input
+                  type="text"
+                  placeholder="AB 1234567"
+                  value={passportId}
+                  onChange={(e) => setPassportId(e.target.value)}
+                  className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-900"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+                  Ota-onasi F.I.Sh.:
+                </label>
+                <input
+                  type="text"
+                  placeholder="Masalan: Ilhomov Botir"
+                  value={parentName}
+                  onChange={(e) => setParentName(e.target.value)}
+                  className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-900"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Preset Buttons */}
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">

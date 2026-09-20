@@ -6,12 +6,14 @@ import {
 import { StudentPaymentPlan, PaymentScheduleItem } from '../../types';
 import { getStoredStudentPayments } from '../../data/paymentAndAnalyticsData';
 import { PaymentReceiptModal } from '../../components/payments/PaymentReceiptModal';
+import { StudentContractModal } from '../../components/payments/StudentContractModal';
 import { useAuth } from '../../contexts/AuthContext';
 
 export const StudentPaymentsPage: React.FC = () => {
   const { user } = useAuth();
   const [plans, setPlans] = useState<StudentPaymentPlan[]>([]);
   const [selectedReceipt, setSelectedReceipt] = useState<{ plan: StudentPaymentPlan; item: PaymentScheduleItem } | null>(null);
+  const [isContractOpen, setIsContractOpen] = useState(false);
 
   useEffect(() => {
     setPlans(getStoredStudentPayments());
@@ -34,20 +36,30 @@ export const StudentPaymentsPage: React.FC = () => {
   return (
     <div className="space-y-8 pb-16">
       {/* Header */}
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase tracking-wider">
-            O'quvchi Kabineti
-          </span>
-          <span className="text-slate-400 text-xs">•</span>
-          <span className="text-xs font-semibold text-slate-500">Moliya & To'lovlar</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase tracking-wider">
+              O'quvchi Kabineti
+            </span>
+            <span className="text-slate-400 text-xs">•</span>
+            <span className="text-xs font-semibold text-slate-500">Moliya & To'lovlar</span>
+          </div>
+          <h1 className="text-2xl font-black text-slate-950 tracking-tight">
+            Mening To'lov Grafigim & Kvitansiyalar
+          </h1>
+          <p className="text-sm text-slate-600 mt-1 max-w-2xl">
+            Kurs to'lovlari holati, qoldiq mablag'lar, navbatdagi to'lov sanalari va rasmiy to'lov cheklarini yuklab olish.
+          </p>
         </div>
-        <h1 className="text-2xl font-black text-slate-950 tracking-tight">
-          Mening To'lov Grafigim & Kvitansiyalar
-        </h1>
-        <p className="text-sm text-slate-600 mt-1 max-w-2xl">
-          Kurs to'lovlari holati, qoldiq mablag'lar, navbatdagi to'lov sanalari va rasmiy to'lov cheklarini yuklab olish.
-        </p>
+
+        <button
+          onClick={() => setIsContractOpen(true)}
+          className="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold transition flex items-center gap-2 cursor-pointer shadow-sm self-start sm:self-auto"
+        >
+          <FileText className="w-4 h-4 text-indigo-200" />
+          <span>📄 Mening Shartnomam (PDF)</span>
+        </button>
       </div>
 
       {/* Main Plan Overview Card */}
@@ -179,6 +191,15 @@ export const StudentPaymentsPage: React.FC = () => {
           plan={selectedReceipt.plan}
           item={selectedReceipt.item}
           onClose={() => setSelectedReceipt(null)}
+        />
+      )}
+
+      {/* Official Student Contract Modal */}
+      {isContractOpen && myPlan && (
+        <StudentContractModal
+          isOpen={true}
+          plan={myPlan}
+          onClose={() => setIsContractOpen(false)}
         />
       )}
     </div>

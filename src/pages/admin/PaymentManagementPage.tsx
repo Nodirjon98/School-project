@@ -20,6 +20,7 @@ import { PaymentReceiptModal } from '../../components/payments/PaymentReceiptMod
 import { ReceivePaymentModal } from '../../components/payments/ReceivePaymentModal';
 import { CustomizeScheduleModal } from '../../components/payments/CustomizeScheduleModal';
 import { PaymentReminderModal } from '../../components/payments/PaymentReminderModal';
+import { StudentContractModal } from '../../components/payments/StudentContractModal';
 import { Modal } from '../../components/common/Modal';
 
 type ActiveTab = 'plans' | 'debtors' | 'ledger' | 'groups';
@@ -48,6 +49,7 @@ export const PaymentManagementPage: React.FC = () => {
   const [isQuickPayOpen, setIsQuickPayOpen] = useState(false);
   const [selectedPlanForCustomize, setSelectedPlanForCustomize] = useState<StudentPaymentPlan | null>(null);
   const [selectedPlanForReminder, setSelectedPlanForReminder] = useState<{ plan: StudentPaymentPlan; item?: PaymentScheduleItem } | null>(null);
+  const [selectedPlanForContract, setSelectedPlanForContract] = useState<StudentPaymentPlan | null>(null);
   const [isCreatePlanModalOpen, setIsCreatePlanModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -58,6 +60,8 @@ export const PaymentManagementPage: React.FC = () => {
   const [newPlanInstallments, setNewPlanInstallments] = useState<number>(3);
   const [newPlanDiscountPercent, setNewPlanDiscountPercent] = useState<number>(0);
   const [newPlanDiscountReason, setNewPlanDiscountReason] = useState<string>('');
+  const [newPlanPassportId, setNewPlanPassportId] = useState<string>('');
+  const [newPlanParentName, setNewPlanParentName] = useState<string>('');
 
   // Initial load and sync with registered students
   useEffect(() => {
@@ -89,7 +93,15 @@ export const PaymentManagementPage: React.FC = () => {
     setPlans(nextPlans);
     saveStoredStudentPayments(nextPlans);
     setSelectedPlanForCustomize(null);
-    showToast(`✅ "${updatedPlan.student_name}" uchun to'lov grafigi yangilandi!`);
+    showToast(`✅ "${updatedPlan.student_name}" uchun to'lov grafigi va kelishilgan to'lov yangilandi!`);
+  };
+
+  const handleUpdatePlan = (updatedPlan: StudentPaymentPlan) => {
+    const nextPlans = plans.map(p => p.id === updatedPlan.id ? updatedPlan : p);
+    setPlans(nextPlans);
+    saveStoredStudentPayments(nextPlans);
+    setSelectedPlanForContract(updatedPlan);
+    showToast(`✅ "${updatedPlan.student_name}" shartnomasi va kelishilgan to'lovi saqlandi!`);
   };
 
   const handleCreateNewPaymentPlan = (e: React.FormEvent) => {
@@ -121,6 +133,8 @@ export const PaymentManagementPage: React.FC = () => {
       });
     }
 
+    const contractNo = `PS-2026/09-${Date.now().toString().slice(-4)}`;
+
     const newPlan: StudentPaymentPlan = {
       id: `plan-${Date.now()}`,
       student_id: targetStudent.id,
@@ -132,6 +146,11 @@ export const PaymentManagementPage: React.FC = () => {
       course_title: newPlanCourseTitle,
       plan_type: newPlanInstallments === 1 ? 'full_course' : 'monthly',
       base_monthly_fee: newPlanMonthlyFee,
+      agreed_fee: newPlanMonthlyFee,
+      contract_number: contractNo,
+      contract_date: new Date().toISOString().split('T')[0],
+      passport_id: newPlanPassportId || undefined,
+      parent_name: newPlanParentName || undefined,
       total_course_fee: baseTotal,
       discount_percent: newPlanDiscountPercent,
       discount_reason: newPlanDiscountReason || (newPlanDiscountPercent > 0 ? 'Grant' : undefined),
@@ -150,6 +169,8 @@ export const PaymentManagementPage: React.FC = () => {
     setIsCreatePlanModalOpen(false);
     showToast(`✅ "${targetStudent.full_name}" uchun ${finalTotal.toLocaleString()} UZS to'lov rejasi ochildi!`);
     setNewPlanStudentId('');
+    setNewPlanPassportId('');
+    setNewPlanParentName('');
   };
 
   // Financial aggregates
@@ -715,8 +736,13 @@ export const PaymentManagementPage: React.FC = () => {
                           </td>
 
                           {/* Tarif */}
-                          <td className="px-4 py-3.5 font-semibold text-slate-700">
-                            {plan.base_monthly_fee.toLocaleString()} UZS/oy
+                          <td className="px-4 py-3.5">
+                            <div className="font-extrabold text-slate-900">{plan.base_monthly_fee.toLocaleString()} UZS/oy</div>
+                            {plan.agreed_fee && plan.agreed_fee !== 500000 && (
+                              <span className="text-[9px] text-purple-700 font-bold bg-purple-50 px-1.5 py-0.2 rounded border border-purple-200 inline-block mt-0.5">
+                                Kelishilgan
+                              </span>
+                            )}
                           </td>
 
                           {/* Total */}
@@ -793,10 +819,19 @@ export const PaymentManagementPage: React.FC = () => {
                               {/* Customize schedule button */}
                               <button
                                 onClick={() => setSelectedPlanForCustomize(plan)}
-                                title="Grafigini moslash"
+                                title="Grafigini va kelishilgan to'lovni moslash"
                                 className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer"
                               >
                                 <Calendar className="w-4 h-4" />
+                              </button>
+
+                              {/* Contract PDF button */}
+                              <button
+                                onClick={() => setSelectedPlanForContract(plan)}
+                                title="O'quvchi shartnomasini ochish va chop etish (PDF)"
+                                className="p-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 transition cursor-pointer"
+                              >
+                                <FileText className="w-4 h-4" />
                               </button>
 
                               {/* Receipt view button */}
@@ -806,7 +841,7 @@ export const PaymentManagementPage: React.FC = () => {
                                   title="Oxirgi to'lov chekini ko'rish"
                                   className="p-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 transition cursor-pointer"
                                 >
-                                  <FileText className="w-4 h-4" />
+                                  <Receipt className="w-4 h-4" />
                                 </button>
                               )}
                             </div>
@@ -904,9 +939,17 @@ export const PaymentManagementPage: React.FC = () => {
                           <button
                             onClick={() => setSelectedPlanForCustomize(plan)}
                             className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition cursor-pointer"
-                            title="Grafigini moslash"
+                            title="Grafigini va kelishilgan to'lovni moslash"
                           >
                             <Calendar className="w-4 h-4" />
+                          </button>
+
+                          <button
+                            onClick={() => setSelectedPlanForContract(plan)}
+                            className="p-2 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl transition cursor-pointer"
+                            title="O'quvchi shartnomasini ochish va chop etish (PDF)"
+                          >
+                            <FileText className="w-4 h-4" />
                           </button>
                         </div>
                       </div>
@@ -1144,6 +1187,14 @@ export const PaymentManagementPage: React.FC = () => {
                           {/* Actions */}
                           <td className="px-5 py-4 text-right">
                             <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => setSelectedPlanForContract(plan)}
+                                className="p-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 transition cursor-pointer shadow-2xs"
+                                title="O'quvchi shartnomasini ko'rish (PDF)"
+                              >
+                                <FileText className="w-4 h-4" />
+                              </button>
+
                               <button
                                 onClick={() => setSelectedPlanForReminder({ plan, item: targetItem })}
                                 className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
@@ -1440,20 +1491,46 @@ export const PaymentManagementPage: React.FC = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Oylik to'lov summasi (UZS):
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-bold text-slate-700">
+                O'quvchi Bilan Kelishilgan Oylik To'lov Summasi (UZS):
               </label>
+              <span className="text-[10px] text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+                Admin tomonidan kelishilgan stavka
+              </span>
+            </div>
+            <div className="relative">
               <input
                 type="number"
+                step="50000"
                 required
                 value={newPlanMonthlyFee}
                 onChange={(e) => setNewPlanMonthlyFee(Number(e.target.value))}
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:bg-white focus:outline-hidden"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-hidden"
               />
+              <span className="absolute right-3.5 top-2.5 text-xs font-bold text-slate-400">UZS / oy</span>
             </div>
+            {/* Quick Chips */}
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {[300000, 350000, 400000, 450000, 500000, 600000, 800000].map((feeVal) => (
+                <button
+                  key={feeVal}
+                  type="button"
+                  onClick={() => setNewPlanMonthlyFee(feeVal)}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition cursor-pointer ${
+                    newPlanMonthlyFee === feeVal
+                      ? 'border-indigo-600 bg-indigo-600 text-white shadow-2xs'
+                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  {feeVal / 1000}k
+                </button>
+              ))}
+            </div>
+          </div>
 
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
                 To'lov oylari / davomiyligi:
@@ -1470,9 +1547,7 @@ export const PaymentManagementPage: React.FC = () => {
                 <option value={9}>9 oy (To'liq akademik yil)</option>
               </select>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
                 Grant / Chegirma (%):
@@ -1490,17 +1565,45 @@ export const PaymentManagementPage: React.FC = () => {
                 <option value={100}>100% To'liq Grant</option>
               </select>
             </div>
+          </div>
 
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1">
+              Chegirma / Grant sababi (ixtiyoriy):
+            </label>
+            <input
+              type="text"
+              value={newPlanDiscountReason}
+              onChange={(e) => setNewPlanDiscountReason(e.target.value)}
+              placeholder="Masalan: Iqtidorli o'quvchi / A'lochi"
+              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-slate-900 focus:bg-white focus:outline-hidden"
+            />
+          </div>
+
+          {/* Contract Details */}
+          <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Chegirma sababi:
+              <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                Pasport / ID № (Shartnoma uchun):
               </label>
               <input
                 type="text"
-                value={newPlanDiscountReason}
-                onChange={(e) => setNewPlanDiscountReason(e.target.value)}
-                placeholder="Iqtidorli o'quvchi / A'lochi"
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-slate-900 focus:bg-white focus:outline-hidden"
+                placeholder="Masalan: AB 1234567"
+                value={newPlanPassportId}
+                onChange={(e) => setNewPlanPassportId(e.target.value)}
+                className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-900"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                Ota-onasi F.I.Sh. (ixtiyoriy):
+              </label>
+              <input
+                type="text"
+                placeholder="Masalan: Karimova Dilrabo"
+                value={newPlanParentName}
+                onChange={(e) => setNewPlanParentName(e.target.value)}
+                className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-900"
               />
             </div>
           </div>
@@ -1586,6 +1689,16 @@ export const PaymentManagementPage: React.FC = () => {
             showToast(`✅ "${studentName}" ga eslatma muvaffaqiyatli jo'natildi!`);
             setSelectedPlanForReminder(null);
           }}
+        />
+      )}
+
+      {/* Modal: Student Contract (PDF / Print) */}
+      {selectedPlanForContract && (
+        <StudentContractModal
+          isOpen={true}
+          plan={selectedPlanForContract}
+          onClose={() => setSelectedPlanForContract(null)}
+          onUpdatePlan={handleUpdatePlan}
         />
       )}
     </div>
