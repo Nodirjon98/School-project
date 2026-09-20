@@ -820,7 +820,17 @@ export interface StudentPaymentPlan {
   contract_date?: string;
   passport_id?: string;
   parent_name?: string;
+  parent_phone?: string;
   agreed_fee?: number;
+  contract_custom_clauses?: ContractCustomClauses;
+}
+
+export interface ContractCustomClauses {
+  daily_study_minutes: number;
+  student_obligations: string;
+  parent_obligations: string;
+  disciplinary_terms: string;
+  custom_terms?: string;
 }
 
 export interface PaymentReceipt {

@@ -12,7 +12,7 @@ import {
 import { useLMSData } from '../../contexts/LMSDataContext';
 
 export const AdminActivityAnalytics: React.FC = () => {
-  const { telemetryLogs, actionEvents, students: lmsStudents } = useLMSData();
+  const { telemetryLogs, actionEvents, students: lmsStudents, supabaseStatus, presenceCount } = useLMSData();
 
   const [students, setStudents] = useState<StudentActivityMetric[]>([]);
   const [teachers, setTeachers] = useState<TeacherActivityMetric[]>([]);
@@ -174,6 +174,23 @@ export const AdminActivityAnalytics: React.FC = () => {
           <p className="text-sm text-slate-600 mt-1 max-w-2xl">
             O'quvchilar platformada qancha vaqt sarflagani, qaysi parametrlarni (Speaking, Listening, Vocabulary) qay darajada o'zlashtirayotgani va o'qituvchilar samaradorligi.
           </p>
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
+            <span className="text-xs font-bold text-slate-500">Baza aloqasi:</span>
+            {supabaseStatus === 'connected' ? (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                Supabase Realtime: Ulangan & Faol (Channel: premier-telemetry-live)
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-[11px] font-bold">
+                Lokal Telemetriya Rejimi
+              </span>
+            )}
+            <span className="text-xs text-slate-300">•</span>
+            <span className="text-xs text-slate-500 font-medium">
+              Ulangan qurilmalar: <strong>{presenceCount > 0 ? presenceCount : (students.filter(s => s.status === 'online').length || 1)} ta</strong>
+            </span>
+          </div>
         </div>
 
         {/* Tab Controls */}

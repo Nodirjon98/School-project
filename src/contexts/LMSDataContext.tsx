@@ -36,6 +36,8 @@ interface LMSDataContextType {
   telemetryLogs: Record<string, StudentTelemetryLog>;
   actionEvents: StudentActionEvent[];
   loading: boolean;
+  supabaseStatus: 'connected' | 'connecting' | 'disconnected';
+  presenceCount: number;
   
   // Actions
   refreshTelemetry: () => Promise<void>;
@@ -150,6 +152,10 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   });
 
   const [loading, setLoading] = useState(false);
+  const [supabaseStatus, setSupabaseStatus] = useState<'connected' | 'connecting' | 'disconnected'>(
+    isSupabaseConfigured ? 'connecting' : 'disconnected'
+  );
+  const [presenceCount, setPresenceCount] = useState<number>(0);
 
   // Synchronize telemetry records for all official students
   useEffect(() => {
@@ -368,13 +374,48 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => clearInterval(pollTimer);
   }, [syncTelemetryFromServer]);
 
-  // Supabase Realtime Channel for instant 100ms peer broadcast between devices
+  // Supabase Realtime Channel for instant 100ms peer broadcast and Presence between devices
   useEffect(() => {
-    if (!isSupabaseConfigured || !supabase) return;
+    if (!isSupabaseConfigured || !supabase) {
+      setSupabaseStatus('disconnected');
+      return;
+    }
 
     try {
-      const channel = supabase.channel('premier-telemetry-live');
+      setSupabaseStatus('connecting');
+      const channel = supabase.channel('premier-telemetry-live', {
+        config: {
+          broadcast: { self: true, ack: true },
+          presence: { key: profile?.id || 'client-' + Math.random().toString(36).slice(2, 7) }
+        }
+      });
+
       channel
+        .on('presence', { event: 'sync' }, () => {
+          try {
+            const state = channel.presenceState();
+            const keys = Object.keys(state);
+            setPresenceCount(keys.length);
+            if (keys.length > 0) {
+              setTelemetryLogs(prev => {
+                let changed = false;
+                const next = { ...prev };
+                keys.forEach(k => {
+                  if (next[k] && next[k].online_status !== 'online') {
+                    next[k] = {
+                      ...next[k],
+                      online_status: 'online',
+                      last_active_at: new Date().toISOString(),
+                      last_active_label: 'Ayni paytda faol'
+                    };
+                    changed = true;
+                  }
+                });
+                return changed ? next : prev;
+              });
+            }
+          } catch {}
+        })
         .on('broadcast', { event: 'student_login' }, (payload: any) => {
           if (payload?.payload?.student_id) {
             const sid = payload.payload.student_id;
@@ -407,15 +448,31 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
             syncTelemetryFromServer();
           }
         })
-        .subscribe();
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            setSupabaseStatus('connected');
+            if (profile?.id) {
+              const isMobile = typeof navigator !== 'undefined' && /android|iphone|ipad|mobile/i.test(navigator.userAgent);
+              channel.track({
+                id: profile.id,
+                name: profile.full_name,
+                role: profile.role,
+                device: isMobile ? 'mobile' : 'desktop',
+                online_at: new Date().toISOString()
+              });
+            }
+          } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+            setSupabaseStatus('disconnected');
+          }
+        });
 
       return () => {
         supabase.removeChannel(channel);
       };
     } catch {
-      // Non-blocking
+      setSupabaseStatus('disconnected');
     }
-  }, [syncTelemetryFromServer]);
+  }, [syncTelemetryFromServer, profile?.id]);
 
   // Cross-tab BroadcastChannel listener for instant peer updates
   useEffect(() => {
@@ -1186,6 +1243,23 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       };
     });
 
+    try {
+      const storedActivities = getStorageItem<any[]>('premier_student_activities', []);
+      const actIdx = storedActivities.findIndex(a => a.student_id === studentId);
+      if (actIdx >= 0) {
+        storedActivities[actIdx] = {
+          ...storedActivities[actIdx],
+          status: activeSeconds > 0 ? 'online' : (idleSeconds > 0 ? 'idle' : storedActivities[actIdx].status),
+          last_active: 'Ayni paytda faol',
+          device: isMobile ? 'mobile' : 'desktop',
+          total_time_minutes: (storedActivities[actIdx].total_time_minutes || 0) + Math.round(activeSeconds / 60),
+          today_time_minutes: (storedActivities[actIdx].today_time_minutes || 0) + Math.round(activeSeconds / 60),
+          weekly_time_minutes: (storedActivities[actIdx].weekly_time_minutes || 0) + Math.round(activeSeconds / 60)
+        };
+        setStorageItem('premier_student_activities', storedActivities);
+      }
+    } catch {}
+
     // 1. Send heartbeat to Central Server API
     fetch('/api/telemetry/heartbeat', {
       method: 'POST',
@@ -1304,6 +1378,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         telemetryLogs,
         actionEvents,
         loading,
+        supabaseStatus,
+        presenceCount,
         refreshTelemetry: syncTelemetryFromServer,
         recordActiveTime,
         logStudentAction,

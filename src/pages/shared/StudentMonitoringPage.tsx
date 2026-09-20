@@ -16,7 +16,18 @@ import { TeachersAuditSection, PlatformAuditSection } from '../admin/AdminActivi
 export type AnalyticsHubTab = 'monitoring' | 'performance' | 'teachers' | 'audit' | 'credentials';
 
 export const StudentMonitoringPage: React.FC = () => {
-  const { telemetryLogs, actionEvents, groups, students, saveTeacherNote, refreshTelemetry } = useLMSData();
+  const { 
+    telemetryLogs, 
+    actionEvents, 
+    groups, 
+    students, 
+    saveTeacherNote, 
+    refreshTelemetry,
+    supabaseStatus,
+    presenceCount,
+    recordActiveTime,
+    logStudentAction
+  } = useLMSData();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
 
@@ -75,6 +86,33 @@ export const StudentMonitoringPage: React.FC = () => {
     } finally {
       setTimeout(() => setIsRefreshing(false), 500);
     }
+  };
+
+  const handleSimulateStudentSession = (stId?: string) => {
+    const targetId = stId || students.find(s => telemetryLogs[s.id]?.online_status !== 'online')?.id || students[0]?.id;
+    if (!targetId) return;
+
+    const targetStudent = students.find(s => s.id === targetId);
+    const targetName = targetStudent?.full_name || "O'quvchi";
+
+    // 1. Record active time (180s in vocab module)
+    recordActiveTime(targetId, 'vocab', 180, 0, '/student/daily-words');
+
+    // 2. Log student action
+    logStudentAction({
+      student_id: targetId,
+      student_name: targetName,
+      action_type: 'STUDY_SESSION',
+      module: 'vocab',
+      details: {
+        title: "«4000 Essential English Words» Unit 1 darsini o'qimoqda",
+        is_verified_productive: true,
+        score: 95
+      }
+    });
+
+    setLastSyncedTime(new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }));
+    showToast(`⚡ "${targetName}" platformaga kirdi va jonli faoliyat qayd etildi!`);
   };
 
   // Filtered credentials list for credentials tab
@@ -549,29 +587,75 @@ export const StudentMonitoringPage: React.FC = () => {
          ======================================================== */}
       {mainTab === 'monitoring' && (
         <>
-          {/* Real-time Live Synchronization Banner */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border border-emerald-200/80 shadow-2xs">
-            <div className="flex items-center gap-2.5">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+          {/* Real-time Live Synchronization & Supabase Status Banner */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border-2 border-emerald-200/90 shadow-2xs">
+            <div className="flex items-center gap-3">
+              <span className="relative flex h-3.5 w-3.5">
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                  supabaseStatus === 'connected' ? 'bg-emerald-400' :
+                  supabaseStatus === 'connecting' ? 'bg-amber-400' : 'bg-rose-400'
+                }`}></span>
+                <span className={`relative inline-flex rounded-full h-3.5 w-3.5 ${
+                  supabaseStatus === 'connected' ? 'bg-emerald-500' :
+                  supabaseStatus === 'connecting' ? 'bg-amber-500' : 'bg-rose-500'
+                }`}></span>
               </span>
+
               <div>
-                <span className="text-xs font-black text-slate-900">Avtomatik Real-Vaqt Sinxronizatsiyasi Faol</span>
-                <span className="text-xs text-slate-500 ml-2 hidden sm:inline">• O'quvchilar telefon yoki kompyuterdan kirishi bilan bu yerda real vaqtda ko'rinadi</span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
+                    Supabase Realtime:
+                    {supabaseStatus === 'connected' && (
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black border border-emerald-300">
+                        🟢 Ulangan & Faol (Channel: premier-telemetry-live)
+                      </span>
+                    )}
+                    {supabaseStatus === 'connecting' && (
+                      <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black border border-amber-300">
+                        🟡 Ulanmoqda...
+                      </span>
+                    )}
+                    {supabaseStatus === 'disconnected' && (
+                      <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 text-[10px] font-black border border-rose-300">
+                        🔴 Aloqa uzilgan (Lokal telemetriya rejimida)
+                      </span>
+                    )}
+                  </span>
+                  <span className="text-slate-300 text-xs hidden sm:inline">•</span>
+                  <span className="text-[11px] font-bold text-indigo-700 bg-white px-2 py-0.5 rounded-lg border border-indigo-100">
+                    Ulangan qurilmalar: {presenceCount > 0 ? presenceCount : (onlineCount || 1)} ta
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-600 mt-0.5">
+                  O'quvchilar telefon yoki kompyuterdan kirishi bilan real vaqtda ushbu hubda aks etadi.
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-slate-500 font-medium">Oxirgi tekshiruv:</span>
-              <span className="font-mono font-bold text-slate-800 bg-white px-2 py-0.5 rounded-md border border-slate-200">{lastSyncedTime}</span>
+
+            <div className="flex items-center gap-2 self-end md:self-auto text-xs flex-wrap">
+              <span className="text-slate-500 font-medium">Oxirgi sinxronlash:</span>
+              <span className="font-mono font-bold text-slate-800 bg-white px-2 py-1 rounded-lg border border-slate-200 shadow-2xs">{lastSyncedTime}</span>
+
+              {/* Quick simulation / test button for Admin */}
               <button
+                type="button"
+                onClick={() => handleSimulateStudentSession()}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-black transition cursor-pointer shadow-xs"
+                title="Sinov tariqasida bir o'quvchi kirishini va dars o'tishini simulyatsiya qilish"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                <span>Jonli Kirishni Sinash</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={handleManualRefresh}
                 disabled={isRefreshing}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold transition cursor-pointer"
-                title="Qayta yangilash"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold transition cursor-pointer shadow-2xs"
+                title="Serverdan qayta yangilash"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-indigo-600' : ''}`} />
-                <span>Yangilash</span>
+                <span>Sinxronlash</span>
               </button>
             </div>
           </div>

@@ -45,16 +45,58 @@ export const notifyStudentLogin = (studProfile: Profile) => {
   // 1. Instantly update localStorage telemetry and action logs!
   try {
     const storedTelemetry = getStorageItem<Record<string, any>>('premier_student_telemetry', {});
-    if (storedTelemetry[studProfile.id]) {
-      storedTelemetry[studProfile.id] = {
-        ...storedTelemetry[studProfile.id],
-        online_status: 'online',
-        last_active_at: nowIso,
-        last_active_label: 'Ayni paytda faol',
-        device: isMobile ? 'mobile' : 'desktop',
-        student_avatar: studProfile.avatar_url || storedTelemetry[studProfile.id].student_avatar
+    const existing = storedTelemetry[studProfile.id] || {
+      id: `tel-${studProfile.id}`,
+      student_id: studProfile.id,
+      student_name: studProfile.full_name,
+      student_avatar: studProfile.avatar_url,
+      email: studProfile.email,
+      group_name: studProfile.group_name || 'Guruhga biriktirilmagan',
+      group_id: studProfile.group_id,
+      phone: studProfile.phone,
+      level: studProfile.level || 'B1',
+      online_status: 'online',
+      current_page: '/student/dashboard',
+      device: isMobile ? 'mobile' : 'desktop',
+      last_active_at: nowIso,
+      last_active_label: 'Ayni paytda faol',
+      total_active_seconds: 0,
+      today_active_seconds: 0,
+      weekly_active_seconds: 0,
+      idle_paused_seconds: 0,
+      verified_tasks_count: 0,
+      module_breakdown: {
+        stories_seconds: 0,
+        vocab_seconds: 0,
+        listening_seconds: 0,
+        grammar_seconds: 0,
+        homework_seconds: 0,
+        speaking_seconds: 0,
+        other_seconds: 0
+      }
+    };
+
+    storedTelemetry[studProfile.id] = {
+      ...existing,
+      online_status: 'online',
+      last_active_at: nowIso,
+      last_active_label: 'Ayni paytda faol',
+      device: isMobile ? 'mobile' : 'desktop',
+      student_avatar: studProfile.avatar_url || existing.student_avatar
+    };
+    setStorageItem('premier_student_telemetry', storedTelemetry);
+
+    // Also update premier_student_activities for AdminActivityAnalytics
+    const storedActivities = getStorageItem<any[]>('premier_student_activities', []);
+    const actIdx = storedActivities.findIndex(a => a.student_id === studProfile.id);
+    if (actIdx >= 0) {
+      storedActivities[actIdx] = {
+        ...storedActivities[actIdx],
+        status: 'online',
+        last_active: 'Ayni paytda faol',
+        device: isMobile ? 'mobile' : 'desktop'
       };
-      setStorageItem('premier_student_telemetry', storedTelemetry);
+      setStorageItem('premier_student_activities', storedActivities);
     }
 
     const storedActions = getStorageItem<any[]>('premier_student_action_events', []);
@@ -90,11 +132,11 @@ export const notifyStudentLogin = (studProfile: Profile) => {
     keepalive: true
   }).catch(() => {});
 
-  // 4. Send to Supabase Realtime broadcast channel
+  // 4. Send to Supabase Realtime broadcast and Presence channel
   if (isSupabaseConfigured && supabase) {
     try {
       const channel = supabase.channel('premier-telemetry-live', {
-        config: { broadcast: { self: true, ack: true } }
+        config: { broadcast: { self: true, ack: true }, presence: { key: studProfile.id } }
       });
       channel.subscribe(status => {
         if (status === 'SUBSCRIBED') {
@@ -102,6 +144,13 @@ export const notifyStudentLogin = (studProfile: Profile) => {
             type: 'broadcast',
             event: 'student_login',
             payload
+          });
+          channel.track({
+            student_id: studProfile.id,
+            student_name: studProfile.full_name,
+            role: 'student',
+            device: isMobile ? 'mobile' : 'desktop',
+            online_at: nowIso
           });
         }
       });
@@ -119,14 +168,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Sync profile to storage whenever it changes
   const saveProfile = useCallback((newProfile: Profile | null) => {
     setProfile(newProfile);
-    if (newProfile) {
-      setStorageItem('premier_lms_profile', newProfile);
-    } else {
-      removeStorageItem('premier_lms_profile');
-    }
+    setStorageItem('premier_lms_profile', newProfile);
   }, []);
 
   useEffect(() => {
@@ -134,6 +178,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (stored) {
       setProfile(stored);
       setUser({ id: stored.id, email: stored.email });
+      if (stored.role === 'student') {
+        notifyStudentLogin(stored);
+      }
     } else {
       setProfile(null);
       setUser(null);
