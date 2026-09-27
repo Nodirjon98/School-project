@@ -166,7 +166,9 @@ const fetchProfile = async (userId: string): Promise<Profile | null> => {
   if (!supabase) return null;
   const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
   if (error || !data) return null;
-  return data as Profile;
+  // Imported students keep their old ID in the app, because local LMS data is keyed by it.
+  const { legacy_id, ...row } = data as Profile & { legacy_id?: string | null };
+  return { ...row, id: legacy_id || row.id, auth_id: row.id } as Profile;
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -336,8 +338,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {}
 
     if (isSupabaseConfigured && supabase) {
-      const { password: _pw, id: _id, created_at: _created, ...dbUpdates } = updates;
-      const { error } = await supabase.from('profiles').update(dbUpdates).eq('id', profile.id);
+      const { password: _pw, id: _id, auth_id: _authId, created_at: _created, ...dbUpdates } = updates;
+      const { error } = await supabase.from('profiles').update(dbUpdates).eq('id', profile.auth_id || profile.id);
       if (error) {
         console.warn('Supabase profile update failed:', error.message);
         return { error: error.message };
