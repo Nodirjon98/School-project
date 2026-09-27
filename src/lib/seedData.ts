@@ -73,7 +73,7 @@ export const SEED_GROUPS: Group[] = [
     teacher_id: 'user-teacher-1',
     teacher_name: 'Malika Karimova (CELTA)',
     schedule: 'Mon / Wed / Fri 18:30',
-    room: 'Room 304 (Chorsu Campus)',
+    room: 'Room 304',
     created_at: '2025-02-01T10:00:00Z',
     students_count: 0,
   },

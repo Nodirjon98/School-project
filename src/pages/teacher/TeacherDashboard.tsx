@@ -96,7 +96,7 @@ export const TeacherDashboard: React.FC = () => {
           <div>
             <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide block">Bugungi darslar</span>
             <span className="text-2xl font-black text-slate-900">{lessons.length} ta</span>
-            <span className="text-[10px] text-emerald-600 font-semibold block">Oybek & Chorsu</span>
+            <span className="text-[10px] text-emerald-600 font-semibold block">Premier School</span>
           </div>
         </div>
       </div>
@@ -106,7 +106,7 @@ export const TeacherDashboard: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
             <h2 className="text-base font-bold text-slate-900">Mening faol guruhlarim & Dars jadvali</h2>
-            <p className="text-xs text-slate-500">Oybek va Chorsu filiallaridagi guruhlar dars grafigi</p>
+            <p className="text-xs text-slate-500">Barcha guruhlar dars grafigi</p>
           </div>
 
           <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">

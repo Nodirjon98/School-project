@@ -235,7 +235,7 @@ export const SEED_MODULE_COMPLETION: ModuleCompletionDataPoint[] = [
 // Group-wise Module Completion Comparison
 export const SEED_GROUP_COMPLETIONS: GroupModuleCompletion[] = [
   { groupName: 'IELTS Intensive 7.5+ (Oybek)', listening: 92, speaking: 94, vocab: 86, reading: 88, grammar: 91, overallAvg: 90.2 },
-  { groupName: 'General English B2 (Chorsu)', listening: 85, speaking: 86, vocab: 79, reading: 80, grammar: 87, overallAvg: 83.4 },
+  { groupName: 'General English B2', listening: 85, speaking: 86, vocab: 79, reading: 80, grammar: 87, overallAvg: 83.4 },
   { groupName: 'TOEFL iBT Mastery (Online)', listening: 88, speaking: 89, vocab: 82, reading: 86, grammar: 89, overallAvg: 86.8 },
   { groupName: 'Kids English Champions', listening: 74, speaking: 81, vocab: 70, reading: 69, grammar: 78, overallAvg: 74.4 }
 ];
