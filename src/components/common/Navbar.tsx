@@ -18,21 +18,28 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   const { profile, role, signOut } = useAuth();
   const { language, setLanguage, t } = useLanguage();
 
+  const L = (uz: string, en: string) => (language === 'en' ? en : uz);
+
   const getPageTitle = () => {
     const path = location.pathname;
     if (path.includes('/dashboard')) {
-      return role === 'admin' ? 'Institute Analytics' : role === 'teacher' ? 'Teacher Dashboard' : 'Student Dashboard';
+      return role === 'admin' ? L('Boshqaruv paneli', 'Admin overview') : L('Bosh sahifa', 'Home');
     }
-    if (path.includes('/lessons')) return 'Lessons & Materials';
-    if (path.includes('/homework')) return 'Assignments & Tasks';
-    if (path.includes('/daily-words')) return 'Daily Vocabulary Bank';
-    if (path.includes('/grammar')) return 'AI Grammar Tutor Lab';
-    if (path.includes('/championship')) return 'Premier Championship';
-    if (path.includes('/ai-studio')) return 'AI Pedagogical Studio';
-    if (path.includes('/attendance')) return 'Attendance & Attendance Tracking';
-    if (path.includes('/groups')) return 'Group Management';
-    if (path.includes('/words')) return 'Vocabulary Database';
-    return 'Premier School LMS';
+    if (path.includes('/lessons')) return L('Darslarim', 'My lessons');
+    if (path.includes('/homework')) return L('Uy vazifalari', 'Homework');
+    if (path.includes('/daily-words')) return L("Kunlik so'zlar", 'Daily words');
+    if (path.includes('/grammar')) return L('Grammatika', 'Grammar');
+    if (path.includes('/championship')) return L('Chempionat', 'Championship');
+    if (path.includes('/ai-studio')) return L('AI kontent', 'AI content');
+    if (path.includes('/attendance')) return L('Davomat', 'Attendance');
+    if (path.includes('/groups')) return L('Guruhlar', 'Groups');
+    if (path.includes('/words')) return L("Lug'at bazasi", 'Word database');
+    if (path.includes('/payments')) return L("To'lovlar", 'Payments');
+    if (path.includes('/speaking')) return 'Speaking';
+    if (path.includes('/ielts-writing')) return 'IELTS Writing';
+    if (path.includes('/placement-test')) return L('Daraja testi', 'Placement test');
+    if (path.includes('/achievements')) return L('Yutuqlar', 'Achievements');
+    return 'Premier School';
   };
 
   const initials = profile?.full_name 
@@ -101,19 +108,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         {/* CEFR Level Badge for Student */}
         {role === 'student' && (
           <div className="hidden md:flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 shadow-2xs">
-            <span className="text-[10px] font-bold uppercase tracking-wider">Level</span>
-            <span className="font-black text-xs">{profile?.level || 'B2'}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider">{L('Daraja', 'Level')}</span>
+            <span className="font-black text-xs">{profile?.level || 'A1'}</span>
           </div>
         )}
 
         {/* Streak Badge */}
-        {role === 'student' && (
+        {role === 'student' && (profile?.streak ?? 0) > 0 && (
           <div 
             className="hidden sm:flex items-center gap-1.5 bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200 text-xs font-bold"
-            title="Daily Active Streak"
+            title={L('Ketma-ket faol kunlar', 'Daily streak')}
           >
             <Flame className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
-            <span>{profile?.streak || 12}d</span>
+            <span>{profile?.streak}{L(' kun', 'd')}</span>
           </div>
         )}
 
@@ -127,14 +134,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
             <p className="text-xs font-bold text-slate-900 leading-tight">
-              {profile?.full_name || 'Azizbek K.'}
+              {profile?.full_name || ''}
             </p>
             <p className="text-[10px] text-slate-500 font-medium leading-tight mt-0.5">
-              {role === 'student' 
-                ? 'Student ID: 49012' 
-                : role === 'teacher' 
-                ? 'Senior Instructor' 
-                : 'Academic Admin'}
+              {role === 'student'
+                ? `${L("O'quvchi", 'Student')}${profile?.group_name ? ` · ${profile.group_name}` : ''}`
+                : role === 'teacher'
+                ? L("O'qituvchi", 'Teacher')
+                : 'Administrator'}
             </p>
           </div>
 

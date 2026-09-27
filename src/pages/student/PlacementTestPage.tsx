@@ -248,7 +248,7 @@ export const PlacementTestPage: React.FC = () => {
                 Certificate of Proficiency & Level Assessment
               </h3>
               <p className="text-[11px] uppercase tracking-widest text-slate-400 font-semibold">
-                Tashkent • CEFR Placement Test
+                CEFR Placement Test
               </p>
             </div>
 
