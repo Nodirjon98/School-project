@@ -2,126 +2,21 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useLMSData } from '../../contexts/LMSDataContext';
-import { CEFRLevel } from '../../types';
-import { 
-  Award, CheckCircle2, AlertCircle, ArrowRight, RotateCcw, 
-  Printer, Sparkles, BookOpen, Clock, ShieldCheck, Download
-} from 'lucide-react';
+import { CheckCircle2, ArrowRight, RotateCcw, Printer } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { getStorageItem, setStorageItem } from '../../lib/storage';
+import {
+  PLACEMENT_QUESTIONS as DIAGNOSTIC_QUESTIONS,
+  PLACEMENT_LEVELS,
+  PASS_MARK,
+  LEVEL_LABELS,
+  LEVEL_SUMMARY,
+  scorePlacement,
+  PlacementResult,
+} from '../../data/placementTestData';
 
-interface Question {
-  id: number;
-  level: CEFRLevel;
-  domain: 'Grammar' | 'Vocabulary' | 'Discourse';
-  question: string;
-  options: string[];
-  correct: string;
-  explanation: string;
-  explanationUz: string;
-}
-
-const DIAGNOSTIC_QUESTIONS: Question[] = [
-  {
-    id: 1,
-    level: 'A2',
-    domain: 'Grammar',
-    question: 'Where ______ you yesterday evening when our study group met at the library?',
-    options: ['was', 'were', 'did', 'are'],
-    correct: 'were',
-    explanation: 'The pronoun "you" in past simple takes "were".',
-    explanationUz: "'You' olmoshi o'tgan zamonda 'were' yordamchi fe'lini oladi."
-  },
-  {
-    id: 2,
-    level: 'A2',
-    domain: 'Vocabulary',
-    question: 'Jasur is very ______; he always finishes his homework before 8 PM.',
-    options: ['punctual', 'crowded', 'bitter', 'shallow'],
-    correct: 'punctual',
-    explanation: '"Punctual" means happening or doing something at the agreed or proper time.',
-    explanationUz: "'Punctual' vaqtida bajaradigan, aniq ma'nosini bildiradi."
-  },
-  {
-    id: 3,
-    level: 'B1',
-    domain: 'Grammar',
-    question: 'I have lived in this district of Tashkent ______ I started attending Premier School.',
-    options: ['for', 'since', 'during', 'from'],
-    correct: 'since',
-    explanation: '"Since" marks the specific starting point in time of an action continuing to the present.',
-    explanationUz: "'Since' o'tmishdagi aniq boshlanish vaqtini bildirish uchun ishlatiladi."
-  },
-  {
-    id: 4,
-    level: 'B1',
-    domain: 'Vocabulary',
-    question: 'Regular vocabulary reviews help students ______ new academic terms into long-term memory.',
-    options: ['consolidate', 'scatter', 'diminish', 'collapse'],
-    correct: 'consolidate',
-    explanation: '"Consolidate" means to make something physically stronger or more solid in memory.',
-    explanationUz: "'Consolidate' mustahkamlamoq, xotirada o'rnashib qolishini ta'minlamoq degani."
-  },
-  {
-    id: 5,
-    level: 'B2',
-    domain: 'Grammar',
-    question: 'If Aziz ______ the express train from Samarkand earlier, he would have arrived on time.',
-    options: ['caught', 'had caught', 'catches', 'would catch'],
-    correct: 'had caught',
-    explanation: 'Third conditional for hypothetical past events requires "had + past participle".',
-    explanationUz: "O'tmishdagi afsus yoki ehtimollik (Third Conditional) uchun 'had + V3' qo'llaniladi."
-  },
-  {
-    id: 6,
-    level: 'B2',
-    domain: 'Discourse',
-    question: 'The initiative was costly; ______, the long-term educational benefits far outweighed the expense.',
-    options: ['nonetheless', 'furthermore', 'namely', 'likewise'],
-    correct: 'nonetheless',
-    explanation: '"Nonetheless" introduces a contrasting, conceding result.',
-    explanationUz: "'Nonetheless' (shunga qaramay) qarama-qarshi fikrni bog'laydi."
-  },
-  {
-    id: 7,
-    level: 'B2',
-    domain: 'Grammar',
-    question: 'Not until the official Cambridge results were published ______ his band score.',
-    options: ['he discovered', 'did he discover', 'he had discovered', 'was he discovered'],
-    correct: 'did he discover',
-    explanation: 'Negative fronting with "Not until" requires subject-auxiliary inversion.',
-    explanationUz: "'Not until' gap boshida kelganda inversiya (yordamchi fe'l egadan oldinga o'tadi) bo'ladi."
-  },
-  {
-    id: 8,
-    level: 'C1',
-    domain: 'Grammar',
-    question: 'The Academic Director insisted that all mock exam scripts ______ by Friday afternoon.',
-    options: ['be evaluated', 'are evaluated', 'were evaluated', 'will be evaluated'],
-    correct: 'be evaluated',
-    explanation: 'The present subjunctive with verbs of urging/insistence uses the base form "be".',
-    explanationUz: "Talab, iltimos fe'llaridan keyin (subjunctive) fe'lning asil shakli 'be evaluated' ishlatiladi."
-  },
-  {
-    id: 9,
-    level: 'C1',
-    domain: 'Discourse',
-    question: 'Seldom ______ such linguistic fluency and analytical depth from high school candidates.',
-    options: ['we encounter', 'have we encountered', 'did we encountered', 'we have encountered'],
-    correct: 'have we encountered',
-    explanation: 'Negative adverb "Seldom" triggers inversion: "have we encountered".',
-    explanationUz: "'Seldom' inkor ma'noli ravish gap boshida kelganda inversiya hosil qiladi."
-  },
-  {
-    id: 10,
-    level: 'C1',
-    domain: 'Vocabulary',
-    question: 'The research aims to ______ the complex correlation between bilingualism and cognitive agility.',
-    options: ['elucidate', 'fabricate', 'obfuscate', 'stagnate'],
-    correct: 'elucidate',
-    explanation: '"Elucidate" means to make something clear; explain.',
-    explanationUz: "'Elucidate' oydinlik kiritmoq, batafsil ilmiy tushuntirib bermoq ma'nosida keladi."
-  }
-];
+const XP_AWARDED_KEY = 'premier_placement_xp_awarded';
+const PLACEMENT_QUESTIONS_PER_LEVEL = DIAGNOSTIC_QUESTIONS.length / PLACEMENT_LEVELS.length;
 
 export const PlacementTestPage: React.FC = () => {
   const { profile, updateProfile } = useAuth();
@@ -131,9 +26,13 @@ export const PlacementTestPage: React.FC = () => {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const [isCompleted, setIsCompleted] = useState(false);
-  const [score, setScore] = useState(0);
-  const [calculatedLevel, setCalculatedLevel] = useState<CEFRLevel>('B1');
+  const [result, setResult] = useState<PlacementResult | null>(null);
+  const [certId, setCertId] = useState('');
   const [certDate] = useState(new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }));
+
+  const score = result?.total ?? 0;
+  const totalQuestions = DIAGNOSTIC_QUESTIONS.length;
+  const calculatedLevel = result?.level ?? 'A1';
 
   const currentQ = DIAGNOSTIC_QUESTIONS[currentIdx];
   const isSelected = Boolean(selectedAnswers[currentQ?.id]);
@@ -154,27 +53,20 @@ export const PlacementTestPage: React.FC = () => {
   };
 
   const finishTest = () => {
-    let correctCount = 0;
-    DIAGNOSTIC_QUESTIONS.forEach(q => {
-      if (selectedAnswers[q.id] === q.correct) correctCount += 1;
-    });
-
-    setScore(correctCount);
-
-    let level: CEFRLevel = 'A1';
-    if (correctCount >= 9) level = 'C1';
-    else if (correctCount >= 7) level = 'B2';
-    else if (correctCount >= 5) level = 'B1';
-    else if (correctCount >= 3) level = 'A2';
-    else level = 'A1';
-
-    setCalculatedLevel(level);
+    const res = scorePlacement(selectedAnswers);
+    setResult(res);
+    setCertId(`PS-CEFR-${Date.now().toString(36).toUpperCase()}`);
     setIsCompleted(true);
-    awardXp(100);
 
-    // Update profile level in context
+    // XP only for the first completion, so retakes cannot farm XP.
+    const xpKey = `${XP_AWARDED_KEY}_${profile?.id ?? 'guest'}`;
+    if (!getStorageItem<boolean>(xpKey, false)) {
+      awardXp(100);
+      setStorageItem(xpKey, true);
+    }
+
     if (updateProfile) {
-      updateProfile({ level });
+      updateProfile({ level: res.level });
     }
 
     try {
@@ -190,6 +82,7 @@ export const PlacementTestPage: React.FC = () => {
     setSelectedAnswers({});
     setCurrentIdx(0);
     setIsCompleted(false);
+    setResult(null);
   };
 
   return (
@@ -202,11 +95,11 @@ export const PlacementTestPage: React.FC = () => {
               CEFR Diagnostic Placement Assessment
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700 border border-indigo-200">
-              Adaptive CEFR Diagnostic
+              {totalQuestions} questions • A1–C1
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Determine your European Framework level (A1 to C1) with verified diagnostics and certification.
+            Determine your European Framework level (A1 to C1). Each level has {PLACEMENT_QUESTIONS_PER_LEVEL} questions; answer at least {PASS_MARK} correctly to pass it.
           </p>
         </div>
 
@@ -318,17 +211,14 @@ export const PlacementTestPage: React.FC = () => {
                 CEFR Level: {calculatedLevel}
               </h2>
               <p className="text-xs text-slate-300 max-w-md">
-                You scored <strong className="text-amber-300">{score} out of 10</strong> ({score * 10}% accuracy).
-                {calculatedLevel === 'C1' ? ' Outstanding academic proficiency matching IELTS 7.5 - 8.0 standards.' :
-                 calculatedLevel === 'B2' ? ' Strong upper-intermediate control matching IELTS 6.0 - 6.5 targets.' :
-                 calculatedLevel === 'B1' ? ' Solid intermediate foundation ready for IELTS foundation training.' :
-                 ' Elementary competence suitable for General English Booster courses.'}
+                You scored <strong className="text-amber-300">{score} out of {totalQuestions}</strong> ({Math.round((score / totalQuestions) * 100)}% accuracy).
+                {' '}{LEVEL_SUMMARY[calculatedLevel]}
               </p>
             </div>
 
             <div className="flex flex-col items-center gap-3">
               <div className="w-24 h-24 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/20 flex flex-col items-center justify-center text-center">
-                <span className="text-3xl font-black text-amber-400">{score}/10</span>
+                <span className="text-3xl font-black text-amber-400">{score}/{totalQuestions}</span>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300">Correct</span>
               </div>
               <button
@@ -358,7 +248,7 @@ export const PlacementTestPage: React.FC = () => {
                 Certificate of Proficiency & Level Assessment
               </h3>
               <p className="text-[11px] uppercase tracking-widest text-slate-400 font-semibold">
-                Tashkent Hub • Standardized CEFR Diagnostic
+                Tashkent • CEFR Placement Test
               </p>
             </div>
 
@@ -369,10 +259,10 @@ export const PlacementTestPage: React.FC = () => {
                 {profile?.full_name || "O'quvchi"}
               </h4>
               <p className="text-xs text-slate-600 leading-relaxed max-w-md mx-auto">
-                Having successfully completed the formal Premier School diagnostic examination, achieving evaluated competence at:
+                Having completed the Premier School placement test, achieving an estimated level of:
               </p>
               <div className="inline-block px-5 py-2 rounded-xl bg-indigo-50 border-2 border-indigo-200 font-black text-indigo-800 text-lg sm:text-xl tracking-wide">
-                CEFR LEVEL {calculatedLevel} • {calculatedLevel === 'C1' ? 'ADVANCED' : calculatedLevel === 'B2' ? 'UPPER INTERMEDIATE' : 'INTERMEDIATE'}
+                CEFR LEVEL {calculatedLevel} • {LEVEL_LABELS[calculatedLevel]}
               </div>
             </div>
 
@@ -381,17 +271,45 @@ export const PlacementTestPage: React.FC = () => {
               <div className="space-y-1 border-t border-slate-300 pt-2">
                 <span className="font-bold text-slate-800 block">Assessment Date:</span>
                 <span className="text-slate-500">{certDate}</span>
-                <span className="text-[10px] text-slate-400 block">ID: PS-CEFR-{Math.abs(score * 8421).toString().padStart(6, '0')}</span>
+                <span className="text-[10px] text-slate-400 block">ID: {certId}</span>
               </div>
               <div className="space-y-1 border-t border-slate-300 pt-2 text-right">
-                <span className="font-bold text-slate-800 block">Director of Studies:</span>
-                <span className="text-slate-600 font-serif italic">Malika Karimova (CELTA)</span>
-                <span className="text-[10px] text-emerald-600 font-bold block flex items-center justify-end gap-1">
-                  <ShieldCheck className="w-3 h-3" /> Verified Diagnostic
-                </span>
+                <span className="font-bold text-slate-800 block">Issued by:</span>
+                <span className="text-slate-600 font-serif italic">Premier School Academic Department</span>
               </div>
             </div>
           </div>
+
+          {/* Per-level breakdown */}
+          {result && (
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+                Results by Level
+              </h3>
+              <div className="grid grid-cols-5 gap-2">
+                {PLACEMENT_LEVELS.map(lvl => {
+                  const { correct, total } = result.perLevel[lvl];
+                  const passed = correct >= PASS_MARK;
+                  return (
+                    <div
+                      key={lvl}
+                      className={`p-3 rounded-xl border text-center ${
+                        passed ? 'bg-emerald-50/60 border-emerald-200' : 'bg-slate-50 border-slate-200'
+                      }`}
+                    >
+                      <div className="text-sm font-black text-slate-900">{lvl}</div>
+                      <div className={`text-xs font-bold ${passed ? 'text-emerald-700' : 'text-slate-500'}`}>
+                        {correct}/{total}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-[11px] text-slate-500">
+                A level is passed with at least {PASS_MARK} of {PLACEMENT_QUESTIONS_PER_LEVEL} correct answers. Your level is the highest one reached without skipping a lower level.
+              </p>
+            </div>
+          )}
 
           {/* Diagnostic Review Breakdown */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
