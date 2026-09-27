@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { 
-  LayoutDashboard, BookOpen, CheckSquare, Sparkles, 
-  Trophy, ClipboardCheck, Users, BrainCircuit, BarChart3, 
-  Layers, Database, X, PenTool, Mic, Award, Swords, FileText, Headphones, CreditCard, Clock, TrendingUp, Music, Radio, MessagesSquare, ShieldCheck, Gamepad2
+import {
+  LayoutDashboard, BookOpen, CheckSquare, Sparkles,
+  Trophy, ClipboardCheck, Users, BrainCircuit, BarChart3,
+  Layers, Database, X, PenTool, Mic, Award, Swords, FileText, Headphones, CreditCard,
+  Music, ShieldCheck, Gamepad2, ChevronDown, Library, Flame
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -17,265 +18,251 @@ interface NavItem {
   label: string;
   path: string;
   icon: React.ReactNode;
-  badge?: string;
 }
 
 interface NavSection {
-  category?: string;
+  category: string;
   items: NavItem[];
+  /** Collapsible sections start closed unless one of their items is active. */
+  collapsible?: boolean;
 }
+
+const icon = (Icon: React.ComponentType<{ className?: string }>) => <Icon className="w-4 h-4" />;
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { role, profile } = useAuth();
-  const { t } = useLanguage();
+  const { language } = useLanguage();
   const location = useLocation();
+  const L = (uz: string, en: string) => (language === 'en' ? en : uz);
 
   const isItemActive = (itemPath: string, isExactActive: boolean) => {
     if (isExactActive) return true;
     if (itemPath === '/admin/analytics') {
-      return (
-        location.pathname.startsWith('/admin/analytics') ||
-        location.pathname.startsWith('/admin/monitoring') ||
-        location.pathname.startsWith('/admin/performance') ||
-        location.pathname.startsWith('/admin/activity')
-      );
+      return ['/admin/analytics', '/admin/monitoring', '/admin/performance', '/admin/activity']
+        .some((p) => location.pathname.startsWith(p));
     }
     return false;
   };
 
+  const libraryItems = (listeningPath: string): NavItem[] => [
+    { label: 'Essential Grammar', path: '/essential-grammar', icon: icon(BookOpen) },
+    { label: 'Stories for Reproduction', path: '/stories-for-reproduction', icon: icon(BookOpen) },
+    { label: '4000 Essential Words', path: '/curriculum', icon: icon(BookOpen) },
+    { label: 'Tactics for Listening', path: listeningPath, icon: icon(Headphones) },
+    { label: 'Reading for the Real World', path: '/real-world-reading', icon: icon(BookOpen) },
+  ];
+
   const studentSections: NavSection[] = [
     {
-      category: "ASOSIY",
+      category: L('Asosiy', 'Main'),
       items: [
-        { label: t('dashboard'), path: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-        { label: t('lessons'), path: '/lessons', icon: <BookOpen className="w-4 h-4" /> },
-        { label: t('homework'), path: '/homework', icon: <CheckSquare className="w-4 h-4" />, badge: 'Due' },
-        { label: "Mening To'lovlarim", path: '/student/payments', icon: <CreditCard className="w-4 h-4 text-emerald-400" />, badge: 'Cheklar' },
-      ]
+        { label: L('Bosh sahifa', 'Home'), path: '/dashboard', icon: icon(LayoutDashboard) },
+        { label: L('Darslarim', 'My lessons'), path: '/lessons', icon: icon(BookOpen) },
+        { label: L('Uy vazifalari', 'Homework'), path: '/homework', icon: icon(CheckSquare) },
+        { label: L("Kunlik so'zlar", 'Daily words'), path: '/daily-words', icon: icon(Layers) },
+      ],
     },
     {
-      category: "O'QUV DASTURI",
+      category: L('Mashq', 'Practice'),
       items: [
-        { label: 'Essential Grammar (Murphy)', path: '/essential-grammar', icon: <BookOpen className="w-4 h-4 text-amber-400" />, badge: 'A1-A2' },
-        { label: 'Stories for Reproduction', path: '/stories-for-reproduction', icon: <BookOpen className="w-4 h-4 text-rose-400" />, badge: 'L.A. Hill' },
-        { label: '4000 Words & Reading', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" />, badge: 'A1-C2' },
-        { label: 'Tactics for Listening', path: '/listening', icon: <Headphones className="w-4 h-4 text-sky-400" />, badge: 'Oxford' },
-        { label: 'Karaoke & Podkastlar', path: '/karaoke', icon: <Music className="w-4 h-4 text-purple-400" />, badge: 'Audio' },
-        { label: 'Reading for Real World', path: '/real-world-reading', icon: <BookOpen className="w-4 h-4 text-indigo-400" /> },
-      ]
+        { label: 'Speaking (AI)', path: '/speaking', icon: icon(Mic) },
+        { label: 'IELTS Writing', path: '/ielts-writing', icon: icon(PenTool) },
+        { label: L('Grammatika imtihonlari', 'Grammar exams'), path: '/student/grammar-exams', icon: icon(Sparkles) },
+        { label: L("So'z o'yinlari", 'Word games'), path: '/word-games', icon: icon(Gamepad2) },
+        { label: L('Daraja testi', 'Placement test'), path: '/placement-test', icon: icon(Award) },
+      ],
     },
     {
-      category: "AI & AMALIYOT",
+      category: L('Kutubxona', 'Library'),
+      collapsible: true,
       items: [
-        { label: 'Speaking w/ Mr. Safoyev', path: '/speaking', icon: <Mic className="w-4 h-4 text-emerald-400" />, badge: 'Live AI' },
-        { label: 'IELTS Writing AI', path: '/ielts-writing', icon: <PenTool className="w-4 h-4 text-indigo-400" />, badge: 'Band 9' },
-        { label: 'Grammatika Imtihonlari', path: '/student/grammar-exams', icon: <Sparkles className="w-4 h-4 text-indigo-400" />, badge: 'Exams' },
-        { label: 'CEFR Diagnostic', path: '/placement-test', icon: <Award className="w-4 h-4 text-amber-400" />, badge: 'Cert' },
-      ]
+        ...libraryItems('/listening'),
+        { label: L('Karaoke va podkastlar', 'Karaoke & podcasts'), path: '/karaoke', icon: icon(Music) },
+      ],
     },
     {
-      category: "BELLASHUV & YUTUQLAR",
+      category: L('Natijalar', 'Progress'),
       items: [
-        { label: 'Vocab Contest Arena', path: '/vocab-contest', icon: <Swords className="w-4 h-4 text-amber-400" />, badge: '1v1 Live' },
-        { label: "So'z O'yinlari Arenasi", path: '/word-games', icon: <Gamepad2 className="w-4 h-4 text-emerald-400" />, badge: '4 O\'yin' },
-        { label: t('dailyWords'), path: '/daily-words', icon: <Layers className="w-4 h-4" />, badge: 'SRS' },
-        { label: t('championship'), path: '/championship', icon: <Trophy className="w-4 h-4 text-amber-400" /> },
-        { label: 'Yutuqlar & Sertifikatlar', path: '/achievements', icon: <Award className="w-4 h-4 text-amber-300" /> },
-      ]
-    }
+        { label: L('Chempionat', 'Championship'), path: '/championship', icon: icon(Trophy) },
+        { label: L("So'z bellashuvi", 'Vocab contest'), path: '/vocab-contest', icon: icon(Swords) },
+        { label: L('Yutuqlar', 'Achievements'), path: '/achievements', icon: icon(Award) },
+        { label: L("To'lovlarim", 'Payments'), path: '/student/payments', icon: icon(CreditCard) },
+      ],
+    },
   ];
 
   const teacherSections: NavSection[] = [
     {
-      category: "ASOSIY",
+      category: L('Asosiy', 'Main'),
       items: [
-        { label: t('dashboard'), path: '/teacher/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-        { label: "O'quvchilar Nazorati", path: '/teacher/monitoring', icon: <ShieldCheck className="w-4 h-4 text-emerald-400" />, badge: 'Live' },
-        { label: t('myGroups'), path: '/teacher/groups', icon: <Users className="w-4 h-4" /> },
-        { label: t('attendance'), path: '/teacher/attendance', icon: <ClipboardCheck className="w-4 h-4" /> },
-        { label: t('homework'), path: '/teacher/homework', icon: <CheckSquare className="w-4 h-4" /> },
-      ]
+        { label: L('Bosh sahifa', 'Home'), path: '/teacher/dashboard', icon: icon(LayoutDashboard) },
+        { label: L('Guruhlarim', 'My groups'), path: '/teacher/groups', icon: icon(Users) },
+        { label: L('Davomat', 'Attendance'), path: '/teacher/attendance', icon: icon(ClipboardCheck) },
+        { label: L('Uy vazifalari', 'Homework'), path: '/teacher/homework', icon: icon(CheckSquare) },
+        { label: L("O'quvchilar nazorati", 'Student monitoring'), path: '/teacher/monitoring', icon: icon(ShieldCheck) },
+      ],
     },
     {
-      category: "O'QUV MATERIALARI",
+      category: L('Vositalar', 'Tools'),
       items: [
-        { label: 'Essential Grammar (Murphy)', path: '/essential-grammar', icon: <BookOpen className="w-4 h-4 text-amber-400" />, badge: 'A1-A2' },
-        { label: 'Stories for Reproduction', path: '/stories-for-reproduction', icon: <BookOpen className="w-4 h-4 text-rose-400" />, badge: 'Hill' },
-        { label: '4000 Words Curriculum', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" />, badge: 'Books 1-6' },
-        { label: 'Tactics for Listening', path: '/teacher/listening', icon: <Headphones className="w-4 h-4 text-sky-400" />, badge: '24 Units' },
-        { label: 'Reading for Real World', path: '/real-world-reading', icon: <BookOpen className="w-4 h-4 text-indigo-400" /> },
-        { label: 'TOEFL 6.0 Essays', path: '/toefl-essays', icon: <FileText className="w-4 h-4 text-indigo-400" /> },
-      ]
+        { label: L('Grammatika imtihonlari', 'Grammar exams'), path: '/admin/grammar-exams', icon: icon(Sparkles) },
+        { label: L('Speaking markazi', 'Speaking hub'), path: '/teacher/speaking-hub', icon: icon(Mic) },
+        { label: L('AI kontent', 'AI content'), path: '/ai-studio', icon: icon(BrainCircuit) },
+        { label: L('Chempionat', 'Championship'), path: '/championship', icon: icon(Trophy) },
+      ],
     },
     {
-      category: "AI & BELLASHUV",
+      category: L('Kutubxona', 'Library'),
+      collapsible: true,
       items: [
-        { label: 'Grammatika Imtihonlari', path: '/admin/grammar-exams', icon: <Sparkles className="w-4 h-4 text-indigo-400" />, badge: 'Exams' },
-        { label: 'Speaking & Voice Hub', path: '/teacher/speaking-hub', icon: <Mic className="w-4 h-4 text-emerald-400" />, badge: 'Mr Safoyev' },
-        { label: t('aiStudio'), path: '/ai-studio', icon: <BrainCircuit className="w-4 h-4 text-indigo-400" />, badge: 'Gemini 3.8' },
-        { label: "So'z O'yinlari Arenasi", path: '/word-games', icon: <Gamepad2 className="w-4 h-4 text-emerald-400" />, badge: 'O\'yinlar' },
-        { label: 'Vocab Contest Arena', path: '/vocab-contest', icon: <Swords className="w-4 h-4 text-amber-400" /> },
-        { label: t('championship'), path: '/championship', icon: <Trophy className="w-4 h-4" /> },
-      ]
-    }
+        ...libraryItems('/teacher/listening'),
+        { label: 'TOEFL Essays', path: '/toefl-essays', icon: icon(FileText) },
+        { label: L("So'z o'yinlari", 'Word games'), path: '/word-games', icon: icon(Gamepad2) },
+        { label: L("So'z bellashuvi", 'Vocab contest'), path: '/vocab-contest', icon: icon(Swords) },
+      ],
+    },
   ];
 
   const adminSections: NavSection[] = [
     {
-      category: "BOSHQARUV & MOLIYA",
+      category: L('Boshqaruv', 'Management'),
       items: [
-        { label: t('adminAnalytics'), path: '/admin/dashboard', icon: <BarChart3 className="w-4 h-4" /> },
-        { label: "Analitika & Nazorat Hubi", path: '/admin/analytics', icon: <ShieldCheck className="w-4 h-4 text-emerald-400" />, badge: 'Live' },
-        { label: "To'lovlar & Kassa", path: '/admin/payments', icon: <CreditCard className="w-4 h-4 text-emerald-400" />, badge: 'Moliya' },
-        { label: t('manageGroups'), path: '/admin/groups', icon: <Users className="w-4 h-4" /> },
-        { label: 'Grammatika Imtihonlari Builder', path: '/admin/grammar-exams', icon: <Sparkles className="w-4 h-4 text-indigo-400" />, badge: 'Exams' },
-      ]
+        { label: L('Bosh sahifa', 'Home'), path: '/admin/dashboard', icon: icon(BarChart3) },
+        { label: L('Guruhlar', 'Groups'), path: '/admin/groups', icon: icon(Users) },
+        { label: L("To'lovlar", 'Payments'), path: '/admin/payments', icon: icon(CreditCard) },
+        { label: L('Analitika', 'Analytics'), path: '/admin/analytics', icon: icon(ShieldCheck) },
+      ],
     },
     {
-      category: "AKADEMIK BAZA",
+      category: L('Kontent', 'Content'),
       items: [
-        { label: 'Essential Grammar (Murphy)', path: '/essential-grammar', icon: <BookOpen className="w-4 h-4 text-amber-400" />, badge: '114 Units' },
-        { label: 'Stories for Reproduction', path: '/stories-for-reproduction', icon: <BookOpen className="w-4 h-4 text-rose-400" />, badge: 'L.A. Hill' },
-        { label: '4000 Words Curriculum', path: '/curriculum', icon: <BookOpen className="w-4 h-4 text-emerald-400" /> },
-        { label: t('manageWords'), path: '/admin/words', icon: <Database className="w-4 h-4" /> },
-        { label: 'Tactics for Listening', path: '/teacher/listening', icon: <Headphones className="w-4 h-4 text-sky-400" /> },
-        { label: 'Reading for Real World', path: '/real-world-reading', icon: <BookOpen className="w-4 h-4 text-indigo-400" /> },
-      ]
+        { label: L("Lug'at bazasi", 'Word database'), path: '/admin/words', icon: icon(Database) },
+        { label: L('Grammatika imtihonlari', 'Grammar exams'), path: '/admin/grammar-exams', icon: icon(Sparkles) },
+        { label: L('Speaking markazi', 'Speaking hub'), path: '/admin/speaking-hub', icon: icon(Mic) },
+        { label: L('AI kontent', 'AI content'), path: '/ai-studio', icon: icon(BrainCircuit) },
+        { label: L('Chempionat', 'Championship'), path: '/championship', icon: icon(Trophy) },
+      ],
     },
     {
-      category: "NAZORAT & AI",
+      category: L('Kutubxona', 'Library'),
+      collapsible: true,
       items: [
-        { label: "So'z O'yinlari Arenasi", path: '/word-games', icon: <Gamepad2 className="w-4 h-4 text-emerald-400" />, badge: 'O\'yinlar' },
-        { label: 'Speaking & Voice Hub', path: '/admin/speaking-hub', icon: <Mic className="w-4 h-4 text-emerald-400" /> },
-        { label: t('aiStudio'), path: '/ai-studio', icon: <BrainCircuit className="w-4 h-4 text-indigo-400" /> },
-        { label: t('championship'), path: '/championship', icon: <Trophy className="w-4 h-4 text-amber-400" /> },
-      ]
-    }
+        ...libraryItems('/teacher/listening'),
+        { label: L("So'z o'yinlari", 'Word games'), path: '/word-games', icon: icon(Gamepad2) },
+      ],
+    },
   ];
 
   const sections = role === 'admin' ? adminSections : role === 'teacher' ? teacherSections : studentSections;
-  const userXp = profile?.xp || 1240;
-  const xpPercentage = Math.min(100, Math.max(15, Math.round(((userXp % 2000) / 2000) * 100)));
+  const roleLabel = role === 'admin' ? 'Administrator' : role === 'teacher' ? L("O'qituvchi", 'Teacher') : L("O'quvchi", 'Student');
+
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const sectionHasActive = (sec: NavSection) => sec.items.some((i) => location.pathname === i.path);
+
+  const userXp = profile?.xp ?? 0;
+  const xpPercentage = Math.min(100, Math.round(((userXp % 2000) / 2000) * 100));
 
   return (
     <>
-      {/* Mobile backdrop */}
       {isOpen && (
-        <div 
+        <div
           onClick={onClose}
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 lg:hidden transition-opacity"
+          className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 lg:hidden transition-opacity"
           aria-hidden="true"
         />
       )}
 
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-40 w-64 bg-slate-900 flex flex-col flex-shrink-0 text-slate-300 border-r border-slate-800 transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-40 w-64 bg-[#0b0c1a] flex flex-col flex-shrink-0 text-slate-300 border-r border-white/5 transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* Brand Header */}
-        <div className="p-5 flex items-center justify-between border-b border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center font-bold text-white shadow-sm">
+        {/* Brand */}
+        <div className="px-5 h-16 flex items-center justify-between border-b border-white/5">
+          <NavLink to="/" className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 flex items-center justify-center font-black text-white shadow-lg shadow-violet-500/20">
               P
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col leading-tight">
               <span className="font-bold text-white tracking-tight text-sm">Premier School</span>
-              <span className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold">
-                LMS • Tashkent
-              </span>
+              <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500 font-semibold">{roleLabel}</span>
             </div>
-          </div>
-
+          </NavLink>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 lg:hidden transition"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 lg:hidden transition"
+            aria-label={L('Menyuni yopish', 'Close menu')}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Portal Role Badge */}
-        <div className="px-5 py-2 bg-slate-800/40 border-b border-slate-800/80 flex items-center justify-between">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            {role.toUpperCase()} PORTAL
-          </span>
-          <span className="text-[10px] font-semibold text-indigo-400 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/60">
-            Tashkent Hub
-          </span>
-        </div>
-
-        {/* Categorized Nav links */}
-        <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
-          {sections.map((sec, secIdx) => (
-            <div key={sec.category || secIdx} className="space-y-1">
-              {sec.category && (
-                <div className="px-3 pt-1 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
-                  {sec.category}
-                </div>
-              )}
-              {sec.items.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => {
-                    if (window.innerWidth < 1024) onClose();
-                  }}
-                  className={({ isActive }) => {
-                    const active = isItemActive(item.path, isActive);
-                    return `flex items-center justify-between px-3 py-2 transition-colors text-xs font-medium rounded-lg ${
-                      active
-                        ? 'bg-indigo-600/20 text-indigo-300 font-bold border-l-2 border-indigo-500'
-                        : 'text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer'
-                    }`;
-                  }}
-                >
-                  {({ isActive }) => {
-                    const active = isItemActive(item.path, isActive);
-                    return (
+        <nav className="flex-1 px-3 py-4 space-y-5 overflow-y-auto">
+          {sections.map((sec) => {
+            const open = !sec.collapsible || openSections[sec.category] || sectionHasActive(sec);
+            return (
+              <div key={sec.category} className="space-y-0.5">
+                {sec.collapsible ? (
+                  <button
+                    type="button"
+                    onClick={() => setOpenSections((s) => ({ ...s, [sec.category]: !open }))}
+                    className="w-full flex items-center justify-between px-3 pb-1.5 text-[10px] font-bold tracking-[0.16em] text-slate-500 uppercase hover:text-slate-300 transition"
+                    aria-expanded={open}
+                  >
+                    <span className="flex items-center gap-1.5"><Library className="w-3 h-3" /> {sec.category}</span>
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`} />
+                  </button>
+                ) : (
+                  <div className="px-3 pb-1.5 text-[10px] font-bold tracking-[0.16em] text-slate-500 uppercase">
+                    {sec.category}
+                  </div>
+                )}
+                {open && sec.items.map((item) => (
+                  <NavLink
+                    key={item.path + item.label}
+                    to={item.path}
+                    onClick={() => {
+                      if (window.innerWidth < 1024) onClose();
+                    }}
+                    className={({ isActive }) => {
+                      const active = isItemActive(item.path, isActive);
+                      return `relative flex items-center gap-2.5 px-3 py-2 text-[13px] rounded-lg transition-colors ${
+                        active
+                          ? 'bg-white/[0.07] text-white font-semibold before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-0.5 before:rounded-full before:bg-gradient-to-b before:from-indigo-400 before:to-fuchsia-400'
+                          : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-100'
+                      }`;
+                    }}
+                  >
+                    {({ isActive }) => (
                       <>
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <span className={active ? 'text-indigo-400' : 'opacity-70'}>
-                            {item.icon}
-                          </span>
-                          <span className="truncate">{item.label}</span>
-                        </div>
-                        {item.badge && (
-                          <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold uppercase tracking-wide flex-shrink-0 ${
-                            active 
-                              ? 'bg-indigo-500/30 text-indigo-200 border border-indigo-500/50' 
-                              : 'bg-slate-800 text-slate-400 border border-slate-700'
-                          }`}>
-                            {item.badge}
-                          </span>
-                        )}
+                        <span className={isItemActive(item.path, isActive) ? 'text-indigo-300' : 'opacity-70'}>{item.icon}</span>
+                        <span className="truncate">{item.label}</span>
                       </>
-                    );
-                  }}
-                </NavLink>
-              ))}
-            </div>
-          ))}
+                    )}
+                  </NavLink>
+                ))}
+              </div>
+            );
+          })}
         </nav>
 
-        {/* Monthly XP Widget in Sidebar (Professional Polish) */}
-        <div className="p-4 m-4 bg-slate-800/50 rounded-xl border border-slate-700/50">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Monthly XP
-            </span>
-            <span className="text-xs font-bold text-amber-400">
-              {userXp.toLocaleString()}
-            </span>
+        {role === 'student' && (
+          <div className="m-3 p-4 rounded-2xl border border-white/5 bg-gradient-to-br from-indigo-500/10 via-violet-500/5 to-transparent">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-semibold text-slate-400">{L('Oylik XP', 'Monthly XP')}</span>
+              <span className="flex items-center gap-1 text-xs font-bold text-amber-300">
+                <Flame className="w-3.5 h-3.5" /> {userXp.toLocaleString()}
+              </span>
+            </div>
+            <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+              <div
+                className="bg-gradient-to-r from-amber-300 to-orange-400 h-full rounded-full transition-all duration-500"
+                style={{ width: `${xpPercentage}%` }}
+              />
+            </div>
           </div>
-          <div className="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden">
-            <div 
-              className="bg-amber-400 h-full rounded-full transition-all duration-500" 
-              style={{ width: `${xpPercentage}%` }}
-            />
-          </div>
-        </div>
+        )}
       </aside>
     </>
   );

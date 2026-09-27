@@ -45,8 +45,10 @@ export const AIStudyAssistant: React.FC<AIStudyAssistantProps> = ({ initialExpan
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Only follow the conversation once the user has interacted; scrolling on mount
+  // would yank the whole dashboard down to the chat.
   useEffect(() => {
-    if (isExpanded) {
+    if (isExpanded && messages.length > 1) {
       scrollToBottom();
     }
   }, [messages, isExpanded]);

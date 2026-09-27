@@ -47,7 +47,7 @@ export const Login: React.FC = () => {
             Premier School LMS
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            {t('tagline')} • Tashkent
+            {t('tagline')}
           </p>
         </div>
 

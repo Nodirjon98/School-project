@@ -44,7 +44,7 @@ export const Championship: React.FC = () => {
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-bold text-amber-100 mb-3">
             <Trophy className="w-3.5 h-3.5 text-yellow-200" />
-            <span>Premier School Tashkent • Oylik Chempionat</span>
+            <span>Premier School • Oylik chempionat</span>
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
