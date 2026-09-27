@@ -150,7 +150,7 @@ export const Championship: React.FC = () => {
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
         <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
           <h3 className="font-bold text-sm text-slate-900">To'liq Reyting Jadvali</h3>
-          <span className="text-xs text-slate-500 font-semibold">Toshkent filiali</span>
+          <span className="text-xs text-slate-500 font-semibold">Premier School</span>
         </div>
 
         <div className="divide-y divide-slate-100">

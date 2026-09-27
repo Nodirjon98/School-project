@@ -163,7 +163,6 @@ export const WeeklyTimetable: React.FC<WeeklyTimetableProps> = ({
               >
                 <option value="all">Barcha filiallar</option>
                 <option value="oybek">Oybek filiali</option>
-                <option value="chorsu">Chorsu filiali</option>
               </select>
             </div>
 
