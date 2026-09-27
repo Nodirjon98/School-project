@@ -15,6 +15,7 @@ export const Signup: React.FC = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmEmailSent, setConfirmEmailSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +28,8 @@ export const Signup: React.FC = () => {
 
     if (result.error) {
       setError(result.error);
+    } else if (result.needsConfirmation) {
+      setConfirmEmailSent(true);
     } else {
       navigate('/onboarding');
     }
@@ -57,6 +60,18 @@ export const Signup: React.FC = () => {
             </div>
           )}
 
+          {confirmEmailSent ? (
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm space-y-2">
+              <p className="font-bold">Hisob yaratildi!</p>
+              <p>
+                <strong>{email.trim().toLowerCase()}</strong> manziliga tasdiqlash havolasi yuborildi.
+                Havolani bosing, so'ng tizimga kiring.
+              </p>
+              <Link to="/login" className="inline-block text-blue-600 font-semibold hover:underline">
+                Tizimga kirish →
+              </Link>
+            </div>
+          ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1.5">
@@ -117,6 +132,7 @@ export const Signup: React.FC = () => {
                 <input
                   type="password"
                   required
+                  minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
@@ -134,6 +150,7 @@ export const Signup: React.FC = () => {
               <span>{loading ? 'Yaratilmoqda...' : t('signupBtn')}</span>
             </button>
           </form>
+          )}
 
           <div className="mt-6 text-center text-xs text-slate-500">
             {t('alreadyHaveAccount')}{' '}
