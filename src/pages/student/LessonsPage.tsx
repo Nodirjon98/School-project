@@ -43,11 +43,15 @@ export const LessonsPage: React.FC = () => {
                     <Calendar className="w-3.5 h-3.5" />
                     {new Date(lesson.lesson_date || lesson.date || Date.now()).toLocaleDateString()}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" />
-                    18:30 - 20:00
-                  </span>
-                  <span>O'qituvchi: Malika Karimova</span>
+                  {groups.find(g => g.id === lesson.group_id)?.schedule && (
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5" />
+                      {groups.find(g => g.id === lesson.group_id)?.schedule}
+                    </span>
+                  )}
+                  {groups.find(g => g.id === lesson.group_id)?.teacher_name && (
+                    <span>O'qituvchi: {groups.find(g => g.id === lesson.group_id)?.teacher_name}</span>
+                  )}
                 </div>
               </div>
             </div>

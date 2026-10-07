@@ -182,48 +182,8 @@ export const SEED_PLATFORM_AUDIT: PlatformAuditAction[] = [];
 
 // LocalStorage helpers for persistence
 export function getStoredStudentPayments(): StudentPaymentPlan[] {
-  const stored = getStorageItem<StudentPaymentPlan[]>('premier_student_payments', []);
-  // Purge any legacy dummy plans referencing old template demo names
-  const validStored = stored.filter(p => 
-    !p.student_id.startsWith('student-1') && 
-    !p.student_id.startsWith('student-2') && 
-    !p.student_id.startsWith('student-3') && 
-    !p.student_id.startsWith('student-4') && 
-    !p.student_id.startsWith('student-5') &&
-    p.student_name !== 'Alisher Usmonov' &&
-    p.student_name !== 'Malika Toirova' &&
-    p.student_name !== 'Jasur Bekmurodov' &&
-    p.student_name !== 'Dilnoza Karimova' &&
-    p.student_name !== 'Shaxzod Rahimov'
-  );
-
-  // Once plans come from the database they are the source of truth: no reseeding.
-  if (getStorageItem<boolean>('premier_payments_db_loaded', false)) {
-    return validStored;
-  }
-
-  // If stored data was completely empty or had zero collected revenue across non-free plans, re-seed with realistic transactions
-  const totalPaidInStored = validStored.reduce((acc, p) => acc + p.paid_amount, 0);
-  if (validStored.length === 0 || totalPaidInStored === 0) {
-    setStorageItem('premier_student_payments', SEED_STUDENT_PAYMENTS);
-    return SEED_STUDENT_PAYMENTS;
-  }
-
-  // Ensure all 36 real students exist in the stored payments
-  const storedMap = new Map(validStored.map(p => [p.student_id, p]));
-  let hasNew = false;
-  SEED_STUDENT_PAYMENTS.forEach(seedPlan => {
-    if (!storedMap.has(seedPlan.student_id)) {
-      validStored.push(seedPlan);
-      hasNew = true;
-    }
-  });
-
-  if (hasNew) {
-    setStorageItem('premier_student_payments', validStored);
-  }
-
-  return validStored;
+  // Plans are created by the admin and loaded from Supabase; no demo seeding.
+  return getStorageItem<StudentPaymentPlan[]>('premier_student_payments', []);
 }
 
 export function saveStoredStudentPayments(plans: StudentPaymentPlan[]) {
@@ -289,84 +249,10 @@ export function getAllPaymentTransactions(plans: StudentPaymentPlan[]): PaymentT
 /**
  * Synchronizes plans with an arbitrary list of profiles (e.g. from LMSDataContext or premier_all_students)
  */
-export function syncPaymentsWithAllStudents(allStudents: any[]): StudentPaymentPlan[] {
-  const currentPlans = getStoredStudentPayments();
-  const planMap = new Map(currentPlans.map(p => [p.student_id, p]));
-  let hasChanges = false;
-
-  allStudents.forEach(st => {
-    if (!planMap.has(st.id) && st.role === 'student') {
-      const isFree = st.payment_type === 'free';
-      const isCustom = st.payment_type === 'custom';
-      const monthlyFee = isFree ? 0 : (st.custom_fee || (isCustom ? 400000 : 500000));
-      const totalFee = monthlyFee * 3;
-      const discountPercent = isFree ? 100 : (st.custom_fee && st.custom_fee < 500000 ? Math.round((1 - st.custom_fee / 500000) * 100) : 0);
-
-      const newPlan: StudentPaymentPlan = {
-        id: `pay-plan-${st.id}`,
-        student_id: st.id,
-        student_name: st.full_name,
-        student_phone: st.phone || '',
-        student_email: st.email,
-        group_id: st.group_id || 'unassigned',
-        group_name: st.group_name || "Guruhga biriktirilmagan",
-        course_title: "General English & IELTS Accelerator",
-        plan_type: isFree ? 'custom' : 'monthly',
-        base_monthly_fee: monthlyFee,
-        total_course_fee: totalFee,
-        discount_percent: discountPercent,
-        discount_reason: isFree ? "100% Grant" : undefined,
-        final_total_fee: totalFee,
-        paid_amount: isFree ? totalFee : 0,
-        remaining_amount: isFree ? 0 : totalFee,
-        overall_status: isFree ? 'paid' : 'pending',
-        next_due_date: '2026-09-25',
-        created_at: st.created_at || new Date().toISOString().split('T')[0],
-        schedules: [
-          {
-            id: `sch-${st.id}-1`,
-            installment_number: 1,
-            title: "1-oy: Sentyabr to'lovi",
-            amount: monthlyFee,
-            due_date: '2026-09-25',
-            paid_date: isFree ? '2026-09-01' : undefined,
-            status: isFree ? 'paid' : 'pending',
-            payment_method: isFree ? 'cash' : undefined,
-            notes: isFree ? "Grant asosida ta'lim" : undefined
-          },
-          {
-            id: `sch-${st.id}-2`,
-            installment_number: 2,
-            title: "2-oy: Oktyabr to'lovi",
-            amount: monthlyFee,
-            due_date: '2026-10-25',
-            paid_date: isFree ? '2026-10-01' : undefined,
-            status: isFree ? 'paid' : 'pending',
-            payment_method: isFree ? 'cash' : undefined
-          },
-          {
-            id: `sch-${st.id}-3`,
-            installment_number: 3,
-            title: "3-oy: Noyabr to'lovi",
-            amount: monthlyFee,
-            due_date: '2026-11-25',
-            paid_date: isFree ? '2026-11-01' : undefined,
-            status: isFree ? 'paid' : 'pending',
-            payment_method: isFree ? 'cash' : undefined
-          }
-        ]
-      };
-
-      currentPlans.push(newPlan);
-      hasChanges = true;
-    }
-  });
-
-  if (hasChanges) {
-    saveStoredStudentPayments(currentPlans);
-  }
-
-  return currentPlans;
+export function syncPaymentsWithAllStudents(_allStudents: unknown[]): StudentPaymentPlan[] {
+  // Plans are no longer generated automatically with made-up fees and dates;
+  // the admin creates each student's plan from the payments page.
+  return getStoredStudentPayments();
 }
 
 export function getStoredStudentActivities(): StudentActivityMetric[] {
@@ -377,11 +263,7 @@ export function getStoredStudentActivities(): StudentActivityMetric[] {
     a.student_name !== 'Malika Toirova' &&
     a.student_name !== 'Jasur Bekmurodov'
   );
-  if (valid.length === 0 || hasFakeMinutes) {
-    setStorageItem('premier_student_activities', SEED_STUDENT_ACTIVITIES);
-    return SEED_STUDENT_ACTIVITIES;
-  }
-  return valid;
+  return hasFakeMinutes ? [] : valid;
 }
 
 export function saveStoredStudentActivities(acts: StudentActivityMetric[]) {
@@ -391,19 +273,11 @@ export function saveStoredStudentActivities(acts: StudentActivityMetric[]) {
 export function getStoredTeacherActivities(): TeacherActivityMetric[] {
   const stored = getStorageItem<TeacherActivityMetric[]>('premier_teacher_activities', []);
   const hasFakeHours = stored.some(t => t.total_teaching_hours > 50);
-  if (stored.length === 0 || hasFakeHours) {
-    setStorageItem('premier_teacher_activities', SEED_TEACHER_ACTIVITIES);
-    return SEED_TEACHER_ACTIVITIES;
-  }
-  return stored;
+  return hasFakeHours ? [] : stored;
 }
 
 export function getStoredPlatformAudit(): PlatformAuditAction[] {
   const stored = getStorageItem<PlatformAuditAction[]>('premier_platform_audit', []);
   const hasFakeLogs = stored.some(a => a.id === 'aud-1' || a.action_description.includes("Unit 1 bo'yicha"));
-  if (stored.length === 0 || hasFakeLogs) {
-    setStorageItem('premier_platform_audit', SEED_PLATFORM_AUDIT);
-    return SEED_PLATFORM_AUDIT;
-  }
-  return stored;
+  return hasFakeLogs ? [] : stored;
 }

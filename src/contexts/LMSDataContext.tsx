@@ -6,18 +6,12 @@ import {
   StudentTelemetryLog, StudentActionEvent, TelemetryModule, ModuleTimeBreakdown,
   StudentPaymentPlan,
 } from '../types';
-import { 
-  SEED_GROUPS, SEED_LESSONS, SEED_HOMEWORK, SEED_SUBMISSIONS, 
-  SEED_DAILY_WORDS, SEED_WORD_PROGRESS, SEED_CHAMPIONSHIP, SEED_BADGES,
-  SEED_PROFILES
-} from '../lib/seedData';
-import { PREMIER_OFFICIAL_STUDENTS } from '../data/premierStudentsData';
+import { SEED_DAILY_WORDS } from '../lib/seedData';
 import { SEED_GRAMMAR_EXAMS } from '../data/seedGrammarExams';
 import { SEED_BOOK_FINAL_EXAMS, assignBookFinalExamToGroup } from '../data/bookFinalExamsData';
 import { getStorageItem, setStorageItem } from '../lib/storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { loadCollection, syncCollection } from '../lib/lmsStore';
-import { getStoredStudentPayments } from '../data/paymentAndAnalyticsData';
 import { useAuth } from './AuthContext';
 import { playSound } from '../lib/sound';
 import { realtime } from '../lib/realtime';
@@ -80,18 +74,37 @@ interface LMSDataContextType {
 
 const LMSDataContext = createContext<LMSDataContextType | undefined>(undefined);
 
+// Browsers that ran older builds cached demo/template records (sample groups,
+// students, payments, scores). Clear them once; real data now comes from Supabase.
+const DATA_VERSION = '2';
+try {
+  if (typeof window !== 'undefined' && window.localStorage.getItem('premier_data_version') !== DATA_VERSION) {
+    [
+      'premier_groups', 'premier_lessons', 'premier_attendance', 'premier_homeworks', 'premier_submissions',
+      'premier_word_progress', 'premier_championship', 'premier_badges', 'premier_all_students',
+      'premier_registered_users', 'premier_deleted_student_ids', 'premier_student_payments',
+      'premier_payments_db_loaded', 'premier_student_activities', 'premier_teacher_activities',
+      'premier_platform_audit', 'premier_notifications', 'premier_student_telemetry',
+      'premier_student_action_events',
+    ].forEach(key => window.localStorage.removeItem(key));
+    window.localStorage.setItem('premier_data_version', DATA_VERSION);
+  }
+} catch {
+  // Storage unavailable (private mode); nothing cached to clear.
+}
+
 export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { profile, updateProfile } = useAuth();
 
-  const [groups, setGroups] = useState<Group[]>(() => getStorageItem('premier_groups', SEED_GROUPS));
-  const [lessons, setLessons] = useState<Lesson[]>(() => getStorageItem('premier_lessons', SEED_LESSONS));
+  const [groups, setGroups] = useState<Group[]>(() => getStorageItem<Group[]>('premier_groups', []));
+  const [lessons, setLessons] = useState<Lesson[]>(() => getStorageItem<Lesson[]>('premier_lessons', []));
   const [attendance, setAttendance] = useState<Attendance[]>(() => getStorageItem('premier_attendance', []));
-  const [homeworks, setHomeworks] = useState<Homework[]>(() => getStorageItem('premier_homeworks', SEED_HOMEWORK));
-  const [submissions, setSubmissions] = useState<HomeworkSubmission[]>(() => getStorageItem('premier_submissions', SEED_SUBMISSIONS));
+  const [homeworks, setHomeworks] = useState<Homework[]>(() => getStorageItem<Homework[]>('premier_homeworks', []));
+  const [submissions, setSubmissions] = useState<HomeworkSubmission[]>(() => getStorageItem<HomeworkSubmission[]>('premier_submissions', []));
   const [dailyWords, setDailyWords] = useState<DailyWord[]>(() => getStorageItem('premier_daily_words', SEED_DAILY_WORDS));
-  const [wordProgress, setWordProgress] = useState<WordProgress[]>(() => getStorageItem('premier_word_progress', SEED_WORD_PROGRESS));
-  const [championshipScores, setChampionshipScores] = useState<ChampionshipScore[]>(() => getStorageItem('premier_championship', SEED_CHAMPIONSHIP));
-  const [badges, setBadges] = useState<Badge[]>(() => getStorageItem('premier_badges', SEED_BADGES));
+  const [wordProgress, setWordProgress] = useState<WordProgress[]>(() => getStorageItem<WordProgress[]>('premier_word_progress', []));
+  const [championshipScores, setChampionshipScores] = useState<ChampionshipScore[]>(() => getStorageItem<ChampionshipScore[]>('premier_championship', []));
+  const [badges, setBadges] = useState<Badge[]>(() => getStorageItem<Badge[]>('premier_badges', []));
   const [aiContents, setAIContents] = useState<AIContent[]>(() => getStorageItem('premier_ai_contents', []));
   const [grammarExams, setGrammarExams] = useState<GrammarExam[]>(() => {
     const stored = getStorageItem<GrammarExam[]>('premier_grammar_exams', []);
@@ -105,47 +118,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return combined;
   });
   const [examSubmissions, setExamSubmissions] = useState<GrammarExamSubmission[]>(() => getStorageItem('premier_grammar_submissions', []));
-  const [students, setStudents] = useState<Profile[]>(() => {
-    const stored = getStorageItem<Profile[]>('premier_all_students', []);
-    const deletedIds = new Set(getStorageItem<string[]>('premier_deleted_student_ids', []));
-    const map = new Map<string, Profile>();
-
-    // 1. Seed official premier students from real records (36 real students)
-    PREMIER_OFFICIAL_STUDENTS.forEach((st) => {
-      if (!deletedIds.has(st.id)) {
-        map.set(st.id, st);
-      }
-    });
-
-    // 2. Apply any updates from localStorage (filtering out legacy dummy mock student IDs)
-    stored.forEach(r => {
-      const isLegacyDummy = 
-        r.id.startsWith('user-student-') || 
-        r.id.startsWith('user-other-') || 
-        (r.id.startsWith('student-') && !r.id.startsWith('student-official-') && !r.id.match(/^student-\d{13}/)) ||
-        r.full_name === 'Jasur Rustamov' ||
-        r.full_name === 'Nodira Karimova' ||
-        r.full_name === 'Bekzod Toshmatov' ||
-        r.full_name === 'Alisher Usmonov' ||
-        r.full_name === 'Malika Toirova';
-
-      if (r.role === 'student' && !deletedIds.has(r.id) && !isLegacyDummy) {
-        const existing = map.get(r.id);
-        if (existing) {
-          map.set(r.id, { ...existing, ...r });
-        } else if (r.id.startsWith('student-official-') || r.id.match(/^student-\d{13}/)) {
-          map.set(r.id, r);
-        }
-      }
-    });
-
-    const allStudents = Array.from(map.values());
-    if (stored.length !== allStudents.length) {
-      setStorageItem('premier_all_students', allStudents);
-    }
-
-    return allStudents;
-  });
+  // Real students come from Supabase (refreshStudentsFromDb); local cache only bridges the first paint.
+  const [students, setStudents] = useState<Profile[]>(() => getStorageItem<Profile[]>('premier_all_students', []));
 
   const [telemetryLogs, setTelemetryLogs] = useState<Record<string, StudentTelemetryLog>>(() => {
     return getStorageItem<Record<string, StudentTelemetryLog>>('premier_student_telemetry', {});
@@ -285,18 +259,32 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       id: legacy_id || row.id,
       auth_id: row.id,
     }) as Profile);
-    const deletedIds = new Set(getStorageItem<string[]>('premier_deleted_student_ids', []));
-    setStudents(prev => {
-      const byId = new Map(prev.map(s => [s.id, s]));
-      dbStudents.filter(db => !deletedIds.has(db.id)).forEach(db => {
-        const existing = byId.get(db.id)
-          || prev.find(s => s.email && db.email && s.email.toLowerCase() === db.email.toLowerCase());
-        if (existing) byId.delete(existing.id);
-        // Local-only fields (group, payments) win until they are migrated to the DB.
-        byId.set(db.id, { ...db, ...(existing ? { group_id: existing.group_id ?? db.group_id, group_name: existing.group_name ?? db.group_name } : {}) });
-      });
-      return Array.from(byId.values()).sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+    // The database list is authoritative; keep only admin-created local
+    // placeholders (no account yet) alongside it.
+    setStudents(prev => [...dbStudents, ...prev.filter(st => !st.auth_id && !dbStudents.some(db => db.email?.toLowerCase() === st.email?.toLowerCase()))]);
+
+    // Tell the admin about students who signed up since this browser last looked.
+    const seenRaw = getStorageItem<string[] | null>('premier_seen_student_ids', null);
+    const seen = new Set(seenRaw ?? []);
+    const recentCutoff = Date.now() - 3 * 24 * 60 * 60 * 1000;
+    const fresh = dbStudents.filter(st => {
+      const key = st.auth_id || st.id;
+      if (seen.has(key)) return false;
+      // First run in this browser: only surface the last few days, not everyone.
+      return seenRaw !== null || new Date(st.created_at).getTime() > recentCutoff;
     });
+    fresh.slice().reverse().forEach(st => {
+      realtime.notifyLocal({
+        id: `student-registered-${st.auth_id || st.id}`,
+        type: 'STUDENT_REGISTERED',
+        title: "Yangi o'quvchi ro'yxatdan o'tdi",
+        message: `${st.full_name || st.email} (${st.email}) ro'yxatdan o'tdi. Uni guruhga biriktiring.`,
+        timestamp: st.created_at,
+        read: false,
+        data: { studentId: st.id },
+      });
+    });
+    setStorageItem('premier_seen_student_ids', dbStudents.map(st => st.auth_id || st.id));
   }, [isStaff]);
 
   useEffect(() => {
@@ -333,9 +321,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => window.removeEventListener('premier:student_registered', handleNewReg);
   }, []);
 
-  // Load LMS records from Supabase once the user is known. Staff whose
-  // database is still empty upload what this browser holds (one-time move
-  // from localStorage); after that every change is written back.
+  // Load LMS records from Supabase once the user is known; after that every
+  // change is written back.
   const [dbLoaded, setDbLoaded] = useState(false);
   const myStudentIds = [profile?.id, profile?.auth_id].filter(Boolean) as string[];
 
@@ -358,19 +345,15 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         isStaff ? loadCollection<StudentPaymentPlan>('payment_plans') : Promise.resolve(null),
       ]);
       if (cancelled) return;
-      if (g?.length) setGroups(g);
-      if (l?.length) setLessons(l);
-      if (h?.length) setHomeworks(h);
-      if (s?.length) setSubmissions(s);
-      if (a?.length) setAttendance(a);
+      // The database is the source of truth, even when a collection is empty.
+      if (g) setGroups(g);
+      if (l) setLessons(l);
+      if (h) setHomeworks(h);
+      if (s) setSubmissions(s);
+      if (a) setAttendance(a);
       if (w?.length) setDailyWords(w);
       if (pp) {
-        if (pp.length) {
-          setStorageItem('premier_student_payments', pp);
-        } else {
-          await syncCollection('payment_plans', getStoredStudentPayments(), { studentIdOf: plan => plan.student_id });
-        }
-        setStorageItem('premier_payments_db_loaded', true);
+        setStorageItem('premier_student_payments', pp);
         window.dispatchEvent(new Event('premier:payments_synced'));
       }
       // Ignore failed loads (null) so we never overwrite the server blindly.

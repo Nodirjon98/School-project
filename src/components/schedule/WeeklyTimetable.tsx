@@ -261,7 +261,7 @@ export const WeeklyTimetable: React.FC<WeeklyTimetableProps> = ({
                                 </div>
 
                                 <div className="mt-0.5 text-[10px] text-slate-500 truncate">
-                                  Ustoz: {slot.group.teacher_name || 'Malika Karimova'}
+                                  Ustoz: {slot.group.teacher_name || '—'}
                                 </div>
                               </div>
                             );

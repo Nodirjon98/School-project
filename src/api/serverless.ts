@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { PREMIER_OFFICIAL_STUDENTS } from '../data/premierStudentsData';
 
 const TELEMETRY_DIR = path.resolve(process.env.TEMP || (process.platform === 'win32' ? process.env.TMP || 'C:\\Windows\\Temp' : '/tmp'));
 const TELEMETRY_FILE = path.join(TELEMETRY_DIR, 'premier_lms_telemetry_store.json');
@@ -63,13 +62,6 @@ function ensureInit() {
     }
   } catch {}
 
-  if (Array.isArray(PREMIER_OFFICIAL_STUDENTS)) {
-    PREMIER_OFFICIAL_STUDENTS.forEach(st => {
-      if (!globalTelemetryStore[st.id]) {
-        globalTelemetryStore[st.id] = createDefaultStudentTelemetry(st);
-      }
-    });
-  }
 }
 
 function persistStore() {
@@ -162,8 +154,7 @@ export default async function handler(req: any, res: any) {
     return sendJson(res, 200, {
       status: 'ok',
       timestamp: new Date().toISOString(),
-      service: 'Premier School LMS Vercel API',
-      officialStudentsCount: PREMIER_OFFICIAL_STUDENTS.length
+      service: 'Premier School LMS Vercel API'
     });
   }
 
@@ -188,8 +179,7 @@ export default async function handler(req: any, res: any) {
     const { student_id, student_name, email, device, group_name, group_id, level, student_avatar } = body;
     if (!student_id) return sendJson(res, 400, { error: 'student_id required' });
 
-    const matchedOfficial = PREMIER_OFFICIAL_STUDENTS.find(s => s.id === student_id || s.email.toLowerCase() === (email || '').toLowerCase());
-    const current = globalTelemetryStore[student_id] || createDefaultStudentTelemetry(matchedOfficial || { id: student_id, full_name: student_name, email, group_name, group_id, level, avatar_url: student_avatar });
+    const current = globalTelemetryStore[student_id] || createDefaultStudentTelemetry({ id: student_id, full_name: student_name, email, group_name, group_id, level, avatar_url: student_avatar });
 
     const nowIso = new Date().toISOString();
     const detectedDevice = device || (/android|iphone|ipad|mobile/i.test(req.headers?.['user-agent'] || '') ? 'mobile' : 'desktop');
@@ -229,8 +219,7 @@ export default async function handler(req: any, res: any) {
     const { student_id, student_name, module, active_seconds = 0, idle_seconds = 0, current_page, is_idle, device } = body;
     if (!student_id) return sendJson(res, 400, { error: 'student_id required' });
 
-    const matchedOfficial = PREMIER_OFFICIAL_STUDENTS.find(s => s.id === student_id);
-    const current = globalTelemetryStore[student_id] || createDefaultStudentTelemetry(matchedOfficial || { id: student_id, full_name: student_name });
+    const current = globalTelemetryStore[student_id] || createDefaultStudentTelemetry({ id: student_id, full_name: student_name });
 
     const nowIso = new Date().toISOString();
     const activeSec = Number(active_seconds) || 0;
@@ -268,8 +257,7 @@ export default async function handler(req: any, res: any) {
     const { student_id, student_name, action_type, module, details } = body;
     if (!student_id) return sendJson(res, 400, { error: 'student_id required' });
 
-    const matchedOfficial = PREMIER_OFFICIAL_STUDENTS.find(s => s.id === student_id);
-    const current = globalTelemetryStore[student_id] || createDefaultStudentTelemetry(matchedOfficial || { id: student_id, full_name: student_name });
+    const current = globalTelemetryStore[student_id] || createDefaultStudentTelemetry({ id: student_id, full_name: student_name });
 
     const nowIso = new Date().toISOString();
     const actionEvent = {
@@ -300,11 +288,9 @@ export default async function handler(req: any, res: any) {
 
   // 6. RESET
   if (url.includes('/telemetry/reset')) {
-    if (Array.isArray(PREMIER_OFFICIAL_STUDENTS)) {
-      PREMIER_OFFICIAL_STUDENTS.forEach(st => {
-        globalTelemetryStore[st.id] = createDefaultStudentTelemetry(st);
-      });
-    }
+    Object.keys(globalTelemetryStore).forEach(id => {
+      globalTelemetryStore[id] = createDefaultStudentTelemetry({ id, full_name: globalTelemetryStore[id]?.student_name });
+    });
     globalActionEvents.length = 0;
     persistStore();
     return sendJson(res, 200, { success: true, message: 'Barcha telemetriya tozalab yangilandi' });
