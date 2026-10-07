@@ -386,7 +386,7 @@ export const GroupManager: React.FC = () => {
             <Calendar className="w-4 h-4 text-purple-600" />
           </div>
           <div className="text-2xl font-black text-slate-900">{groups.length} ta guruh</div>
-          <span className="text-[11px] text-purple-600 font-semibold block mt-0.5">Oybek & Chorsu filiallari</span>
+          <span className="text-[11px] text-purple-600 font-semibold block mt-0.5">Premier School</span>
         </div>
       </div>
 

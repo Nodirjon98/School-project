@@ -5,7 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { useLMSData } from '../../contexts/LMSDataContext';
 import { 
   Users, BookOpen, CheckSquare, BarChart3, 
-  TrendingUp, Award, Building, Sparkles, Plus, ArrowRight, Clock 
+  TrendingUp, ArrowRight, Clock, CreditCard, AlertTriangle, Monitor, Smartphone
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -37,78 +37,49 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Top Banner */}
-      <div className="bg-gradient-to-r from-purple-800 via-indigo-800 to-slate-900 rounded-3xl p-6 sm:p-8 text-white">
-        <div className="max-w-2xl">
-          <span className="text-xs font-bold uppercase tracking-wider text-purple-200 block mb-1">
-            Premier School Tashkent • Boshqaruv Markazi
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Administrator Paneli
-          </h1>
-          <p className="text-xs sm:text-sm text-purple-100 mt-1 leading-relaxed">
-            O'quv markaz faoliyati, guruhlar, davomat ko'rsatkichlari va Gemini AI generatsiyalarini boshqaring.
-          </p>
-
-          <div className="flex flex-wrap gap-2.5 mt-6">
+      {/* Hero */}
+      <section className="relative overflow-hidden rounded-[28px] bg-[#0b0c1a] text-white p-6 sm:p-8">
+        <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-violet-600/30 blur-[90px]" />
+        <div className="pointer-events-none absolute -bottom-28 left-20 h-72 w-72 rounded-full bg-indigo-600/25 blur-[90px]" />
+        <div className="relative flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">Premier School</p>
+            <h1 className="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight">Boshqaruv paneli</h1>
+            <p className="mt-2 text-sm text-slate-300 max-w-xl">
+              O'quvchilar, guruhlar, davomat va to'lovlar — bir joyda.
+            </p>
             <Link
               to="/admin/analytics?tab=monitoring"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-400 text-slate-950 font-black text-xs hover:bg-emerald-300 transition shadow-sm"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/5 ring-1 ring-white/10 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10 transition"
             >
-              <span className={`w-2 h-2 rounded-full ${onlineCount > 0 ? 'bg-emerald-950 animate-ping' : idleCount > 0 ? 'bg-amber-600 animate-pulse' : 'bg-emerald-800'}`} />
-              <span>
-                {onlineCount > 0 ? `🟢 Jonli Nazorat (${onlineCount} Onlayn)` :
-                 idleCount > 0 ? `🟡 Jonli Nazorat (${idleCount} Pauzada)` :
-                 activeTodayCount > 0 ? `🔵 Jonli Nazorat (${activeTodayCount} Bugun Faol)` :
-                 `🟢 Jonli Nazorat (0 Onlayn)`}
-              </span>
+              <span className={`w-2 h-2 rounded-full ${onlineCount > 0 ? 'bg-emerald-400 animate-pulse' : idleCount > 0 ? 'bg-amber-400' : 'bg-slate-500'}`} />
+              {onlineCount > 0 ? `${onlineCount} ta onlayn` : idleCount > 0 ? `${idleCount} ta pauzada` : activeTodayCount > 0 ? `${activeTodayCount} ta bugun kirgan` : 'Hozir hech kim onlayn emas'}
             </Link>
-            <Link
-              to="/admin/analytics?tab=performance"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-500 transition shadow-sm"
-            >
-              <TrendingUp className="w-4 h-4" />
-              <span>📊 Performance Analytics</span>
+          </div>
+          <div className="flex flex-wrap gap-2.5">
+            <Link to="/admin/groups" className="inline-flex items-center gap-2 rounded-full bg-white text-slate-900 px-5 py-2.5 text-sm font-bold hover:bg-slate-100 transition">
+              <Users className="w-4 h-4" /> Guruhlar
             </Link>
-            <Link
-              to="/admin/analytics?tab=audit"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-700 text-white font-bold text-xs hover:bg-purple-600 transition shadow-sm"
-            >
-              <span>🛡️ Xavfsizlik & Audit Log</span>
+            <Link to="/admin/payments" className="inline-flex items-center gap-2 rounded-full bg-white/10 ring-1 ring-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-white/15 transition">
+              <CreditCard className="w-4 h-4" /> To'lovlar
             </Link>
-            <Link
-              to="/teacher/listening"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sky-500 text-white font-bold text-xs hover:bg-sky-400 transition shadow-sm"
-            >
-              <span>🎧 Tactics for Listening</span>
-            </Link>
-            <Link
-              to="/admin/speaking-hub"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition shadow-sm"
-            >
-              <span>🎙️ Mr. Safoyev Voice</span>
-            </Link>
-            <Link
-              to="/admin/groups"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white text-purple-900 font-bold text-xs hover:bg-purple-50 transition shadow-sm"
-            >
-              <Users className="w-4 h-4" />
-              <span>Guruhlar & O'quvchilar</span>
+            <Link to="/admin/analytics?tab=performance" className="inline-flex items-center gap-2 rounded-full bg-white/10 ring-1 ring-white/15 px-5 py-2.5 text-sm font-semibold hover:bg-white/15 transition">
+              <TrendingUp className="w-4 h-4" /> Analitika
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Unassigned Students Alert Banner */}
       {unassignedCount > 0 && (
         <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-700 flex items-center justify-center font-black text-base shrink-0">
-              ⚠️
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-700 flex items-center justify-center shrink-0">
+              <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
               <h4 className="text-xs font-bold text-slate-900">
-                {unassignedCount} ta yangi ro'yxatdan o'tgan o'quvchi guruhga biriktirilishini kutmoqda
+                {unassignedCount} ta o'quvchi guruhga biriktirilmagan
               </h4>
               <p className="text-[11px] text-slate-500">
                 O'quvchilarni darajasiga mos guruhlarga joylashtiring va to'lov grafigini belgilang.
@@ -119,14 +90,14 @@ export const AdminDashboard: React.FC = () => {
             to="/admin/groups"
             className="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition shadow-xs whitespace-nowrap text-center"
           >
-            Guruhlarga joylash →
+            Guruhlarga joylash
           </Link>
         </div>
       )}
 
       {/* 4 KPI Metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
+        <div className="bg-white p-5 rounded-3xl border border-slate-200/70 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">O'quvchilar</span>
             <Users className="w-4 h-4 text-blue-600" />
@@ -154,7 +125,7 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
+        <div className="bg-white p-5 rounded-3xl border border-slate-200/70 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Faol Guruhlar</span>
             <BookOpen className="w-4 h-4 text-indigo-600" />
@@ -165,7 +136,7 @@ export const AdminDashboard: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
+        <div className="bg-white p-5 rounded-3xl border border-slate-200/70 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">O'rtacha Davomat</span>
             <CheckSquare className="w-4 h-4 text-emerald-600" />
@@ -182,7 +153,7 @@ export const AdminDashboard: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
+        <div className="bg-white p-5 rounded-3xl border border-slate-200/70 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Vazifalar topshirilishi</span>
             <BarChart3 className="w-4 h-4 text-purple-600" />
@@ -204,7 +175,7 @@ export const AdminDashboard: React.FC = () => {
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
               </span>
               <h3 className="text-sm font-black text-slate-900">
-                Jonli O'quvchilar Telemetriyasi — Yaqinda kirganlar ({recentlyActiveStudents.length})
+                Yaqinda kirgan o'quvchilar ({recentlyActiveStudents.length})
               </h3>
             </div>
             <Link to="/admin/analytics?tab=monitoring" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
@@ -236,7 +207,7 @@ export const AdminDashboard: React.FC = () => {
                   <div className="min-w-0">
                     <div className="font-extrabold text-slate-900 group-hover:text-indigo-600 transition text-xs truncate">{st.student_name}</div>
                     <div className="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5">
-                      <span>{st.device === 'desktop' ? '💻' : '📱'}</span>
+                      {st.device === 'desktop' ? <Monitor className="w-3 h-3" /> : <Smartphone className="w-3 h-3" />}
                       <span className="font-bold text-indigo-600 truncate">{st.last_active_label || 'Faol'}</span>
                     </div>
                   </div>
@@ -250,11 +221,11 @@ export const AdminDashboard: React.FC = () => {
       {/* Grid: Groups Distribution & Real-time Activity Feed */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Groups Distribution */}
-        <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-2xs space-y-4">
+        <div className="bg-white rounded-3xl p-6 border border-slate-200/70 shadow-[0_1px_2px_rgba(15,23,42,0.04)] space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-indigo-600" />
-              <span>Guruhlar va O'quvchilar Taqsimoti</span>
+              <span>Guruhlar</span>
             </h3>
             <Link to="/admin/groups" className="text-xs text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1">
               <span>Barchasini ko'rish</span>
@@ -279,15 +250,14 @@ export const AdminDashboard: React.FC = () => {
                           {group.level}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 mt-0.5">{group.teacher_name} • {group.schedule}</p>
+                      <p className="text-xs text-slate-500 mt-0.5">{[group.teacher_name, group.schedule].filter(Boolean).join(' • ')}</p>
                       <div className="flex gap-3 text-xs text-slate-600 mt-2">
-                        <span>{group.room || "Asosiy Bino"}</span>
-                        <span>•</span>
+                        {group.room && <><span>{group.room}</span><span>•</span></>}
                         <span className="font-semibold text-slate-800">{groupStudentsCount} nafar o'quvchi</span>
                       </div>
                     </div>
                     <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      Faol (Ochiq)
+                      Faol
                     </span>
                   </div>
                 );
@@ -297,13 +267,12 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Real LMS Events Feed */}
-        <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-2xs space-y-4">
+        <div className="bg-white rounded-3xl p-6 border border-slate-200/70 shadow-[0_1px_2px_rgba(15,23,42,0.04)] space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
               <Clock className="w-4 h-4 text-blue-600" />
               <span>So'nggi tizim hodisalari</span>
             </h3>
-            <span className="text-xs text-slate-400">Jonli telemetriya</span>
           </div>
 
           {actionEvents.length === 0 ? (
@@ -311,7 +280,7 @@ export const AdminDashboard: React.FC = () => {
               <Clock className="w-8 h-8 text-slate-300 mx-auto mb-2" />
               <h4 className="text-xs font-bold text-slate-700">Hozircha tizimda hodisalar qayd etilmagan</h4>
               <p className="text-[11px] text-slate-400 mt-1 max-w-xs mx-auto">
-                Login-parollar tarqatilib, o'quvchilar va ustozlar platformada dars qilishi bilanoq barcha hodisalar bu yerda real vaqtda aks etadi.
+                O'quvchilar platformaga kirishi bilan hodisalar shu yerda ko'rinadi.
               </p>
             </div>
           ) : (
@@ -339,7 +308,7 @@ export const AdminDashboard: React.FC = () => {
                   <div key={evt.id} className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start justify-between gap-3 hover:bg-slate-100/70 transition">
                     <div className="flex items-start gap-2.5 min-w-0">
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase shrink-0 mt-0.5 ${badgeBg}`}>
-                        {isLogin ? "🔑 Kirish" : isIdle ? "⏸️ Pauza" : isResume ? "▶️ Faol" : "📄 Sahifa"}
+                        {isLogin ? "Kirish" : isIdle ? "Pauza" : isResume ? "Faol" : "Sahifa"}
                       </span>
                       <div className="min-w-0">
                         <span className="font-extrabold text-slate-900 block truncate">{evt.student_name}</span>

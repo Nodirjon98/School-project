@@ -46,7 +46,7 @@ export const Signup: React.FC = () => {
             Premier School LMS
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Yangi hisob yaratish • Tashkent
+            Yangi hisob yaratish
           </p>
         </div>
 

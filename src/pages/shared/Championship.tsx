@@ -44,7 +44,7 @@ export const Championship: React.FC = () => {
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-bold text-amber-100 mb-3">
             <Trophy className="w-3.5 h-3.5 text-yellow-200" />
-            <span>Premier School Tashkent • Oylik Chempionat</span>
+            <span>Premier School • Oylik chempionat</span>
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
@@ -150,7 +150,7 @@ export const Championship: React.FC = () => {
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
         <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
           <h3 className="font-bold text-sm text-slate-900">To'liq Reyting Jadvali</h3>
-          <span className="text-xs text-slate-500 font-semibold">Toshkent filiali</span>
+          <span className="text-xs text-slate-500 font-semibold">Premier School</span>
         </div>
 
         <div className="divide-y divide-slate-100">
