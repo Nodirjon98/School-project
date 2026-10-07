@@ -5,22 +5,31 @@ import {
 } from 'lucide-react';
 import { StudentPaymentPlan, PaymentScheduleItem } from '../../types';
 import { getStoredStudentPayments } from '../../data/paymentAndAnalyticsData';
+import { loadCollection } from '../../lib/lmsStore';
 import { PaymentReceiptModal } from '../../components/payments/PaymentReceiptModal';
 import { StudentContractModal } from '../../components/payments/StudentContractModal';
 import { useAuth } from '../../contexts/AuthContext';
 
 export const StudentPaymentsPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [plans, setPlans] = useState<StudentPaymentPlan[]>([]);
   const [selectedReceipt, setSelectedReceipt] = useState<{ plan: StudentPaymentPlan; item: PaymentScheduleItem } | null>(null);
   const [isContractOpen, setIsContractOpen] = useState(false);
 
   useEffect(() => {
-    setPlans(getStoredStudentPayments());
+    let cancelled = false;
+    // RLS returns only this student's own plans.
+    loadCollection<StudentPaymentPlan>('payment_plans').then(dbPlans => {
+      if (cancelled) return;
+      setPlans(dbPlans && dbPlans.length > 0 ? dbPlans : getStoredStudentPayments());
+    });
+    return () => { cancelled = true; };
   }, []);
 
-  // Match current user or default to first plan
-  const myPlan = plans.find(p => p.student_email?.toLowerCase() === user?.email?.toLowerCase() || p.student_id === user?.id) || plans[0];
+  // Only ever show the signed-in student's own plan.
+  const myIds = [profile?.id, profile?.auth_id, user?.id].filter(Boolean);
+  const myEmail = (profile?.email || user?.email || '').toLowerCase();
+  const myPlan = plans.find(p => myIds.includes(p.student_id) || (!!myEmail && p.student_email?.toLowerCase() === myEmail));
 
   if (!myPlan) {
     return (

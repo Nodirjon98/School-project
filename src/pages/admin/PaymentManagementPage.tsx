@@ -63,7 +63,14 @@ export const PaymentManagementPage: React.FC = () => {
   const [newPlanPassportId, setNewPlanPassportId] = useState<string>('');
   const [newPlanParentName, setNewPlanParentName] = useState<string>('');
 
-  // Initial load and sync with registered students
+  // Initial load and sync with registered students; reload once plans arrive from the database
+  const [paymentsVersion, setPaymentsVersion] = useState(0);
+  useEffect(() => {
+    const onSynced = () => setPaymentsVersion(v => v + 1);
+    window.addEventListener('premier:payments_synced', onSynced);
+    return () => window.removeEventListener('premier:payments_synced', onSynced);
+  }, []);
+
   useEffect(() => {
     if (students && students.length > 0) {
       const synced = syncPaymentsWithAllStudents(students);
@@ -71,7 +78,7 @@ export const PaymentManagementPage: React.FC = () => {
     } else {
       setPlans(getStoredStudentPayments());
     }
-  }, [students]);
+  }, [students, paymentsVersion]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
