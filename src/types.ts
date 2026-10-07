@@ -8,6 +8,8 @@ export type ContentStatus = 'draft' | 'published' | 'archived';
 
 export interface Profile {
   id: string;
+  // Supabase Auth user ID when it differs from `id` (imported students keep their old ID)
+  auth_id?: string;
   email: string;
   full_name: string;
   role: UserRole;

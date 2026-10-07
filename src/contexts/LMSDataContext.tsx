@@ -263,6 +263,56 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setStorageItem('premier_registered_users', updated);
   }, [students]);
 
+  // Staff load the real student list from Supabase. Rows imported from the old
+  // seed keep their legacy id so local LMS data (groups, payments) still lines up.
+  const isStaff = profile?.role === 'admin' || profile?.role === 'teacher';
+  const refreshStudentsFromDb = useCallback(async () => {
+    if (!isSupabaseConfigured || !supabase || !isStaff) return;
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('role', 'student')
+      .order('created_at', { ascending: false });
+    if (error || !data) {
+      if (error) console.warn('Supabase students load error:', error.message);
+      return;
+    }
+    const dbStudents = (data as (Profile & { legacy_id?: string | null })[]).map(({ legacy_id, ...row }) => ({
+      ...row,
+      id: legacy_id || row.id,
+      auth_id: row.id,
+    }) as Profile);
+    const deletedIds = new Set(getStorageItem<string[]>('premier_deleted_student_ids', []));
+    setStudents(prev => {
+      const byId = new Map(prev.map(s => [s.id, s]));
+      dbStudents.filter(db => !deletedIds.has(db.id)).forEach(db => {
+        const existing = byId.get(db.id)
+          || prev.find(s => s.email && db.email && s.email.toLowerCase() === db.email.toLowerCase());
+        if (existing) byId.delete(existing.id);
+        // Local-only fields (group, payments) win until they are migrated to the DB.
+        byId.set(db.id, { ...db, ...(existing ? { group_id: existing.group_id ?? db.group_id, group_name: existing.group_name ?? db.group_name } : {}) });
+      });
+      return Array.from(byId.values()).sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+    });
+  }, [isStaff]);
+
+  useEffect(() => {
+    if (!isStaff) return;
+    refreshStudentsFromDb();
+    const interval = window.setInterval(refreshStudentsFromDb, 30000);
+    window.addEventListener('focus', refreshStudentsFromDb);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener('focus', refreshStudentsFromDb);
+    };
+  }, [isStaff, refreshStudentsFromDb]);
+
+  /** Primary key of a student's row in `profiles`, or null if they only exist locally. */
+  const dbIdFor = (studentId: string): string | null => {
+    const st = students.find(s => s.id === studentId);
+    return st?.auth_id || null;
+  };
+
   // Real-time listener for newly registered students
   useEffect(() => {
     const handleNewReg = (e: any) => {
@@ -1070,10 +1120,14 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     if (isSupabaseConfigured && supabase) {
       try {
-        await supabase.from('profiles').update({
-          group_id: groupId,
-          updated_at: new Date().toISOString()
-        }).eq('id', studentId);
+        const dbId = dbIdFor(studentId);
+        if (dbId) {
+          await supabase.from('profiles').update({
+            group_id: groupId,
+            group_name: targetGroup.name,
+            updated_at: new Date().toISOString()
+          }).eq('id', dbId);
+        }
       } catch (e) {
         console.warn('Supabase assign student error:', e);
       }
@@ -1103,10 +1157,14 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     if (isSupabaseConfigured && supabase) {
       try {
-        await supabase.from('profiles').update({
-          group_id: null,
-          updated_at: new Date().toISOString()
-        }).eq('id', studentId);
+        const dbId = dbIdFor(studentId);
+        if (dbId) {
+          await supabase.from('profiles').update({
+            group_id: null,
+            group_name: null,
+            updated_at: new Date().toISOString()
+          }).eq('id', dbId);
+        }
       } catch (e) {
         console.warn('Supabase remove student error:', e);
       }
@@ -1123,7 +1181,12 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     if (isSupabaseConfigured && supabase) {
       try {
-        await supabase.from('profiles').update(updates).eq('id', studentId);
+        const dbId = dbIdFor(studentId);
+        if (dbId) {
+          const { id: _id, auth_id: _authId, password: _pw, created_at: _c, ...dbUpdates } = updates;
+          const { error } = await supabase.from('profiles').update(dbUpdates).eq('id', dbId);
+          if (error) console.warn('Supabase update student profile error:', error.message);
+        }
       } catch (e) {
         console.warn('Supabase update student profile error:', e);
       }
@@ -1160,13 +1223,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const reg = getStorageItem<Profile[]>('premier_registered_users', []);
     setStorageItem('premier_registered_users', [...reg, newStudent]);
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from('profiles').upsert([newStudent]);
-      } catch (e) {
-        console.warn('Supabase registerStudentByAdmin error:', e);
-      }
-    }
+    // Note: this creates a local record only. A database profile needs a real
+    // auth account, which the student gets by signing up with this email.
 
     playSound('levelup');
     return newStudent;
@@ -1187,7 +1245,10 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     if (isSupabaseConfigured && supabase) {
       try {
-        await supabase.from('profiles').delete().eq('id', studentId);
+        // Profiles are tied to auth accounts and cannot be deleted from the
+        // browser; mark them as having left instead.
+        const dbId = dbIdFor(studentId);
+        if (dbId) await supabase.from('profiles').update({ status: 'left' }).eq('id', dbId);
       } catch (e) {
         console.warn('Supabase delete student error:', e);
       }
