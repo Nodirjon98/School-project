@@ -3,7 +3,8 @@ import {
   Group, Lesson, Attendance, Homework, HomeworkSubmission, 
   DailyWord, WordProgress, ChampionshipScore, Badge, AIContent, AttendanceStatus,
   GrammarExam, GrammarExamSubmission, Profile, CEFRLevel,
-  StudentTelemetryLog, StudentActionEvent, TelemetryModule, ModuleTimeBreakdown
+  StudentTelemetryLog, StudentActionEvent, TelemetryModule, ModuleTimeBreakdown,
+  StudentPaymentPlan,
 } from '../types';
 import { 
   SEED_GROUPS, SEED_LESSONS, SEED_HOMEWORK, SEED_SUBMISSIONS, 
@@ -15,6 +16,8 @@ import { SEED_GRAMMAR_EXAMS } from '../data/seedGrammarExams';
 import { SEED_BOOK_FINAL_EXAMS, assignBookFinalExamToGroup } from '../data/bookFinalExamsData';
 import { getStorageItem, setStorageItem } from '../lib/storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { loadCollection, syncCollection } from '../lib/lmsStore';
+import { getStoredStudentPayments } from '../data/paymentAndAnalyticsData';
 import { useAuth } from './AuthContext';
 import { playSound } from '../lib/sound';
 import { realtime } from '../lib/realtime';
@@ -330,31 +333,77 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => window.removeEventListener('premier:student_registered', handleNewReg);
   }, []);
 
-  // Sync with Supabase on mount if configured
+  // Load LMS records from Supabase once the user is known. Staff whose
+  // database is still empty upload what this browser holds (one-time move
+  // from localStorage); after that every change is written back.
+  const [dbLoaded, setDbLoaded] = useState(false);
+  const myStudentIds = [profile?.id, profile?.auth_id].filter(Boolean) as string[];
+
   useEffect(() => {
-    if (isSupabaseConfigured && supabase) {
-      setLoading(true);
-      Promise.all([
-        supabase.from('groups').select('*'),
-        supabase.from('lessons').select('*'),
-        supabase.from('homeworks').select('*'),
-        supabase.from('homework_submissions').select('*'),
-        supabase.from('attendance').select('*'),
-        supabase.from('daily_words').select('*')
-      ]).then(([gRes, lRes, hRes, sRes, aRes, wRes]) => {
-        if (gRes.data && gRes.data.length > 0) setGroups(gRes.data as Group[]);
-        if (lRes.data && lRes.data.length > 0) setLessons(lRes.data as Lesson[]);
-        if (hRes.data && hRes.data.length > 0) setHomeworks(hRes.data as Homework[]);
-        if (sRes.data && sRes.data.length > 0) setSubmissions(sRes.data as HomeworkSubmission[]);
-        if (aRes.data && aRes.data.length > 0) setAttendance(aRes.data as Attendance[]);
-        if (wRes.data && wRes.data.length > 0) setDailyWords(wRes.data as DailyWord[]);
-      }).finally(() => {
-        setLoading(false);
-      });
-    } else {
+    if (!isSupabaseConfigured || !supabase || !profile?.id) {
       setLoading(false);
+      return;
     }
-  }, []);
+    let cancelled = false;
+    setDbLoaded(false);
+    setLoading(true);
+    (async () => {
+      const [g, l, h, s, a, w, pp] = await Promise.all([
+        loadCollection<Group>('groups'),
+        loadCollection<Lesson>('lessons'),
+        loadCollection<Homework>('homeworks'),
+        loadCollection<HomeworkSubmission>('homework_submissions'),
+        loadCollection<Attendance>('attendance'),
+        loadCollection<DailyWord>('daily_words'),
+        isStaff ? loadCollection<StudentPaymentPlan>('payment_plans') : Promise.resolve(null),
+      ]);
+      if (cancelled) return;
+      if (g?.length) setGroups(g);
+      if (l?.length) setLessons(l);
+      if (h?.length) setHomeworks(h);
+      if (s?.length) setSubmissions(s);
+      if (a?.length) setAttendance(a);
+      if (w?.length) setDailyWords(w);
+      if (pp) {
+        if (pp.length) {
+          setStorageItem('premier_student_payments', pp);
+        } else {
+          await syncCollection('payment_plans', getStoredStudentPayments(), { studentIdOf: plan => plan.student_id });
+        }
+        setStorageItem('premier_payments_db_loaded', true);
+        window.dispatchEvent(new Event('premier:payments_synced'));
+      }
+      // Ignore failed loads (null) so we never overwrite the server blindly.
+      if (![g, l, h, s, a, w].some(x => x === null)) setDbLoaded(true);
+    })().finally(() => {
+      if (!cancelled) setLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, [profile?.id, isStaff]);
+
+  useEffect(() => {
+    if (dbLoaded && isStaff) syncCollection('groups', groups, { deleteMissing: true });
+  }, [groups, dbLoaded, isStaff]);
+  useEffect(() => {
+    if (dbLoaded && isStaff) syncCollection('lessons', lessons, { deleteMissing: true });
+  }, [lessons, dbLoaded, isStaff]);
+  useEffect(() => {
+    if (dbLoaded && isStaff) syncCollection('homeworks', homeworks, { deleteMissing: true });
+  }, [homeworks, dbLoaded, isStaff]);
+  useEffect(() => {
+    if (dbLoaded && isStaff) syncCollection('attendance', attendance, { studentIdOf: a => a.student_id, deleteMissing: true });
+  }, [attendance, dbLoaded, isStaff]);
+  useEffect(() => {
+    if (dbLoaded && isStaff) syncCollection('daily_words', dailyWords, { deleteMissing: true });
+  }, [dailyWords, dbLoaded, isStaff]);
+  useEffect(() => {
+    if (!dbLoaded) return;
+    syncCollection('homework_submissions', submissions, {
+      studentIdOf: sub => sub.student_id,
+      // Students write only their own, ungraded submissions; staff write all.
+      filter: isStaff ? undefined : sub => myStudentIds.includes(sub.student_id) && (sub.status === 'submitted' || sub.status === 'draft'),
+    });
+  }, [submissions, dbLoaded, isStaff]);
 
   // --------------------------------------------------------------------------
   // LIVE TELEMETRY CROSS-DEVICE REAL-TIME SYNCHRONIZATION
@@ -692,13 +741,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
     setGroups(prev => [item, ...prev]);
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from('groups').insert([item]);
-      } catch (e) {
-        console.warn('Supabase addGroup warning:', e);
-      }
-    }
   };
 
   const updateGroup = async (groupId: string, updates: Partial<Omit<Group, 'id' | 'created_at'>>) => {
@@ -719,13 +761,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }));
     }
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from('groups').update(updates).eq('id', groupId);
-      } catch (e) {
-        console.warn('Supabase updateGroup warning:', e);
-      }
-    }
 
     playSound('bell');
     realtime.publish({
@@ -748,13 +783,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return s;
     }));
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from('groups').delete().eq('id', groupId);
-      } catch (e) {
-        console.warn('Supabase deleteGroup warning:', e);
-      }
-    }
 
     playSound('pop');
     realtime.publish({
@@ -773,13 +801,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
     setLessons(prev => [item, ...prev]);
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from('lessons').insert([item]);
-      } catch (e) {
-        console.warn('Supabase addLesson warning:', e);
-      }
-    }
   };
 
   const completeLesson = async (lessonId: string) => {
@@ -820,13 +841,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
     setAttendance(updated);
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from('attendance').upsert([record]);
-      } catch (e) {
-        console.warn('Supabase markAttendance warning:', e);
-      }
-    }
 
     const targetLesson = lessons.find(l => l.id === lessonId);
 
@@ -849,13 +863,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
     setHomeworks(prev => [item, ...prev]);
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from('homeworks').insert([item]);
-      } catch (e) {
-        console.warn('Supabase createHomework warning:', e);
-      }
-    }
 
     // Push real-time notification for new homework
     realtime.publish({
@@ -879,13 +886,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
     setSubmissions(prev => [item, ...prev.filter(s => s.homework_id !== submission.homework_id)]);
     
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from('homework_submissions').upsert([item]);
-      } catch (e) {
-        console.warn('Supabase submitHomework warning:', e);
-      }
-    }
 
     // Reward XP for completing homework!
     addXP(item.score ? Math.round(item.score * 0.5) : 30, 'Submitted homework');
@@ -934,19 +934,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       });
     }
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from('homework_submissions').update({
-          score,
-          feedback,
-          status: 'graded',
-          graded_at: new Date().toISOString(),
-          graded_by: profile?.id
-        }).eq('id', submissionId);
-      } catch (e) {
-        console.warn('Supabase gradeHomework warning:', e);
-      }
-    }
 
     // Push real-time event to student
     realtime.publish({
@@ -967,13 +954,6 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
     setDailyWords(prev => [item, ...prev]);
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from('daily_words').insert([item]);
-      } catch (e) {
-        console.warn('Supabase addDailyWord warning:', e);
-      }
-    }
   };
 
   const updateWordReview = async (wordId: string, remembered: boolean) => {

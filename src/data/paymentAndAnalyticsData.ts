@@ -3,6 +3,7 @@ import {
   TeacherActivityMetric, PlatformAuditAction, PaymentReceipt, PaymentStatus, PaymentMethod 
 } from '../types';
 import { getStorageItem, setStorageItem } from '../lib/storage';
+import { syncCollection } from '../lib/lmsStore';
 import { PREMIER_OFFICIAL_STUDENTS } from './premierStudentsData';
 
 // Dynamically generate payment plans for all 36 real Premier students with realistic cashier history
@@ -196,6 +197,11 @@ export function getStoredStudentPayments(): StudentPaymentPlan[] {
     p.student_name !== 'Shaxzod Rahimov'
   );
 
+  // Once plans come from the database they are the source of truth: no reseeding.
+  if (getStorageItem<boolean>('premier_payments_db_loaded', false)) {
+    return validStored;
+  }
+
   // If stored data was completely empty or had zero collected revenue across non-free plans, re-seed with realistic transactions
   const totalPaidInStored = validStored.reduce((acc, p) => acc + p.paid_amount, 0);
   if (validStored.length === 0 || totalPaidInStored === 0) {
@@ -222,6 +228,8 @@ export function getStoredStudentPayments(): StudentPaymentPlan[] {
 
 export function saveStoredStudentPayments(plans: StudentPaymentPlan[]) {
   setStorageItem('premier_student_payments', plans);
+  // Only staff can write plans; for anyone else RLS rejects the upsert.
+  void syncCollection('payment_plans', plans, { studentIdOf: p => p.student_id });
 }
 
 export interface PaymentTransactionItem {
