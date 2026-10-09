@@ -10,6 +10,7 @@ import { ProtectedRoute } from './components/common/ProtectedRoute';
 const Login = lazy(() => import('./pages/auth/Login').then(m => ({ default: m.Login })));
 const Signup = lazy(() => import('./pages/auth/Signup').then(m => ({ default: m.Signup })));
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword').then(m => ({ default: m.ForgotPassword })));
+const ResetPassword = lazy(() => import('./pages/auth/ResetPassword').then(m => ({ default: m.ResetPassword })));
 const StudentOnboarding = lazy(() => import('./pages/onboarding/StudentOnboarding').then(m => ({ default: m.StudentOnboarding })));
 
 // Lazy Loaded Student Pages
@@ -88,6 +89,7 @@ export const AppRouter: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Onboarding Wizard (7 steps) */}
         <Route
