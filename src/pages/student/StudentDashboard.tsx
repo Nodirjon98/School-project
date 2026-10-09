@@ -12,6 +12,7 @@ import {
 import { AIStudyAssistant } from '../../components/student/AIStudyAssistant';
 import { WeeklyTimetable } from '../../components/schedule/WeeklyTimetable';
 import { ProfilePhotoModal } from '../../components/student/ProfilePhotoModal';
+import { ConductCard } from '../../components/conduct/ConductCard';
 
 const UZ_WEEKDAYS = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
 const UZ_MONTHS = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
@@ -315,6 +316,7 @@ export const StudentDashboard: React.FC = () => {
 
         {/* Side column */}
         <div className="lg:col-span-4 flex flex-col gap-6">
+          <ConductCard />
           {featuredWord && (
             <Card className="p-5 sm:p-6 overflow-hidden relative">
               <CardHeader title={L('Kun so\'zi', 'Word of the day')} />
