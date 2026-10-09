@@ -398,10 +398,6 @@ export const StudentOnboarding: React.FC = () => {
                     <span className="font-bold text-slate-900">IELTS Intensive ({predictedLevel})</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Kafedrasi:</span>
-                    <span className="font-bold text-slate-900">Malika Karimova (CELTA)</span>
-                  </div>
-                  <div className="flex justify-between">
                     <span className="text-slate-500">Boshlang'ich bonus:</span>
                     <span className="font-bold text-emerald-600">+150 XP Ball</span>
                   </div>

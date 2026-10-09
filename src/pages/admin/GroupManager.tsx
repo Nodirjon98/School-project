@@ -45,7 +45,7 @@ export const GroupManager: React.FC = () => {
   const [editCustomSchedule, setEditCustomSchedule] = useState('');
   const [editRoom, setEditRoom] = useState('Oybek Campus, Room 304');
   const [editCapacity, setEditCapacity] = useState(14);
-  const [editTeacherName, setEditTeacherName] = useState('Malika Karimova');
+  const [editTeacherName, setEditTeacherName] = useState('');
 
   // Search and Filters
   const [groupSearch, setGroupSearch] = useState('');
@@ -60,7 +60,7 @@ export const GroupManager: React.FC = () => {
   const [scheduleTime, setScheduleTime] = useState('18:30 - 20:00');
   const [room, setRoom] = useState('Oybek Campus, Room 304');
   const [capacity, setCapacity] = useState(14);
-  const [teacherName, setTeacherName] = useState('Malika Karimova');
+  const [teacherName, setTeacherName] = useState('');
 
   // Student Registration Form states
   const [studentName, setStudentName] = useState('');
@@ -94,7 +94,7 @@ export const GroupManager: React.FC = () => {
     }
     setEditRoom(grp.room || 'Oybek Campus, Room 304');
     setEditCapacity(grp.capacity || 14);
-    setEditTeacherName(grp.teacher_name || 'Malika Karimova');
+    setEditTeacherName(grp.teacher_name || '');
   };
 
   const handleSaveEditGroup = async (e: React.FormEvent) => {
@@ -803,7 +803,7 @@ export const GroupManager: React.FC = () => {
 
                   <div>
                     <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs mb-3">
-                      <span className="text-slate-500 font-medium truncate max-w-[140px]">Ustoz: {g.teacher_name || 'Malika Karimova'}</span>
+                      <span className="text-slate-500 font-medium truncate max-w-[140px]">Ustoz: {g.teacher_name || '—'}</span>
                       <span className="text-xs text-slate-500 font-semibold flex items-center gap-1">
                         <Users className="w-3.5 h-3.5 text-slate-400" />
                         {assignedCount} / {g.capacity || 14} o'quvchi
@@ -1058,7 +1058,7 @@ export const GroupManager: React.FC = () => {
               required
               value={teacherName}
               onChange={(e) => setTeacherName(e.target.value)}
-              placeholder="Malika Karimova"
+              placeholder="Ustoz ismi"
               className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden"
             />
           </div>
@@ -1428,7 +1428,7 @@ export const GroupManager: React.FC = () => {
                 required
                 value={editTeacherName}
                 onChange={(e) => setEditTeacherName(e.target.value)}
-                placeholder="Malika Karimova"
+                placeholder="Ustoz ismi"
                 className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-hidden font-medium"
               />
             </div>

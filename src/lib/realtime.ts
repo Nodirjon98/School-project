@@ -128,6 +128,11 @@ class RealtimeManager {
     }
   }
 
+  /** Shows a notification in this browser only (no cross-device broadcast). */
+  public notifyLocal(event: RealtimeEventPayload) {
+    this.handleIncomingEvent(event, false);
+  }
+
   public subscribe(callback: EventCallback): () => void {
     this.listeners.add(callback);
     return () => {
@@ -170,24 +175,7 @@ class RealtimeManager {
   }
 
   public getNotifications(): RealtimeEventPayload[] {
-    return getStorageItem<RealtimeEventPayload[]>('premier_notifications', [
-      {
-        id: 'init-notif-1',
-        type: 'NEW_HOMEWORK',
-        title: 'New Assignment Assigned',
-        message: 'Malika Karimova assigned "IELTS Writing Task 2 - Essay on Technology".',
-        timestamp: new Date(Date.now() - 3600000).toISOString(),
-        read: false,
-      },
-      {
-        id: 'init-notif-2',
-        type: 'DEADLINE_ALERT',
-        title: 'Upcoming Deadline Reminder',
-        message: '"Conditionals in Context" homework is due in 8 hours.',
-        timestamp: new Date(Date.now() - 7200000).toISOString(),
-        read: true,
-      }
-    ]);
+    return getStorageItem<RealtimeEventPayload[]>('premier_notifications', []);
   }
 
   public markAsRead(id: string) {

@@ -3,6 +3,7 @@ import {
   Bell, CheckCircle2, Clock, BookOpen, 
   ClipboardCheck, Award, AlertTriangle, X, Check, ArrowRight
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { RealtimeEventPayload } from '../../types';
 import { realtime } from '../../lib/realtime';
 
@@ -11,6 +12,7 @@ export const NotificationBell: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeToast, setActiveToast] = useState<RealtimeEventPayload | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Subscribe to live events
@@ -45,6 +47,12 @@ export const NotificationBell: React.FC = () => {
   const handleMarkAsRead = (id: string) => {
     realtime.markAsRead(id);
     setNotifications(realtime.getNotifications());
+    // Sign-up notifications open the list of registered students.
+    const notif = notifications.find(n => n.id === id);
+    if (notif?.type === 'STUDENT_REGISTERED') {
+      setIsOpen(false);
+      navigate('/admin/registrations');
+    }
   };
 
   const handleMarkAllAsRead = () => {
@@ -113,7 +121,7 @@ export const NotificationBell: React.FC = () => {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">
-                Live Update
+                Yangi xabar
               </span>
               <button 
                 onClick={() => setActiveToast(null)}
@@ -157,7 +165,7 @@ export const NotificationBell: React.FC = () => {
             {notifications.length === 0 ? (
               <div className="p-8 text-center text-slate-400 text-xs">
                 <Bell className="w-8 h-8 mx-auto mb-2 opacity-30" />
-                No real-time notifications yet.
+                Hozircha bildirishnoma yo'q.
               </div>
             ) : (
               notifications.map((notif) => (

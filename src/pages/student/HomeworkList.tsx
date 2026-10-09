@@ -122,7 +122,7 @@ export const HomeworkList: React.FC = () => {
                     <Calendar className="w-3.5 h-3.5 text-slate-400" />
                     <span>Muddat: {dueDateObj.toLocaleDateString()}</span>
                   </div>
-                  <span>{hw.teacher_name || 'Malika Karimova'}</span>
+                  <span>{hw.teacher_name || '—'}</span>
                 </div>
 
                 {/* Feedback preview if graded */}
