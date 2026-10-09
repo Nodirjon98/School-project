@@ -12,7 +12,15 @@ import { DAILY_WORDS_BANK } from '../data/dailyWordsBank';
 /** Built-in vocabulary plus whatever the admin added; stored words win on id clashes. */
 const withBuiltInWords = (stored: DailyWord[]): DailyWord[] => {
   const ids = new Set(stored.map(w => w.id));
-  return [...stored, ...[...SEED_DAILY_WORDS, ...DAILY_WORDS_BANK].filter(w => !ids.has(w.id))];
+  const spellings = new Set(stored.map(w => w.word.toLowerCase()));
+  const extra: DailyWord[] = [];
+  [...SEED_DAILY_WORDS, ...DAILY_WORDS_BANK].forEach(w => {
+    const key = w.word.toLowerCase();
+    if (ids.has(w.id) || spellings.has(key)) return;
+    spellings.add(key);
+    extra.push(w);
+  });
+  return [...stored, ...extra];
 };
 import { SEED_GRAMMAR_EXAMS } from '../data/seedGrammarExams';
 import { SEED_BOOK_FINAL_EXAMS, assignBookFinalExamToGroup } from '../data/bookFinalExamsData';
@@ -92,7 +100,9 @@ try {
   if (typeof window !== 'undefined' && window.localStorage.getItem('premier_data_version') !== DATA_VERSION) {
     [
       'premier_groups', 'premier_lessons', 'premier_attendance', 'premier_homeworks', 'premier_submissions',
-      'premier_word_progress', 'premier_championship', 'premier_badges', 'premier_all_students',
+      // Word progress, championship XP and badges are real per-student data with no
+      // server copy (their seeds were empty), so they are kept.
+      'premier_all_students',
       'premier_registered_users', 'premier_deleted_student_ids', 'premier_student_payments',
       'premier_payments_db_loaded', 'premier_student_activities', 'premier_teacher_activities',
       'premier_platform_audit', 'premier_notifications', 'premier_student_telemetry',
@@ -272,7 +282,24 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }) as Profile);
     // The database list is authoritative; keep only admin-created local
     // placeholders (no account yet) alongside it.
-    setStudents(prev => [...dbStudents, ...prev.filter(st => !st.auth_id && !dbStudents.some(db => db.email?.toLowerCase() === st.email?.toLowerCase()))]);
+    const deletedIds = new Set(getStorageItem<string[]>('premier_deleted_student_ids', []));
+    setStudents(prev => {
+      const placeholders = prev.filter(st => !st.auth_id);
+      const merged = dbStudents
+        .filter(db => !deletedIds.has(db.id))
+        .map(db => {
+          // An admin-created placeholder with the same email: keep its group on the real profile.
+          const ph = placeholders.find(p => p.email && db.email && p.email.toLowerCase() === db.email.toLowerCase());
+          if (ph?.group_id && !db.group_id && supabase) {
+            supabase.from('profiles').update({ group_id: ph.group_id, group_name: ph.group_name ?? null }).eq('id', db.auth_id as string)
+              .then(({ error }) => { if (error) console.warn('Placeholder group carry-over failed:', error.message); });
+            return { ...db, group_id: ph.group_id, group_name: ph.group_name };
+          }
+          return db;
+        });
+      const remaining = placeholders.filter(p => !merged.some(db => db.email?.toLowerCase() === p.email?.toLowerCase()));
+      return [...merged, ...remaining];
+    });
 
     // Tell the admin about students who signed up since this browser last looked.
     const seenRaw = getStorageItem<string[] | null>('premier_seen_student_ids', null);
@@ -314,9 +341,12 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     .filter(st => st.auth_id && !ackStudentIds.has(st.auth_id))
     .map(st => st.id);
   const markStudentsSeen = useCallback(() => {
-    const all = students.filter(st => st.auth_id).map(st => st.auth_id as string);
-    setStorageItem('premier_ack_student_ids', all);
-    setAckStudentIds(new Set(all));
+    const ids = students.filter(st => st.auth_id).map(st => st.auth_id as string);
+    // Nothing loaded yet: don't write, so the first-run baseline still applies.
+    if (ids.length === 0) return;
+    const merged = new Set([...getStorageItem<string[]>('premier_ack_student_ids', []), ...ids]);
+    setStorageItem('premier_ack_student_ids', Array.from(merged));
+    setAckStudentIds(merged);
   }, [students]);
 
   useEffect(() => {
@@ -1117,11 +1147,16 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       try {
         const dbId = dbIdFor(studentId);
         if (dbId) {
-          await supabase.from('profiles').update({
+          const { error } = await supabase.from('profiles').update({
             group_id: groupId,
             group_name: targetGroup.name,
             updated_at: new Date().toISOString()
           }).eq('id', dbId);
+          if (error) {
+            console.warn('Supabase assign student error:', error.message);
+            alert("Guruhga biriktirib bo'lmadi: " + error.message);
+            refreshStudentsFromDb();
+          }
         }
       } catch (e) {
         console.warn('Supabase assign student error:', e);

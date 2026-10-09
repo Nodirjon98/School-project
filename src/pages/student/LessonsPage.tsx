@@ -6,6 +6,8 @@ import { BookOpen, Clock, Calendar, FileText, Download, CheckCircle2 } from 'luc
 export const LessonsPage: React.FC = () => {
   const { t } = useLanguage();
   const { lessons, groups } = useLMSData();
+  const groupById = new Map(groups.map(g => [g.id, g]));
+  const lessonGroup = (id: string) => groupById.get(id);
 
   return (
     <div className="space-y-6">
@@ -43,14 +45,14 @@ export const LessonsPage: React.FC = () => {
                     <Calendar className="w-3.5 h-3.5" />
                     {new Date(lesson.lesson_date || lesson.date || Date.now()).toLocaleDateString()}
                   </span>
-                  {groups.find(g => g.id === lesson.group_id)?.schedule && (
+                  {lessonGroup(lesson.group_id)?.schedule && (
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" />
-                      {groups.find(g => g.id === lesson.group_id)?.schedule}
+                      {lessonGroup(lesson.group_id)?.schedule}
                     </span>
                   )}
-                  {groups.find(g => g.id === lesson.group_id)?.teacher_name && (
-                    <span>O'qituvchi: {groups.find(g => g.id === lesson.group_id)?.teacher_name}</span>
+                  {lessonGroup(lesson.group_id)?.teacher_name && (
+                    <span>O'qituvchi: {lessonGroup(lesson.group_id)?.teacher_name}</span>
                   )}
                 </div>
               </div>

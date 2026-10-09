@@ -289,7 +289,17 @@ export default async function handler(req: any, res: any) {
   // 6. RESET
   if (url.includes('/telemetry/reset')) {
     Object.keys(globalTelemetryStore).forEach(id => {
-      globalTelemetryStore[id] = createDefaultStudentTelemetry({ id, full_name: globalTelemetryStore[id]?.student_name });
+      const prev = globalTelemetryStore[id] || {};
+      globalTelemetryStore[id] = createDefaultStudentTelemetry({
+        id,
+        full_name: prev.student_name,
+        email: prev.email,
+        group_id: prev.group_id,
+        group_name: prev.group_name,
+        phone: prev.phone,
+        level: prev.level,
+        avatar_url: prev.student_avatar,
+      });
     });
     globalActionEvents.length = 0;
     persistStore();

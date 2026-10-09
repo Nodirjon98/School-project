@@ -95,10 +95,9 @@ export const RegistrationsPage: React.FC = () => {
   const [newOnOpen] = useState(() => new Set(newStudentIds));
 
   useEffect(() => {
-    // Opening this page counts as reviewing the new sign-ups.
+    // Opening this page counts as reviewing the new sign-ups (once the list has loaded).
     markStudentsSeen();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [markStudentsSeen]);
 
   const registered = useMemo(
     () => students.filter(st => st.auth_id).sort((a, b) => (b.created_at || '').localeCompare(a.created_at || '')),
@@ -118,7 +117,7 @@ export const RegistrationsPage: React.FC = () => {
   const q = query.trim().toLowerCase();
   const visible = registered.filter(st => {
     if (filter === 'new' && !isNew(st)) return false;
-    if (filter === 'unassigned' && st.group_id) return false;
+    if (filter === 'unassigned' && (st.group_id || st.status === 'left')) return false;
     if (!q) return true;
     return [st.full_name, st.email, st.phone].some(v => v?.toLowerCase().includes(q));
   });
@@ -165,7 +164,7 @@ export const RegistrationsPage: React.FC = () => {
             {([
               ['all', 'Hammasi', registered.length],
               ['new', 'Yangi', registered.filter(isNew).length],
-              ['unassigned', 'Guruhsiz', registered.filter(s => !s.group_id).length],
+              ['unassigned', 'Guruhsiz', registered.filter(s => !s.group_id && s.status !== 'left').length],
             ] as [Filter, string, number][]).map(([key, label, count]) => (
               <button
                 key={key}
@@ -227,6 +226,8 @@ export const RegistrationsPage: React.FC = () => {
                       <span className="inline-flex items-center gap-1 font-semibold text-emerald-700">
                         <CheckCircle2 className="w-4 h-4" /> {st.group_name || groups.find(g => g.id === st.group_id)?.name}
                       </span>
+                    ) : st.status === 'left' ? (
+                      <span className="text-slate-400">—</span>
                     ) : groups.length > 0 ? (
                       <select
                         defaultValue=""
