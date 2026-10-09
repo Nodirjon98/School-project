@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useLMSData } from '../../contexts/LMSDataContext';
 import {
   LayoutDashboard, BookOpen, CheckSquare, Sparkles,
   Trophy, ClipboardCheck, Users, BrainCircuit, BarChart3,
   Layers, Database, X, PenTool, Mic, Award, Swords, FileText, Headphones, CreditCard,
-  Music, ShieldCheck, Gamepad2, ChevronDown, Library, Flame
+  Music, ShieldCheck, Gamepad2, ChevronDown, Library, Flame, UserPlus
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -18,6 +19,8 @@ interface NavItem {
   label: string;
   path: string;
   icon: React.ReactNode;
+  /** Unread count shown as a pill (e.g. new sign-ups). */
+  count?: number;
 }
 
 interface NavSection {
@@ -32,6 +35,7 @@ const icon = (Icon: React.ComponentType<{ className?: string }>) => <Icon classN
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { role, profile } = useAuth();
   const { language } = useLanguage();
+  const { newStudentIds } = useLMSData();
   const location = useLocation();
   const L = (uz: string, en: string) => (language === 'en' ? en : uz);
 
@@ -97,6 +101,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       items: [
         { label: L('Bosh sahifa', 'Home'), path: '/teacher/dashboard', icon: icon(LayoutDashboard) },
         { label: L('Guruhlarim', 'My groups'), path: '/teacher/groups', icon: icon(Users) },
+        { label: L("Ro'yxatdan o'tganlar", 'Sign-ups'), path: '/admin/registrations', icon: icon(UserPlus), count: newStudentIds.length },
         { label: L('Davomat', 'Attendance'), path: '/teacher/attendance', icon: icon(ClipboardCheck) },
         { label: L('Uy vazifalari', 'Homework'), path: '/teacher/homework', icon: icon(CheckSquare) },
         { label: L("O'quvchilar nazorati", 'Student monitoring'), path: '/teacher/monitoring', icon: icon(ShieldCheck) },
@@ -128,6 +133,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       category: L('Boshqaruv', 'Management'),
       items: [
         { label: L('Bosh sahifa', 'Home'), path: '/admin/dashboard', icon: icon(BarChart3) },
+        { label: L("Ro'yxatdan o'tganlar", 'Sign-ups'), path: '/admin/registrations', icon: icon(UserPlus), count: newStudentIds.length },
         { label: L('Guruhlar', 'Groups'), path: '/admin/groups', icon: icon(Users) },
         { label: L("To'lovlar", 'Payments'), path: '/admin/payments', icon: icon(CreditCard) },
         { label: L('Analitika', 'Analytics'), path: '/admin/analytics', icon: icon(ShieldCheck) },
@@ -238,6 +244,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                       <>
                         <span className={isItemActive(item.path, isActive) ? 'text-indigo-300' : 'opacity-70'}>{item.icon}</span>
                         <span className="truncate">{item.label}</span>
+                        {!!item.count && (
+                          <span className="ml-auto rounded-full bg-fuchsia-500 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
+                            {item.count > 99 ? '99+' : item.count}
+                          </span>
+                        )}
                       </>
                     )}
                   </NavLink>

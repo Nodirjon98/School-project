@@ -5,13 +5,13 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { useLMSData } from '../../contexts/LMSDataContext';
 import { 
   Users, BookOpen, CheckSquare, BarChart3, 
-  TrendingUp, ArrowRight, Clock, CreditCard, AlertTriangle, Monitor, Smartphone
+  TrendingUp, ArrowRight, Clock, CreditCard, AlertTriangle, Monitor, Smartphone, UserPlus
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
   const { profile } = useAuth();
   const { t } = useLanguage();
-  const { groups, homeworks, submissions, dailyWords, students, attendance, actionEvents, telemetryLogs } = useLMSData();
+  const { groups, homeworks, submissions, dailyWords, students, attendance, actionEvents, telemetryLogs, newStudentIds } = useLMSData();
 
   const activeStudentsCount = students.filter(s => s.status === 'active').length;
   const unassignedCount = students.filter(s => !s.group_id && s.status !== 'left').length;
@@ -87,13 +87,52 @@ export const AdminDashboard: React.FC = () => {
             </div>
           </div>
           <Link
-            to="/admin/groups"
+            to="/admin/registrations"
             className="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition shadow-xs whitespace-nowrap text-center"
           >
             Guruhlarga joylash
           </Link>
         </div>
       )}
+
+      {/* Latest sign-ups */}
+      <section className="rounded-3xl border border-slate-200/70 bg-white p-5 sm:p-6">
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <h3 className="flex items-center gap-2 text-[15px] font-bold text-slate-900">
+            <UserPlus className="w-4 h-4 text-indigo-600" /> Oxirgi ro'yxatdan o'tganlar
+            {newStudentIds.length > 0 && (
+              <span className="rounded-full bg-fuchsia-500 px-2 py-0.5 text-[10px] font-bold text-white">{newStudentIds.length} yangi</span>
+            )}
+          </h3>
+          <Link to="/admin/registrations" className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800">
+            Barchasi <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
+        {students.filter(s => s.auth_id).length === 0 ? (
+          <p className="py-6 text-center text-sm text-slate-500">Hali hech kim ro'yxatdan o'tmagan.</p>
+        ) : (
+          <ul className="divide-y divide-slate-100">
+            {students
+              .filter(s => s.auth_id)
+              .sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''))
+              .slice(0, 5)
+              .map(st => (
+                <li key={st.id} className="flex items-center justify-between gap-3 py-2.5">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-slate-900">
+                      {st.full_name || st.email}
+                      {newStudentIds.includes(st.id) && <span className="ml-2 rounded-full bg-indigo-600 px-1.5 py-0.5 text-[9px] font-bold text-white align-middle">Yangi</span>}
+                    </p>
+                    <p className="truncate text-xs text-slate-500">{st.email}{st.phone ? ` · ${st.phone}` : ''}</p>
+                  </div>
+                  <span className={`shrink-0 text-xs font-semibold ${st.group_id ? 'text-emerald-700' : 'text-amber-700'}`}>
+                    {st.group_id ? (st.group_name || 'Guruhda') : 'Guruhsiz'}
+                  </span>
+                </li>
+              ))}
+          </ul>
+        )}
+      </section>
 
       {/* 4 KPI Metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

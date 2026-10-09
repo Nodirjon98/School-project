@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useLMSData } from '../../contexts/LMSDataContext';
@@ -25,8 +25,23 @@ export const DailyWordsPage: React.FC = () => {
   const [selectedQuizOption, setSelectedQuizOption] = useState<string | null>(null);
   const [quizCompleted, setQuizCompleted] = useState(false);
 
-  // Target words for review
-  const targetWords = dailyWords;
+  // Review queue: the student's level and one above, weakest (lowest Leitner box) first.
+  const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const myLevelIdx = Math.max(0, LEVELS.indexOf((profile?.level_estimate || profile?.level || 'A1').slice(0, 2)));
+  const boxOf = (wordId: string) => {
+    const p = wordProgress.find(wp => wp.word_id === wordId && wp.student_id === profile?.id);
+    return p ? (p.mastered ? 6 : p.box) : 0;
+  };
+  const levelWords = dailyWords.filter(w => {
+    const i = LEVELS.indexOf(w.cefr_level);
+    return i === myLevelIdx || i === myLevelIdx + 1;
+  });
+  // Order is fixed per visit so reviewing a word doesn't reshuffle the deck under the student.
+  const targetWords = useMemo(
+    () => (levelWords.length >= 5 ? levelWords : dailyWords).slice().sort((a, b) => boxOf(a.id) - boxOf(b.id)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dailyWords, myLevelIdx]
+  );
   const currentWord = targetWords[currentIndex] || targetWords[0];
 
   // Get current word's box level
@@ -109,7 +124,7 @@ export const DailyWordsPage: React.FC = () => {
             {t('dailyWordsTitle')}
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            {t('dailyWordsSubtitle')} • 20+ Academic IELTS & CEFR vocabulary items with Leitner SRS intervals.
+            {t('dailyWordsSubtitle')} • {dailyWords.length} ta so'z (A1–C1), darajangizga mos tartibda.
           </p>
         </div>
 

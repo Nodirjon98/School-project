@@ -46,6 +46,7 @@ const TacticsListeningManager = lazy(() => import('./pages/teacher/TacticsListen
 const SpeakingAndVoiceManager = lazy(() => import('./pages/teacher/SpeakingAndVoiceManager').then(m => ({ default: m.SpeakingAndVoiceManager })));
 
 // Lazy Loaded Admin Pages
+const RegistrationsPage = lazy(() => import('./pages/admin/RegistrationsPage').then(m => ({ default: m.RegistrationsPage })));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 const GroupManager = lazy(() => import('./pages/admin/GroupManager').then(m => ({ default: m.GroupManager })));
 const DailyWordsManager = lazy(() => import('./pages/admin/DailyWordsManager').then(m => ({ default: m.DailyWordsManager })));
@@ -209,6 +210,14 @@ export const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/registrations"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'teacher']}>
+                <RegistrationsPage />
               </ProtectedRoute>
             }
           />

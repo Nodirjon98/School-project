@@ -7,6 +7,13 @@ import {
   StudentPaymentPlan,
 } from '../types';
 import { SEED_DAILY_WORDS } from '../lib/seedData';
+import { DAILY_WORDS_BANK } from '../data/dailyWordsBank';
+
+/** Built-in vocabulary plus whatever the admin added; stored words win on id clashes. */
+const withBuiltInWords = (stored: DailyWord[]): DailyWord[] => {
+  const ids = new Set(stored.map(w => w.id));
+  return [...stored, ...[...SEED_DAILY_WORDS, ...DAILY_WORDS_BANK].filter(w => !ids.has(w.id))];
+};
 import { SEED_GRAMMAR_EXAMS } from '../data/seedGrammarExams';
 import { SEED_BOOK_FINAL_EXAMS, assignBookFinalExamToGroup } from '../data/bookFinalExamsData';
 import { getStorageItem, setStorageItem } from '../lib/storage';
@@ -17,6 +24,10 @@ import { playSound } from '../lib/sound';
 import { realtime } from '../lib/realtime';
 
 interface LMSDataContextType {
+  /** Students who signed up and have not been reviewed on the registrations page. */
+  newStudentIds: string[];
+  markStudentsSeen: () => void;
+  refreshStudentsFromDb: () => Promise<void>;
   groups: Group[];
   lessons: Lesson[];
   attendance: Attendance[];
@@ -101,7 +112,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [attendance, setAttendance] = useState<Attendance[]>(() => getStorageItem('premier_attendance', []));
   const [homeworks, setHomeworks] = useState<Homework[]>(() => getStorageItem<Homework[]>('premier_homeworks', []));
   const [submissions, setSubmissions] = useState<HomeworkSubmission[]>(() => getStorageItem<HomeworkSubmission[]>('premier_submissions', []));
-  const [dailyWords, setDailyWords] = useState<DailyWord[]>(() => getStorageItem('premier_daily_words', SEED_DAILY_WORDS));
+  const [dailyWords, setDailyWords] = useState<DailyWord[]>(() => withBuiltInWords(getStorageItem<DailyWord[]>('premier_daily_words', [])));
   const [wordProgress, setWordProgress] = useState<WordProgress[]>(() => getStorageItem<WordProgress[]>('premier_word_progress', []));
   const [championshipScores, setChampionshipScores] = useState<ChampionshipScore[]>(() => getStorageItem<ChampionshipScore[]>('premier_championship', []));
   const [badges, setBadges] = useState<Badge[]>(() => getStorageItem<Badge[]>('premier_badges', []));
@@ -285,7 +296,28 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       });
     });
     setStorageItem('premier_seen_student_ids', dbStudents.map(st => st.auth_id || st.id));
+
+    // "New" badge: students the admin has not reviewed on the registrations page yet.
+    const ackRaw = getStorageItem<string[] | null>('premier_ack_student_ids', null);
+    if (ackRaw === null) {
+      // First run: treat older sign-ups as already reviewed.
+      const baseline = dbStudents.filter(st => new Date(st.created_at).getTime() <= recentCutoff).map(st => st.auth_id || st.id);
+      setStorageItem('premier_ack_student_ids', baseline);
+      setAckStudentIds(new Set(baseline));
+    }
   }, [isStaff]);
+
+  const [ackStudentIds, setAckStudentIds] = useState<Set<string>>(
+    () => new Set(getStorageItem<string[]>('premier_ack_student_ids', []))
+  );
+  const newStudentIds = students
+    .filter(st => st.auth_id && !ackStudentIds.has(st.auth_id))
+    .map(st => st.id);
+  const markStudentsSeen = useCallback(() => {
+    const all = students.filter(st => st.auth_id).map(st => st.auth_id as string);
+    setStorageItem('premier_ack_student_ids', all);
+    setAckStudentIds(new Set(all));
+  }, [students]);
 
   useEffect(() => {
     if (!isStaff) return;
@@ -351,7 +383,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (h) setHomeworks(h);
       if (s) setSubmissions(s);
       if (a) setAttendance(a);
-      if (w?.length) setDailyWords(w);
+      if (w) setDailyWords(withBuiltInWords(w));
       if (pp) {
         setStorageItem('premier_student_payments', pp);
         window.dispatchEvent(new Event('premier:payments_synced'));
@@ -1386,6 +1418,9 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   return (
     <LMSDataContext.Provider
       value={{
+        newStudentIds,
+        markStudentsSeen,
+        refreshStudentsFromDb,
         groups,
         lessons,
         attendance,
