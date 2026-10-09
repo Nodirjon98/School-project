@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Search, UserPlus, Users, CalendarDays, AlertCircle, RefreshCw, Phone, Mail, CheckCircle2 } from 'lucide-react';
 import { useLMSData } from '../../contexts/LMSDataContext';
 import { Profile } from '../../types';
+import { useAuth } from '../../contexts/AuthContext';
+import { AddStudentsDialog } from '../../components/admin/AddStudentsDialog';
 
 const UZ_MONTHS = ['yan', 'fev', 'mar', 'apr', 'may', 'iyn', 'iyl', 'avg', 'sen', 'okt', 'noy', 'dek'];
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -91,6 +93,8 @@ export const RegistrationsPage: React.FC = () => {
   const [filter, setFilter] = useState<Filter>('all');
   const [query, setQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const { role } = useAuth();
   // Snapshot of what was new when the page opened, so badges stay visible while reviewing.
   const [newOnOpen] = useState(() => new Set(newStudentIds));
 
@@ -135,13 +139,24 @@ export const RegistrationsPage: React.FC = () => {
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">Ro'yxatdan o'tganlar</h1>
           <p className="text-sm text-slate-500 mt-1">Saytda ro'yxatdan o'tgan barcha o'quvchilar. Ro'yxat har 30 soniyada yangilanadi.</p>
         </div>
-        <button
-          type="button"
-          onClick={refresh}
-          className="inline-flex items-center gap-2 self-start rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
-        >
-          <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} /> Yangilash
-        </button>
+        <div className="flex gap-2 self-start">
+          {role === 'admin' && (
+            <button
+              type="button"
+              onClick={() => setAdding(true)}
+              className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-bold text-white hover:bg-indigo-700 transition cursor-pointer"
+            >
+              <UserPlus className="w-4 h-4" /> O'quvchi qo'shish
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={refresh}
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} /> Yangilash
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -248,6 +263,7 @@ export const RegistrationsPage: React.FC = () => {
           </ul>
         )}
       </div>
+      {adding && <AddStudentsDialog groups={groups} onClose={() => setAdding(false)} onDone={() => { refreshStudentsFromDb(); }} />}
     </div>
   );
 };
