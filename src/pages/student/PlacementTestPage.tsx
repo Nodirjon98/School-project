@@ -5,6 +5,7 @@ import { useLMSData } from '../../contexts/LMSDataContext';
 import { CheckCircle2, ArrowRight, RotateCcw, Printer } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { getStorageItem, setStorageItem } from '../../lib/storage';
+import { loadCollection, syncCollection } from '../../lib/lmsStore';
 import {
   PLACEMENT_QUESTIONS as DIAGNOSTIC_QUESTIONS,
   PLACEMENT_LEVELS,
@@ -52,21 +53,36 @@ export const PlacementTestPage: React.FC = () => {
     }
   };
 
-  const finishTest = () => {
+  const finishTest = async () => {
     const res = scorePlacement(selectedAnswers);
+    const certificateId = `PS-CEFR-${Date.now().toString(36).toUpperCase()}`;
     setResult(res);
-    setCertId(`PS-CEFR-${Date.now().toString(36).toUpperCase()}`);
+    setCertId(certificateId);
     setIsCompleted(true);
 
-    // XP only for the first completion, so retakes cannot farm XP.
-    const xpKey = `${XP_AWARDED_KEY}_${profile?.id ?? 'guest'}`;
-    if (!getStorageItem<boolean>(xpKey, false)) {
-      awardXp(100);
-      setStorageItem(xpKey, true);
+    // Keep every attempt in the database so the admin sees the level history.
+    const previous = (await loadCollection<{ id: string }>('placement_results')) ?? [];
+    if (profile?.id) {
+      await syncCollection('placement_results', [{
+        id: certificateId,
+        student_id: profile.id,
+        level: res.level,
+        correct: res.total,
+        total: res.outOf,
+        per_level: res.perLevel,
+        taken_at: new Date().toISOString(),
+      }], { studentIdOf: r => r.student_id });
     }
 
+    // XP only for the first completion (on any device), so retakes cannot farm XP.
+    const xpKey = `${XP_AWARDED_KEY}_${profile?.id ?? 'guest'}`;
+    if (!getStorageItem<boolean>(xpKey, false) && previous.length === 0) {
+      awardXp(100);
+    }
+    setStorageItem(xpKey, true);
+
     if (updateProfile) {
-      updateProfile({ level: res.level });
+      updateProfile({ level: res.level, level_estimate: res.level });
     }
 
     try {

@@ -54,18 +54,6 @@ export const Championship: React.FC = () => {
             {t('championshipSubtitle')}
           </p>
 
-          {role === 'admin' && (
-            <div className="mt-6">
-              <button
-                type="button"
-                onClick={handleResetSeason}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-900 text-white font-bold text-xs transition border border-white/20 shadow-sm"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>{t('resetSeasonBtn')}</span>
-              </button>
-            </div>
-          )}
         </div>
       </div>
 

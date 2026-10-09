@@ -9,6 +9,48 @@ import {
 import { SEED_DAILY_WORDS } from '../lib/seedData';
 import { DAILY_WORDS_BANK } from '../data/dailyWordsBank';
 
+/** Local (not UTC) day and Monday-of-week keys, so counters roll over at local midnight. */
+const localPeriodKeys = () => {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const key = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const now = new Date();
+  const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
+  return { dayKey: key(now), weekKey: key(monday) };
+};
+
+/** Empty telemetry record for a student who has not been tracked yet. */
+const newTelemetryLog = (st: Profile): StudentTelemetryLog => ({
+  id: `tel-${st.id}`,
+  student_id: st.id,
+  student_name: st.full_name,
+  student_avatar: st.avatar_url,
+  group_name: st.group_name || 'Guruhga biriktirilmagan',
+  group_id: st.group_id,
+  phone: st.phone,
+  level: st.level || 'A1',
+  online_status: 'offline',
+  device: 'mobile',
+  last_active_at: '',
+  last_active_label: 'Hali kirmagan',
+  total_active_seconds: 0,
+  today_active_seconds: 0,
+  weekly_active_seconds: 0,
+  idle_paused_seconds: 0,
+  verified_tasks_count: 0,
+  module_breakdown: {
+    stories_seconds: 0, vocab_seconds: 0, listening_seconds: 0, grammar_seconds: 0,
+    homework_seconds: 0, speaking_seconds: 0, other_seconds: 0,
+  },
+  risk_level: 'normal',
+  teacher_notes: '',
+});
+
+/** Server rows first; local-only rows (by id) are kept so nothing recorded offline is lost. */
+const mergeById = <T extends { id: string }>(server: T[], local: T[]): T[] => {
+  const ids = new Set(server.map(x => x.id));
+  return [...server, ...local.filter(x => !ids.has(x.id))];
+};
+
 /** Built-in vocabulary plus whatever the admin added; stored words win on id clashes. */
 const withBuiltInWords = (stored: DailyWord[]): DailyWord[] => {
   const ids = new Set(stored.map(w => w.id));
@@ -23,7 +65,6 @@ const withBuiltInWords = (stored: DailyWord[]): DailyWord[] => {
   return [...stored, ...extra];
 };
 import { SEED_GRAMMAR_EXAMS } from '../data/seedGrammarExams';
-import { SEED_BOOK_FINAL_EXAMS, assignBookFinalExamToGroup } from '../data/bookFinalExamsData';
 import { getStorageItem, setStorageItem } from '../lib/storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { loadCollection, syncCollection } from '../lib/lmsStore';
@@ -133,11 +174,23 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     SEED_GRAMMAR_EXAMS.forEach(se => {
       if (!combined.some(e => e.id === se.id)) combined.push(se);
     });
-    SEED_BOOK_FINAL_EXAMS.forEach(be => {
-      if (!combined.some(e => e.id === be.id)) combined.push(be);
-    });
     return combined;
   });
+
+  // Book final exams are generated from the 6 curriculum books (~2 MB of word data),
+  // so load them after first paint instead of shipping them in the main bundle.
+  useEffect(() => {
+    let cancelled = false;
+    import('../data/bookFinalExamsData').then(({ SEED_BOOK_FINAL_EXAMS }) => {
+      if (cancelled) return;
+      setGrammarExams(prev => {
+        const ids = new Set(prev.map(e => e.id));
+        const missing = SEED_BOOK_FINAL_EXAMS.filter(be => !ids.has(be.id));
+        return missing.length ? [...prev, ...missing] : prev;
+      });
+    });
+    return () => { cancelled = true; };
+  }, []);
   const [examSubmissions, setExamSubmissions] = useState<GrammarExamSubmission[]>(() => getStorageItem('premier_grammar_submissions', []));
   // Real students come from Supabase (refreshStudentsFromDb); local cache only bridges the first paint.
   const [students, setStudents] = useState<Profile[]>(() => getStorageItem<Profile[]>('premier_all_students', []));
@@ -397,7 +450,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setDbLoaded(false);
     setLoading(true);
     (async () => {
-      const [g, l, h, s, a, w, pp] = await Promise.all([
+      const [g, l, h, s, a, w, pp, wp, bd] = await Promise.all([
         loadCollection<Group>('groups'),
         loadCollection<Lesson>('lessons'),
         loadCollection<Homework>('homeworks'),
@@ -405,6 +458,9 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         loadCollection<Attendance>('attendance'),
         loadCollection<DailyWord>('daily_words'),
         isStaff ? loadCollection<StudentPaymentPlan>('payment_plans') : Promise.resolve(null),
+        // Own progress only for students (RLS scopes it); staff don't need everyone's flashcards.
+        isStaff ? Promise.resolve(null) : loadCollection<WordProgress>('word_progress'),
+        isStaff ? Promise.resolve(null) : loadCollection<Badge>('badges'),
       ]);
       if (cancelled) return;
       // The database is the source of truth, even when a collection is empty.
@@ -414,6 +470,9 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (s) setSubmissions(s);
       if (a) setAttendance(a);
       if (w) setDailyWords(withBuiltInWords(w));
+      // Merge server progress with anything this browser recorded before the move to the database.
+      if (wp) setWordProgress(prev => mergeById(wp, prev.filter(p => myStudentIds.includes(p.student_id))));
+      if (bd) setBadges(prev => mergeById(bd, prev.filter(b => myStudentIds.includes(b.student_id))));
       if (pp) {
         setStorageItem('premier_student_payments', pp);
         window.dispatchEvent(new Event('premier:payments_synced'));
@@ -425,6 +484,33 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
     return () => { cancelled = true; };
   }, [profile?.id, isStaff]);
+
+  // Championship = real XP from profiles, via the leaderboard() RPC (students can't read other profiles).
+  const refreshLeaderboard = useCallback(async () => {
+    if (!isSupabaseConfigured || !supabase || !profile?.id) return;
+    const { data, error } = await supabase.rpc('leaderboard', { p_limit: 100 });
+    if (error || !data) return;
+    const month = new Date().toISOString().slice(0, 7);
+    setChampionshipScores((data as { student_id: string; full_name: string | null; xp: number; group_name: string | null; avatar_url: string | null; rank: number }[])
+      .map(row => ({
+        id: `lb-${row.student_id}`,
+        student_id: row.student_id,
+        student_name: row.full_name || "O'quvchi",
+        month,
+        xp: row.xp,
+        total_score: row.xp,
+        rank: Number(row.rank),
+        lessons_attended: 0,
+        homeworks_completed: 0,
+        group_name: row.group_name || undefined,
+      })));
+  }, [profile?.id]);
+
+  useEffect(() => {
+    refreshLeaderboard();
+    const t = window.setInterval(refreshLeaderboard, 60000);
+    return () => window.clearInterval(t);
+  }, [refreshLeaderboard]);
 
   useEffect(() => {
     if (dbLoaded && isStaff) syncCollection('groups', groups, { deleteMissing: true });
@@ -442,6 +528,14 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (dbLoaded && isStaff) syncCollection('daily_words', dailyWords, { deleteMissing: true });
   }, [dailyWords, dbLoaded, isStaff]);
   useEffect(() => {
+    if (!dbLoaded || isStaff) return;
+    syncCollection('word_progress', wordProgress, { studentIdOf: p => p.student_id, filter: p => myStudentIds.includes(p.student_id) });
+  }, [wordProgress, dbLoaded, isStaff]);
+  useEffect(() => {
+    if (!dbLoaded || isStaff) return;
+    syncCollection('badges', badges, { studentIdOf: b => b.student_id, filter: b => myStudentIds.includes(b.student_id) });
+  }, [badges, dbLoaded, isStaff]);
+  useEffect(() => {
     if (!dbLoaded) return;
     syncCollection('homework_submissions', submissions, {
       studentIdOf: sub => sub.student_id,
@@ -453,67 +547,67 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // --------------------------------------------------------------------------
   // LIVE TELEMETRY CROSS-DEVICE REAL-TIME SYNCHRONIZATION
   // --------------------------------------------------------------------------
+  const telemetryRef = React.useRef(telemetryLogs);
+  telemetryRef.current = telemetryLogs;
+  // Read the profile through a ref so profile changes (e.g. XP) don't recreate
+  // recordActiveTime and restart the study-time tracker.
+  const profileRef = React.useRef(profile);
+  profileRef.current = profile;
+
+  // Study-time telemetry lives in Supabase (student_telemetry / student_events).
+  // Students read their own row; staff read everyone's.
   const syncTelemetryFromServer = useCallback(async () => {
-    try {
-      const res = await fetch('/api/telemetry/status', {
-        headers: { 'Cache-Control': 'no-cache' }
+    if (!isSupabaseConfigured || !supabase || !profile?.id) return;
+    const { data: rows } = await supabase.from('student_telemetry').select('student_id, data, updated_at');
+    if (rows) {
+      setTelemetryLogs(prev => {
+        const merged = { ...prev };
+        rows.forEach(row => {
+          const log = row.data as StudentTelemetryLog;
+          const lastMs = log.last_active_at ? new Date(log.last_active_at).getTime() : 0;
+          const ageSec = (Date.now() - lastMs) / 1000;
+          const status = !lastMs ? 'offline' : ageSec < 300 ? 'online' : ageSec < 1200 ? 'idle' : 'offline';
+          const label = !lastMs ? 'Hali kirmagan' : status === 'online' ? 'Ayni paytda faol'
+            : ageSec < 3600 ? `${Math.round(ageSec / 60)} daqiqa oldin`
+            : ageSec < 86400 ? `${Math.round(ageSec / 3600)} soat oldin` : `${Math.round(ageSec / 86400)} kun oldin`;
+          const id = row.student_id as string;
+          // Our own fresher local copy wins over what we last wrote.
+          const local = merged[id];
+          const localMs = local?.last_active_at ? new Date(local.last_active_at).getTime() : 0;
+          const { dayKey, weekKey } = localPeriodKeys();
+          merged[id] = localMs > lastMs ? local : {
+            ...log,
+            online_status: status,
+            last_active_label: label,
+            // A student who hasn't been back today/this week has 0 for those periods.
+            today_active_seconds: log.day_key === dayKey ? log.today_active_seconds : 0,
+            weekly_active_seconds: log.week_key === weekKey ? log.weekly_active_seconds : 0,
+          };
+        });
+        setStorageItem('premier_student_telemetry', merged);
+        return merged;
       });
-      if (!res.ok) return;
-      const data = await res.json();
-      if (data.success && data.telemetryLogs) {
-        setTelemetryLogs(prev => {
-          const merged = { ...prev };
-          Object.entries(data.telemetryLogs as Record<string, StudentTelemetryLog>).forEach(([id, log]) => {
-            if (!merged[id]) {
-              merged[id] = log;
-            } else {
-              const serverTime = log.last_active_at ? new Date(log.last_active_at).getTime() : 0;
-              const localTime = merged[id].last_active_at ? new Date(merged[id].last_active_at).getTime() : 0;
-              const isLocallyFreshOnline = merged[id].online_status === 'online' && (Date.now() - localTime < 180000);
-              const useServerActive = !isLocallyFreshOnline && (serverTime > localTime);
-
-              merged[id] = {
-                ...merged[id],
-                ...log,
-                total_active_seconds: Math.max(merged[id].total_active_seconds || 0, log.total_active_seconds || 0),
-                today_active_seconds: Math.max(merged[id].today_active_seconds || 0, log.today_active_seconds || 0),
-                weekly_active_seconds: Math.max(merged[id].weekly_active_seconds || 0, log.weekly_active_seconds || 0),
-                idle_paused_seconds: Math.max(merged[id].idle_paused_seconds || 0, log.idle_paused_seconds || 0),
-                online_status: isLocallyFreshOnline ? 'online' : (useServerActive ? log.online_status : merged[id].online_status),
-                last_active_at: isLocallyFreshOnline ? merged[id].last_active_at : (useServerActive ? (log.last_active_at || merged[id].last_active_at) : merged[id].last_active_at),
-                last_active_label: isLocallyFreshOnline ? 'Ayni paytda faol' : (useServerActive ? (log.last_active_label || merged[id].last_active_label) : merged[id].last_active_label),
-                current_page: isLocallyFreshOnline ? merged[id].current_page : (useServerActive ? (log.current_page || merged[id].current_page) : merged[id].current_page),
-                current_module: isLocallyFreshOnline ? merged[id].current_module : (useServerActive ? (log.current_module || merged[id].current_module) : merged[id].current_module),
-                device: log.device || merged[id].device
-              };
-            }
-          });
-          setStorageItem('premier_student_telemetry', merged);
-          return merged;
-        });
-      }
-
-      if (data.success && Array.isArray(data.actionEvents) && data.actionEvents.length > 0) {
-        setActionEvents(prev => {
-          const existingIds = new Set(prev.map(a => a.id));
-          const newOnes = data.actionEvents.filter((a: any) => !existingIds.has(a.id));
-          if (newOnes.length === 0) return prev;
-          const next = [...newOnes, ...prev].slice(0, 200);
-          setStorageItem('premier_student_action_events', next);
-          return next;
-        });
-      }
-    } catch {
-      // Non-blocking network catch
     }
-  }, []);
+    if (isStaff) {
+      const { data: evts } = await supabase
+        .from('student_events')
+        .select('data')
+        .order('created_at', { ascending: false })
+        .limit(200);
+      if (evts) {
+        const list = evts.map(e => e.data as StudentActionEvent);
+        setActionEvents(list);
+        setStorageItem('premier_student_action_events', list);
+      }
+    }
+  }, [profile?.id, isStaff]);
 
-  // Continuous 3-second polling for immediate multi-device visibility
+  // Poll so the admin's monitoring view stays current across devices.
   useEffect(() => {
     syncTelemetryFromServer();
     const pollTimer = setInterval(() => {
       syncTelemetryFromServer();
-    }, 3000);
+    }, 15000);
 
     return () => clearInterval(pollTimer);
   }, [syncTelemetryFromServer]);
@@ -765,7 +859,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (exists) return;
 
     const newBadge: Badge = {
-      id: `badge-${Date.now()}`,
+      id: `badge-${crypto.randomUUID()}`,
       student_id: profile.id,
       badge_key: badgeKey,
       title,
@@ -961,8 +1055,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return s;
     }));
 
-    // Automatically reward target student with Championship XP upon teacher grading
-    if (existing?.student_id) {
+    // Reward the student once per submission (regrading doesn't pay out again).
+    if (existing?.student_id && existing.status !== 'graded') {
       const earnedXp = Math.round(score * 0.8);
       setChampionshipScores(prev => {
         const studentScore = prev.find(cs => cs.student_id === existing.student_id);
@@ -977,8 +1071,16 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
         return prev;
       });
-    }
 
+      // Persist the reward on the student's profile so it counts on every device and in the leaderboard.
+      const target = students.find(st => st.id === existing.student_id || st.auth_id === existing.student_id);
+      if (target?.auth_id && supabase) {
+        // Atomic server-side increment, so it can't overwrite XP the student earned meanwhile.
+        const { data: newXp, error } = await supabase.rpc('add_xp', { p_student_id: target.auth_id, p_amount: earnedXp });
+        if (error) console.warn('Could not add grading XP:', error.message);
+        else if (typeof newXp === 'number') setStudents(prev => prev.map(st => st.id === target.id ? { ...st, xp: newXp } : st));
+      }
+    }
 
     // Push real-time event to student
     realtime.publish({
@@ -1018,7 +1120,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       } else {
         const foundWord = dailyWords.find(w => w.id === wordId);
         const newEntry: WordProgress = {
-          id: `wp-${Date.now()}`,
+          id: `wp-${crypto.randomUUID()}`,
           student_id: profile.id,
           word_id: wordId,
           box: remembered ? 2 : 1,
@@ -1104,6 +1206,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const group = groups.find(g => g.id === groupId);
     if (!group) throw new Error("Guruh topilmadi");
 
+    const { assignBookFinalExamToGroup } = await import('../data/bookFinalExamsData');
     const newExam = assignBookFinalExamToGroup(bookNumber, group);
     newExam.id = `book-exam-${bookNumber}-${groupId}-${Date.now()}`;
     newExam.createdBy = profile?.full_name || 'Admin';
@@ -1305,9 +1408,19 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   ) => {
     const isMobile = /android|iphone|ipad|mobile/i.test(navigator.userAgent);
 
+    const { dayKey, weekKey } = localPeriodKeys();
+    const me = profileRef.current;
     setTelemetryLogs(prev => {
-      const current = prev[studentId];
-      if (!current) return prev;
+      const existing = prev[studentId] ?? (me && studentId === me.id ? newTelemetryLog(me) : undefined);
+      if (!existing) return prev;
+      // Reset daily/weekly counters when the day or week rolls over.
+      const current = {
+        ...existing,
+        today_active_seconds: existing.day_key === dayKey ? existing.today_active_seconds : 0,
+        weekly_active_seconds: existing.week_key === weekKey ? existing.weekly_active_seconds : 0,
+        day_key: dayKey,
+        week_key: weekKey,
+      };
 
       const updatedModuleBreakdown = { ...current.module_breakdown };
       const key = `${module}_seconds` as keyof ModuleTimeBreakdown;
@@ -1351,20 +1464,16 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
     } catch {}
 
-    // 1. Send heartbeat to Central Server API
-    fetch('/api/telemetry/heartbeat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        student_id: studentId,
-        module,
-        active_seconds: activeSeconds,
-        idle_seconds: idleSeconds,
-        current_page: currentPage,
-        is_idle: idleSeconds > 0 && activeSeconds === 0,
-        device: isMobile ? 'mobile' : 'desktop'
-      })
-    }).catch(() => {});
+    // 1. Persist this student's own telemetry row (read by the admin's monitoring view).
+    if (supabase && studentId === me?.id) {
+      window.setTimeout(() => {
+        const log = telemetryRef.current[studentId];
+        if (!log) return;
+        supabase!.from('student_telemetry')
+          .upsert({ student_id: studentId, data: log, updated_at: new Date().toISOString() })
+          .then(({ error }) => { if (error) console.warn('Telemetry save failed:', error.message); });
+      }, 0);
+    }
 
     // 2. Broadcast to Supabase Realtime channel
     if (supabase) {
@@ -1409,18 +1518,12 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       });
     }
 
-    // 1. Send action to Central Server API
-    fetch('/api/telemetry/action', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        student_id: event.student_id,
-        student_name: event.student_name,
-        action_type: event.action_type,
-        module: event.module,
-        details: event.details
-      })
-    }).catch(() => {});
+    // 1. Append to student_events (RLS: own events, or any for staff).
+    if (supabase) {
+      supabase.from('student_events')
+        .insert({ id: newEvent.id, student_id: newEvent.student_id, data: newEvent })
+        .then(({ error }) => { if (error) console.warn('Event save failed:', error.message); });
+    }
 
     // 2. Broadcast to Supabase Realtime channel
     if (supabase) {

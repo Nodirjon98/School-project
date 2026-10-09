@@ -7,7 +7,7 @@ import {
   LayoutDashboard, BookOpen, CheckSquare, Sparkles,
   Trophy, ClipboardCheck, Users, BrainCircuit, BarChart3,
   Layers, Database, X, PenTool, Mic, Award, Swords, FileText, Headphones, CreditCard,
-  Music, ShieldCheck, Gamepad2, ChevronDown, Library, Flame, UserPlus
+  Music, ShieldCheck, Gamepad2, ChevronDown, Library, Flame, UserPlus, Heart
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -102,6 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         { label: L('Bosh sahifa', 'Home'), path: '/teacher/dashboard', icon: icon(LayoutDashboard) },
         { label: L('Guruhlarim', 'My groups'), path: '/teacher/groups', icon: icon(Users) },
         { label: L("Ro'yxatdan o'tganlar", 'Sign-ups'), path: '/admin/registrations', icon: icon(UserPlus), count: newStudentIds.length },
+        { label: L('Odob (yurakchalar)', 'Conduct'), path: '/admin/conduct', icon: icon(Heart) },
         { label: L('Davomat', 'Attendance'), path: '/teacher/attendance', icon: icon(ClipboardCheck) },
         { label: L('Uy vazifalari', 'Homework'), path: '/teacher/homework', icon: icon(CheckSquare) },
         { label: L("O'quvchilar nazorati", 'Student monitoring'), path: '/teacher/monitoring', icon: icon(ShieldCheck) },
@@ -134,6 +135,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       items: [
         { label: L('Bosh sahifa', 'Home'), path: '/admin/dashboard', icon: icon(BarChart3) },
         { label: L("Ro'yxatdan o'tganlar", 'Sign-ups'), path: '/admin/registrations', icon: icon(UserPlus), count: newStudentIds.length },
+        { label: L('Odob (yurakchalar)', 'Conduct'), path: '/admin/conduct', icon: icon(Heart) },
         { label: L('Guruhlar', 'Groups'), path: '/admin/groups', icon: icon(Users) },
         { label: L("To'lovlar", 'Payments'), path: '/admin/payments', icon: icon(CreditCard) },
         { label: L('Analitika', 'Analytics'), path: '/admin/analytics', icon: icon(ShieldCheck) },

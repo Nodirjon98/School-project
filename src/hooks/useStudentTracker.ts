@@ -61,22 +61,6 @@ export function useStudentTracker() {
     if (!studentId || !isStudent) return;
     recordActiveTime(studentId, currentModuleRef.current, 5, 0, location.pathname);
 
-    const isMobile = typeof navigator !== 'undefined' && /android|iphone|ipad|mobile/i.test(navigator.userAgent);
-    fetch('/api/telemetry/heartbeat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        student_id: studentId,
-        student_name: profile?.full_name,
-        module: currentModuleRef.current,
-        active_seconds: 5,
-        idle_seconds: 0,
-        current_page: location.pathname,
-        is_idle: false,
-        device: isMobile ? 'mobile' : 'desktop'
-      }),
-      keepalive: true
-    }).catch(() => {});
   }, [studentId, isStudent, recordActiveTime]);
 
   // Handle interaction events (tap, click, keypress, scroll)

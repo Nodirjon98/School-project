@@ -10,6 +10,7 @@ import { ProtectedRoute } from './components/common/ProtectedRoute';
 const Login = lazy(() => import('./pages/auth/Login').then(m => ({ default: m.Login })));
 const Signup = lazy(() => import('./pages/auth/Signup').then(m => ({ default: m.Signup })));
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword').then(m => ({ default: m.ForgotPassword })));
+const ResetPassword = lazy(() => import('./pages/auth/ResetPassword').then(m => ({ default: m.ResetPassword })));
 const StudentOnboarding = lazy(() => import('./pages/onboarding/StudentOnboarding').then(m => ({ default: m.StudentOnboarding })));
 
 // Lazy Loaded Student Pages
@@ -46,6 +47,7 @@ const TacticsListeningManager = lazy(() => import('./pages/teacher/TacticsListen
 const SpeakingAndVoiceManager = lazy(() => import('./pages/teacher/SpeakingAndVoiceManager').then(m => ({ default: m.SpeakingAndVoiceManager })));
 
 // Lazy Loaded Admin Pages
+const ConductPage = lazy(() => import('./pages/admin/ConductPage').then(m => ({ default: m.ConductPage })));
 const RegistrationsPage = lazy(() => import('./pages/admin/RegistrationsPage').then(m => ({ default: m.RegistrationsPage })));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 const GroupManager = lazy(() => import('./pages/admin/GroupManager').then(m => ({ default: m.GroupManager })));
@@ -88,6 +90,7 @@ export const AppRouter: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Onboarding Wizard (7 steps) */}
         <Route
@@ -210,6 +213,14 @@ export const AppRouter: React.FC = () => {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/conduct"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'teacher']}>
+                <ConductPage />
               </ProtectedRoute>
             }
           />

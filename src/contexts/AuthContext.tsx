@@ -116,13 +116,20 @@ export const notifyStudentLogin = (studProfile: Profile) => {
     }
   } catch {}
 
-  // 3. Send to Serverless API
-  fetch('/api/telemetry/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-    keepalive: true
-  }).catch(() => {});
+  // 3. Record the login in student_events so the admin sees it on any device
+  if (isSupabaseConfigured && supabase) {
+    const evt = {
+      id: `act-login-${studProfile.id}-${Date.now()}`,
+      student_id: studProfile.id,
+      student_name: studProfile.full_name,
+      action_type: 'LOGIN',
+      module: 'system',
+      timestamp: nowIso,
+      details: { title: 'Platformaga kirdi', extra_info: `Qurilma: ${isMobile ? 'Mobil telefon' : 'Kompyuter'}` },
+    };
+    supabase.from('student_events').insert({ id: evt.id, student_id: evt.student_id, data: evt })
+      .then(({ error }) => { if (error) console.warn('Login event save failed:', error.message); });
+  }
 
   // 4. Send to Supabase Realtime broadcast and Presence channel
   if (isSupabaseConfigured && supabase) {
@@ -338,11 +345,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {}
 
     if (isSupabaseConfigured && supabase) {
-      const { password: _pw, id: _id, auth_id: _authId, created_at: _created, ...dbUpdates } = updates;
-      const { error } = await supabase.from('profiles').update(dbUpdates).eq('id', profile.auth_id || profile.id);
-      if (error) {
-        console.warn('Supabase profile update failed:', error.message);
-        return { error: error.message };
+      const { password: _pw, id: _id, auth_id: _authId, created_at: _created, xp, ...dbUpdates } = updates;
+      const dbId = profile.auth_id || profile.id;
+
+      // XP is locked against direct writes; apply the difference through the atomic add_xp RPC.
+      if (typeof xp === 'number') {
+        const delta = Math.min(200, Math.round(xp - (profile.xp || 0)));
+        if (delta > 0) {
+          const { data: newXp, error } = await supabase.rpc('add_xp', { p_student_id: dbId, p_amount: delta });
+          if (error) console.warn('XP update failed:', error.message);
+          else if (typeof newXp === 'number') saveProfile({ ...updated, xp: newXp });
+        }
+      }
+
+      if (Object.keys(dbUpdates).length > 0) {
+        const { error } = await supabase.from('profiles').update(dbUpdates).eq('id', dbId);
+        if (error) {
+          console.warn('Supabase profile update failed:', error.message);
+          return { error: error.message };
+        }
       }
     }
 

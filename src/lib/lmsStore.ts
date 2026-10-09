@@ -13,7 +13,15 @@ export type LmsCollection =
   | 'homework_submissions'
   | 'attendance'
   | 'daily_words'
-  | 'payment_plans';
+  | 'payment_plans'
+  // Per-student collections live in `student_documents` (owner-writable).
+  | 'word_progress'
+  | 'badges'
+  | 'placement_results';
+
+const STUDENT_COLLECTIONS = new Set<LmsCollection>(['word_progress', 'badges', 'placement_results']);
+const tableFor = (collection: LmsCollection) =>
+  STUDENT_COLLECTIONS.has(collection) ? 'student_documents' : 'lms_documents';
 
 type Doc = { id: string };
 
@@ -34,7 +42,7 @@ const snapshotFor = (collection: LmsCollection) => {
 export async function loadCollection<T extends Doc>(collection: LmsCollection): Promise<T[] | null> {
   if (!isSupabaseConfigured || !supabase) return null;
   const { data, error } = await supabase
-    .from('lms_documents')
+    .from(tableFor(collection))
     .select('id, data')
     .eq('collection', collection);
   if (error) {
@@ -78,7 +86,7 @@ export async function syncCollection<T extends Doc>(
       data: d,
       updated_at: new Date().toISOString(),
     }));
-    const { error } = await supabase.from('lms_documents').upsert(rows, { onConflict: 'collection,id' });
+    const { error } = await supabase.from(tableFor(collection)).upsert(rows, { onConflict: 'collection,id' });
     if (error) {
       console.warn(`lms_documents save ${collection}:`, error.message);
     } else {
@@ -91,7 +99,7 @@ export async function syncCollection<T extends Doc>(
     const removed = Array.from(snap.keys()).filter(id => !present.has(id));
     if (removed.length > 0) {
       const { error } = await supabase
-        .from('lms_documents')
+        .from(tableFor(collection))
         .delete()
         .eq('collection', collection)
         .in('id', removed);

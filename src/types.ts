@@ -1272,6 +1272,9 @@ export interface StudentActionEvent {
 }
 
 export interface StudentTelemetryLog {
+  /** Local date (YYYY-MM-DD) and week start the today/weekly counters belong to. */
+  day_key?: string;
+  week_key?: string;
   id: string;
   student_id: string;
   student_name: string;
