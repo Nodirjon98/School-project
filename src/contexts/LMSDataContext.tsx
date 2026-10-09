@@ -56,7 +56,6 @@ const withBuiltInWords = (stored: DailyWord[]): DailyWord[] => {
   return [...stored, ...extra];
 };
 import { SEED_GRAMMAR_EXAMS } from '../data/seedGrammarExams';
-import { SEED_BOOK_FINAL_EXAMS, assignBookFinalExamToGroup } from '../data/bookFinalExamsData';
 import { getStorageItem, setStorageItem } from '../lib/storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { loadCollection, syncCollection } from '../lib/lmsStore';
@@ -166,11 +165,23 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     SEED_GRAMMAR_EXAMS.forEach(se => {
       if (!combined.some(e => e.id === se.id)) combined.push(se);
     });
-    SEED_BOOK_FINAL_EXAMS.forEach(be => {
-      if (!combined.some(e => e.id === be.id)) combined.push(be);
-    });
     return combined;
   });
+
+  // Book final exams are generated from the 6 curriculum books (~2 MB of word data),
+  // so load them after first paint instead of shipping them in the main bundle.
+  useEffect(() => {
+    let cancelled = false;
+    import('../data/bookFinalExamsData').then(({ SEED_BOOK_FINAL_EXAMS }) => {
+      if (cancelled) return;
+      setGrammarExams(prev => {
+        const ids = new Set(prev.map(e => e.id));
+        const missing = SEED_BOOK_FINAL_EXAMS.filter(be => !ids.has(be.id));
+        return missing.length ? [...prev, ...missing] : prev;
+      });
+    });
+    return () => { cancelled = true; };
+  }, []);
   const [examSubmissions, setExamSubmissions] = useState<GrammarExamSubmission[]>(() => getStorageItem('premier_grammar_submissions', []));
   // Real students come from Supabase (refreshStudentsFromDb); local cache only bridges the first paint.
   const [students, setStudents] = useState<Profile[]>(() => getStorageItem<Profile[]>('premier_all_students', []));
@@ -1176,6 +1187,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const group = groups.find(g => g.id === groupId);
     if (!group) throw new Error("Guruh topilmadi");
 
+    const { assignBookFinalExamToGroup } = await import('../data/bookFinalExamsData');
     const newExam = assignBookFinalExamToGroup(bookNumber, group);
     newExam.id = `book-exam-${bookNumber}-${groupId}-${Date.now()}`;
     newExam.createdBy = profile?.full_name || 'Admin';
