@@ -9,6 +9,15 @@ import {
 import { SEED_DAILY_WORDS } from '../lib/seedData';
 import { DAILY_WORDS_BANK } from '../data/dailyWordsBank';
 
+/** Local (not UTC) day and Monday-of-week keys, so counters roll over at local midnight. */
+const localPeriodKeys = () => {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const key = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const now = new Date();
+  const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
+  return { dayKey: key(now), weekKey: key(monday) };
+};
+
 /** Empty telemetry record for a student who has not been tracked yet. */
 const newTelemetryLog = (st: Profile): StudentTelemetryLog => ({
   id: `tel-${st.id}`,
@@ -540,6 +549,10 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // --------------------------------------------------------------------------
   const telemetryRef = React.useRef(telemetryLogs);
   telemetryRef.current = telemetryLogs;
+  // Read the profile through a ref so profile changes (e.g. XP) don't recreate
+  // recordActiveTime and restart the study-time tracker.
+  const profileRef = React.useRef(profile);
+  profileRef.current = profile;
 
   // Study-time telemetry lives in Supabase (student_telemetry / student_events).
   // Students read their own row; staff read everyone's.
@@ -561,7 +574,15 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
           // Our own fresher local copy wins over what we last wrote.
           const local = merged[id];
           const localMs = local?.last_active_at ? new Date(local.last_active_at).getTime() : 0;
-          merged[id] = localMs > lastMs ? local : { ...log, online_status: status, last_active_label: label };
+          const { dayKey, weekKey } = localPeriodKeys();
+          merged[id] = localMs > lastMs ? local : {
+            ...log,
+            online_status: status,
+            last_active_label: label,
+            // A student who hasn't been back today/this week has 0 for those periods.
+            today_active_seconds: log.day_key === dayKey ? log.today_active_seconds : 0,
+            weekly_active_seconds: log.week_key === weekKey ? log.weekly_active_seconds : 0,
+          };
         });
         setStorageItem('premier_student_telemetry', merged);
         return merged;
@@ -838,7 +859,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (exists) return;
 
     const newBadge: Badge = {
-      id: `badge-${Date.now()}`,
+      id: `badge-${crypto.randomUUID()}`,
       student_id: profile.id,
       badge_key: badgeKey,
       title,
@@ -1034,8 +1055,8 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return s;
     }));
 
-    // Automatically reward target student with Championship XP upon teacher grading
-    if (existing?.student_id) {
+    // Reward the student once per submission (regrading doesn't pay out again).
+    if (existing?.student_id && existing.status !== 'graded') {
       const earnedXp = Math.round(score * 0.8);
       setChampionshipScores(prev => {
         const studentScore = prev.find(cs => cs.student_id === existing.student_id);
@@ -1054,12 +1075,10 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // Persist the reward on the student's profile so it counts on every device and in the leaderboard.
       const target = students.find(st => st.id === existing.student_id || st.auth_id === existing.student_id);
       if (target?.auth_id && supabase) {
-        const { error } = await supabase
-          .from('profiles')
-          .update({ xp: (target.xp || 0) + earnedXp })
-          .eq('id', target.auth_id);
+        // Atomic server-side increment, so it can't overwrite XP the student earned meanwhile.
+        const { data: newXp, error } = await supabase.rpc('add_xp', { p_student_id: target.auth_id, p_amount: earnedXp });
         if (error) console.warn('Could not add grading XP:', error.message);
-        else setStudents(prev => prev.map(st => st.id === target.id ? { ...st, xp: (st.xp || 0) + earnedXp } : st));
+        else if (typeof newXp === 'number') setStudents(prev => prev.map(st => st.id === target.id ? { ...st, xp: newXp } : st));
       }
     }
 
@@ -1101,7 +1120,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
       } else {
         const foundWord = dailyWords.find(w => w.id === wordId);
         const newEntry: WordProgress = {
-          id: `wp-${Date.now()}`,
+          id: `wp-${crypto.randomUUID()}`,
           student_id: profile.id,
           word_id: wordId,
           box: remembered ? 2 : 1,
@@ -1389,10 +1408,10 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
   ) => {
     const isMobile = /android|iphone|ipad|mobile/i.test(navigator.userAgent);
 
-    const dayKey = new Date().toISOString().slice(0, 10);
-    const weekKey = (() => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.toISOString().slice(0, 10); })();
+    const { dayKey, weekKey } = localPeriodKeys();
+    const me = profileRef.current;
     setTelemetryLogs(prev => {
-      const existing = prev[studentId] ?? (studentId === profile?.id ? newTelemetryLog(profile) : undefined);
+      const existing = prev[studentId] ?? (me && studentId === me.id ? newTelemetryLog(me) : undefined);
       if (!existing) return prev;
       // Reset daily/weekly counters when the day or week rolls over.
       const current = {
@@ -1446,7 +1465,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
     } catch {}
 
     // 1. Persist this student's own telemetry row (read by the admin's monitoring view).
-    if (supabase && studentId === profile?.id) {
+    if (supabase && studentId === me?.id) {
       window.setTimeout(() => {
         const log = telemetryRef.current[studentId];
         if (!log) return;
@@ -1474,7 +1493,7 @@ export const LMSDataProvider: React.FC<{ children: React.ReactNode }> = ({ child
         });
       } catch {}
     }
-  }, [profile]);
+  }, []);
 
   const logStudentAction = useCallback((event: Omit<StudentActionEvent, 'id' | 'timestamp'>) => {
     const newEvent: StudentActionEvent = {

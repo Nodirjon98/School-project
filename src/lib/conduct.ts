@@ -27,21 +27,33 @@ export const CONDUCT_PRESETS: { delta: number; reason: string }[] = [
 
 /** Current hearts for a student given their events (never below 0). */
 export const heartsFor = (events: ConductEvent[], studentId: string): number =>
-  Math.max(0, HEARTS_START + events.filter(e => e.student_id === studentId).reduce((sum, e) => sum + e.delta, 0));
+  events
+    .filter(e => e.student_id === studentId)
+    .sort((a, b) => a.created_at.localeCompare(b.created_at))
+    // Clamp as we go, so a reward after hitting 0 always shows up.
+    .reduce((hearts, e) => Math.max(0, hearts + e.delta), HEARTS_START);
 
 /** Staff get every event, students only their own (RLS). */
 export async function loadConductEvents(): Promise<ConductEvent[]> {
   if (!isSupabaseConfigured || !supabase) return [];
-  const { data, error } = await supabase
-    .from('conduct_events')
-    .select('id, student_id, delta, reason, created_by_name, created_at')
-    .order('created_at', { ascending: false })
-    .limit(2000);
-  if (error) {
-    console.warn('conduct_events load:', error.message);
-    return [];
+  // Page through everything; balances need the full history.
+  const all: ConductEvent[] = [];
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from('conduct_events')
+      .select('id, student_id, delta, reason, created_by_name, created_at')
+      .order('created_at', { ascending: false })
+      .order('id', { ascending: true })
+      .range(from, from + PAGE - 1);
+    if (error) {
+      console.warn('conduct_events load:', error.message);
+      break;
+    }
+    all.push(...(data as ConductEvent[]));
+    if (!data || data.length < PAGE) break;
   }
-  return data as ConductEvent[];
+  return all;
 }
 
 /** Admin only (RLS). Returns the saved event or an Uzbek error message. */
