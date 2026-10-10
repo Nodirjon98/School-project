@@ -3,11 +3,13 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useLMSData } from '../../contexts/LMSDataContext';
+import { useInbox } from '../../contexts/InboxContext';
 import {
   LayoutDashboard, BookOpen, CheckSquare, Sparkles,
   Trophy, ClipboardCheck, Users, BrainCircuit, BarChart3,
   Layers, Database, X, PenTool, Mic, Award, Swords, FileText, Headphones, CreditCard,
-  Music, ShieldCheck, Gamepad2, ChevronDown, Library, Flame, UserPlus, Heart
+  Music, ShieldCheck, Gamepad2, ChevronDown, Library, Flame, UserPlus, Heart,
+  ClipboardList, MessageSquare
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -36,8 +38,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { role, profile } = useAuth();
   const { language } = useLanguage();
   const { newStudentIds } = useLMSData();
+  const { unreadTotal, newLeads } = useInbox();
   const location = useLocation();
   const L = (uz: string, en: string) => (language === 'en' ? en : uz);
+  const messagesItem: NavItem = { label: L('Xabarlar', 'Messages'), path: '/messages', icon: icon(MessageSquare), count: unreadTotal };
 
   const isItemActive = (itemPath: string, isExactActive: boolean) => {
     if (isExactActive) return true;
@@ -64,6 +68,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         { label: L('Darslarim', 'My lessons'), path: '/lessons', icon: icon(BookOpen) },
         { label: L('Uy vazifalari', 'Homework'), path: '/homework', icon: icon(CheckSquare) },
         { label: L("Kunlik so'zlar", 'Daily words'), path: '/daily-words', icon: icon(Layers) },
+        messagesItem,
       ],
     },
     {
@@ -106,6 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         { label: L('Davomat', 'Attendance'), path: '/teacher/attendance', icon: icon(ClipboardCheck) },
         { label: L('Uy vazifalari', 'Homework'), path: '/teacher/homework', icon: icon(CheckSquare) },
         { label: L("O'quvchilar nazorati", 'Student monitoring'), path: '/teacher/monitoring', icon: icon(ShieldCheck) },
+        messagesItem,
       ],
     },
     {
@@ -134,7 +140,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       category: L('Boshqaruv', 'Management'),
       items: [
         { label: L('Bosh sahifa', 'Home'), path: '/admin/dashboard', icon: icon(BarChart3) },
+        { label: L('Arizalar', 'Leads'), path: '/admin/leads', icon: icon(ClipboardList), count: newLeads },
         { label: L("Ro'yxatdan o'tganlar", 'Sign-ups'), path: '/admin/registrations', icon: icon(UserPlus), count: newStudentIds.length },
+        messagesItem,
         { label: L('Odob (yurakchalar)', 'Conduct'), path: '/admin/conduct', icon: icon(Heart) },
         { label: L('Guruhlar', 'Groups'), path: '/admin/groups', icon: icon(Users) },
         { label: L("To'lovlar", 'Payments'), path: '/admin/payments', icon: icon(CreditCard) },
