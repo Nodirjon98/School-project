@@ -136,7 +136,7 @@ export function buildTodaysActions({
 }): TodayAction[] {
   const actions: TodayAction[] = [];
   if (newLeads > 0) actions.push({ key: 'leads', tone: 'indigo', title: `${newLeads} ta yangi ariza`, sub: "Sinov darsiga yozilganlarga qo'ng'iroq qiling", to: '/admin/leads', cta: "Ko'rish" });
-  if (riskStudents.length) actions.push({ key: 'risk', tone: 'rose', title: `${riskStudents.length} ta o'quvchi xavf zonasida`, sub: preview(riskStudents), to: '/admin/dashboard#xavf', cta: "Ko'rish" });
+  if (riskStudents.length) actions.push({ key: 'risk', tone: 'rose', title: `${riskStudents.length} ta o'quvchi xavf zonasida`, sub: preview(riskStudents), to: '#xavf', cta: "Ko'rish" });
   if (debtors.length) actions.push({ key: 'debt', tone: 'rose', title: `${debtors.length} ta o'quvchining to'lovi kechikkan`, sub: preview(debtors), to: '/admin/payments', cta: "To'lovlar" });
   if (ungradedHw > 0) actions.push({ key: 'hw', tone: 'amber', title: `${ungradedHw} ta vazifa tekshirilmagan`, sub: 'Baholanmagan topshiriqlar bor', to: '/teacher/homework', cta: 'Tekshirish' });
   if (unassigned > 0) actions.push({ key: 'unassigned', tone: 'amber', title: `${unassigned} ta o'quvchi guruhsiz`, sub: 'Guruhga joylashtiring', to: '/admin/registrations', cta: 'Joylash' });

@@ -61,13 +61,24 @@ export const TodayPanel: React.FC = () => {
           <ul className="space-y-2">
             {actions.map(a => (
               <li key={a.key}>
-                <Link to={a.to} className={`flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 transition hover:shadow-sm ${TONE[a.tone]}`}>
-                  <span className="min-w-0">
-                    <span className="block text-sm font-bold">{a.title}</span>
-                    <span className="block truncate text-xs opacity-75">{a.sub}</span>
-                  </span>
-                  <span className="inline-flex shrink-0 items-center gap-1 text-xs font-bold">{a.cta} <ArrowRight className="h-3 w-3" /></span>
-                </Link>
+                {(() => {
+                  const cls = `flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 transition hover:shadow-sm ${TONE[a.tone]}`;
+                  const body = (
+                    <>
+                      <span className="min-w-0">
+                        <span className="block text-sm font-bold">{a.title}</span>
+                        <span className="block truncate text-xs opacity-75">{a.sub}</span>
+                      </span>
+                      <span className="inline-flex shrink-0 items-center gap-1 text-xs font-bold">{a.cta} <ArrowRight className="h-3 w-3" /></span>
+                    </>
+                  );
+                  // In-page anchors (the risk list below) scroll instead of routing.
+                  return a.to.startsWith('#') ? (
+                    <a href={a.to} className={cls} onClick={e => { e.preventDefault(); document.getElementById(a.to.slice(1))?.scrollIntoView({ behavior: 'smooth' }); }}>{body}</a>
+                  ) : (
+                    <Link to={a.to} className={cls}>{body}</Link>
+                  );
+                })()}
               </li>
             ))}
           </ul>
