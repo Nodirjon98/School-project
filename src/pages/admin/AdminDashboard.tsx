@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useLMSData } from '../../contexts/LMSDataContext';
+import { TodayPanel } from '../../components/admin/TodayPanel';
 import { 
   Users, BookOpen, CheckSquare, BarChart3, 
   TrendingUp, ArrowRight, Clock, CreditCard, AlertTriangle, Monitor, Smartphone, UserPlus
@@ -69,6 +70,8 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
       </section>
+
+      <TodayPanel />
 
       {/* Unassigned Students Alert Banner */}
       {unassignedCount > 0 && (

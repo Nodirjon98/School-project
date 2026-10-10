@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Navbar } from '../common/Navbar';
 import { Sidebar } from '../common/Sidebar';
 import { useStudentTracker } from '../../hooks/useStudentTracker';
+import { InboxProvider } from '../../contexts/InboxContext';
 
 export const AppLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -11,6 +12,7 @@ export const AppLayout: React.FC = () => {
   useStudentTracker();
 
   return (
+    <InboxProvider>
     <div className="flex flex-col h-screen w-full bg-slate-50 font-sans text-slate-900 overflow-hidden">
       {/* Main Shell: Sidebar + Content Area */}
       <div className="flex-1 flex w-full overflow-hidden relative">
@@ -29,5 +31,6 @@ export const AppLayout: React.FC = () => {
         </div>
       </div>
     </div>
+    </InboxProvider>
   );
 };

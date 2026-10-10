@@ -48,6 +48,8 @@ const SpeakingAndVoiceManager = lazy(() => import('./pages/teacher/SpeakingAndVo
 
 // Lazy Loaded Admin Pages
 const ConductPage = lazy(() => import('./pages/admin/ConductPage').then(m => ({ default: m.ConductPage })));
+const LeadsPage = lazy(() => import('./pages/admin/LeadsPage').then(m => ({ default: m.LeadsPage })));
+const MessagesPage = lazy(() => import('./pages/shared/MessagesPage').then(m => ({ default: m.MessagesPage })));
 const RegistrationsPage = lazy(() => import('./pages/admin/RegistrationsPage').then(m => ({ default: m.RegistrationsPage })));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 const GroupManager = lazy(() => import('./pages/admin/GroupManager').then(m => ({ default: m.GroupManager })));
@@ -148,6 +150,15 @@ export const AppRouter: React.FC = () => {
           <Route path="/student/grammar-exam/:id" element={<GrammarExamTakePage />} />
           <Route path="/admin/grammar-exams" element={<GrammarExamBuilder />} />
           <Route path="/student/payments" element={<StudentPaymentsPage />} />
+          <Route path="/messages" element={<MessagesPage />} />
+          <Route
+            path="/admin/leads"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'teacher']}>
+                <LeadsPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Teacher Routes */}
           <Route

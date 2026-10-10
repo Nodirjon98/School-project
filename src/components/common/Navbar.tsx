@@ -39,6 +39,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
     if (path.includes('/ielts-writing')) return 'IELTS Writing';
     if (path.includes('/placement-test')) return L('Daraja testi', 'Placement test');
     if (path.includes('/achievements')) return L('Yutuqlar', 'Achievements');
+    if (path.startsWith('/messages')) return L('Xabarlar', 'Messages');
+    if (path.startsWith('/admin/leads')) return L('Arizalar', 'Leads');
+    if (path.startsWith('/admin/registrations')) return L("Ro'yxatdan o'tganlar", 'Sign-ups');
+    if (path.startsWith('/admin/conduct')) return L('Odob va tartib', 'Conduct');
     return 'Premier School';
   };
 

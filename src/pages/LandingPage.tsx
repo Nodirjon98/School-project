@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { TrialLessonForm } from '../components/landing/TrialLessonForm';
 import {
   ArrowRight, Award, BookOpen, BrainCircuit, Check, Flame, Globe, GraduationCap,
   Headphones, Layers, LineChart, Lock, MessageCircle, Mic, Phone, PenLine,
@@ -420,7 +421,7 @@ export const LandingPage: React.FC = () => {
 
       {/* ── CTA / Contact ── */}
       <section id="aloqa" className="scroll-mt-24 px-4 pb-24 sm:px-6 lg:px-8">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-indigo-600 via-fuchsia-600 to-amber-500 p-10 sm:p-16">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-indigo-600 via-fuchsia-600 to-amber-500 p-6 sm:p-12 lg:p-16">
           <div className="lp-grid-bg pointer-events-none absolute inset-0 opacity-40" />
           <div className="relative grid items-center gap-10 lg:grid-cols-[1.3fr_1fr]">
             <div>
@@ -430,31 +431,28 @@ export const LandingPage: React.FC = () => {
               <p className="mt-4 max-w-lg text-white/80">
                 Bepul daraja testini topshiring — natijaga qarab sizga mos guruh va dasturni tavsiya qilamiz.
               </p>
-              <Link
-                to="/signup"
-                className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-4 text-sm font-extrabold text-slate-900 shadow-xl transition hover:bg-slate-100"
-              >
-                Ro'yxatdan o'tish
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-4 text-sm font-extrabold text-slate-900 shadow-xl transition hover:bg-slate-100"
+                >
+                  Ro'yxatdan o'tish
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a href={phoneHref} className="flex items-center gap-3 rounded-2xl bg-black/20 px-4 py-3 backdrop-blur transition hover:bg-black/30">
+                  <Phone className="h-4 w-4 text-white" />
+                  <span className="text-sm font-bold text-white">{CONTACT.phone}</span>
+                </a>
+                <a href={CONTACT.telegram} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-2xl bg-black/20 px-4 py-3 backdrop-blur transition hover:bg-black/30">
+                  <MessageCircle className="h-4 w-4 text-white" />
+                  <span className="text-sm font-bold text-white">{CONTACT.telegramLabel}</span>
+                </a>
+              </div>
             </div>
 
-            <div className="space-y-3">
-              <a href={phoneHref} className="flex items-center gap-4 rounded-2xl bg-black/20 p-5 backdrop-blur transition hover:bg-black/30">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15"><Phone className="h-5 w-5 text-white" /></div>
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-white/70">Qo'ng'iroq qiling</div>
-                  <div className="text-lg font-bold text-white">{CONTACT.phone}</div>
-                </div>
-              </a>
-              <a href={CONTACT.telegram} target="_blank" rel="noreferrer" className="flex items-center gap-4 rounded-2xl bg-black/20 p-5 backdrop-blur transition hover:bg-black/30">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15"><MessageCircle className="h-5 w-5 text-white" /></div>
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-white/70">Telegram</div>
-                  <div className="text-lg font-bold text-white">{CONTACT.telegramLabel}</div>
-                </div>
-              </a>
-            </div>
+            <TrialLessonForm />
           </div>
         </div>
       </section>
