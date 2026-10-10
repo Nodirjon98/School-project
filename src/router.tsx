@@ -48,6 +48,8 @@ const SpeakingAndVoiceManager = lazy(() => import('./pages/teacher/SpeakingAndVo
 
 // Lazy Loaded Admin Pages
 const ConductPage = lazy(() => import('./pages/admin/ConductPage').then(m => ({ default: m.ConductPage })));
+const DuelPage = lazy(() => import('./pages/games/DuelPage').then(m => ({ default: m.DuelPage })));
+const VocabBattlePage = lazy(() => import('./pages/games/VocabBattlePage').then(m => ({ default: m.VocabBattlePage })));
 const LeadsPage = lazy(() => import('./pages/admin/LeadsPage').then(m => ({ default: m.LeadsPage })));
 const MessagesPage = lazy(() => import('./pages/shared/MessagesPage').then(m => ({ default: m.MessagesPage })));
 const RegistrationsPage = lazy(() => import('./pages/admin/RegistrationsPage').then(m => ({ default: m.RegistrationsPage })));
@@ -151,6 +153,8 @@ export const AppRouter: React.FC = () => {
           <Route path="/admin/grammar-exams" element={<GrammarExamBuilder />} />
           <Route path="/student/payments" element={<StudentPaymentsPage />} />
           <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/games/duel" element={<DuelPage />} />
+          <Route path="/games/battle" element={<VocabBattlePage />} />
           <Route
             path="/admin/leads"
             element={
