@@ -9,7 +9,7 @@ import {
   Trophy, ClipboardCheck, Users, BrainCircuit, BarChart3,
   Layers, Database, X, PenTool, Mic, Award, Swords, FileText, Headphones, CreditCard,
   Music, ShieldCheck, Gamepad2, ChevronDown, Library, Flame, UserPlus, Heart,
-  ClipboardList, MessageSquare
+  ClipboardList, MessageSquare, Zap
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -78,6 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         { label: 'IELTS Writing', path: '/ielts-writing', icon: icon(PenTool) },
         { label: L('Grammatika imtihonlari', 'Grammar exams'), path: '/student/grammar-exams', icon: icon(Sparkles) },
         { label: L("So'z o'yinlari", 'Word games'), path: '/word-games', icon: icon(Gamepad2) },
+        { label: 'Duel', path: '/games/duel', icon: icon(Swords) },
         { label: L('Daraja testi', 'Placement test'), path: '/placement-test', icon: icon(Award) },
       ],
     },
@@ -124,6 +125,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       ],
     },
     {
+      category: L("Sinf o'yinlari", 'Class games'),
+      items: [
+        { label: L("So'z jangi", 'Vocab battle'), path: '/games/battle', icon: icon(Zap) },
+        { label: 'Duel', path: '/games/duel', icon: icon(Swords) },
+      ],
+    },
+    {
       category: L('Kutubxona', 'Library'),
       collapsible: true,
       items: [
@@ -157,6 +165,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         { label: L('Speaking markazi', 'Speaking hub'), path: '/admin/speaking-hub', icon: icon(Mic) },
         { label: L('AI kontent', 'AI content'), path: '/ai-studio', icon: icon(BrainCircuit) },
         { label: L('Chempionat', 'Championship'), path: '/championship', icon: icon(Trophy) },
+      ],
+    },
+    {
+      category: L("Sinf o'yinlari", 'Class games'),
+      items: [
+        { label: L("So'z jangi", 'Vocab battle'), path: '/games/battle', icon: icon(Zap) },
+        { label: 'Duel', path: '/games/duel', icon: icon(Swords) },
       ],
     },
     {
