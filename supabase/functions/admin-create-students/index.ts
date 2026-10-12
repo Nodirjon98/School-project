@@ -1,5 +1,8 @@
 // Creates real, confirmed student accounts on behalf of an admin.
-// POST { students: [{ full_name, email, phone?, password?, level?, group_id?, group_name? }] }
+// POST { students: [{ full_name, email, phone?, password?, level?, group_id?, group_name?,
+//                     birth_date?, payment_type?, custom_fee?, import_id? }] }
+// `import_id` links a row of public.student_imports (students moved in from
+// another system); it is marked created/errored so the admin sees progress.
 // Only callers whose profile has role 'admin' may use it.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
@@ -30,7 +33,14 @@ interface Input {
   level?: string;
   group_id?: string;
   group_name?: string;
+  birth_date?: string;
+  payment_type?: string;
+  custom_fee?: number | string | null;
+  import_id?: string;
 }
+
+const PAYMENT_TYPES = new Set(['full', 'custom', 'free']);
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
@@ -55,6 +65,11 @@ Deno.serve(async (req) => {
   }
   const rows = Array.isArray(body.students) ? body.students.slice(0, 100) : [];
   if (rows.length === 0) return json({ error: "O'quvchilar ro'yxati bo'sh" }, 400);
+
+  const markImport = async (row: Input, fields: Record<string, unknown>) => {
+    if (!row.import_id) return;
+    await admin.from('student_imports').update(fields).eq('id', row.import_id);
+  };
 
   const results = [];
   for (const row of rows) {
@@ -81,7 +96,9 @@ Deno.serve(async (req) => {
     });
     if (error || !created?.user) {
       const exists = /already|registered|exists/i.test(error?.message || '');
-      results.push({ email, full_name, ok: false, error: exists ? 'Bu email bilan akkount allaqachon bor' : (error?.message || 'Xatolik') });
+      const message = exists ? 'Bu email bilan akkount allaqachon bor' : (error?.message || 'Xatolik');
+      await markImport(row, { error: message });
+      results.push({ email, full_name, ok: false, error: message });
       continue;
     }
 
@@ -92,7 +109,12 @@ Deno.serve(async (req) => {
       updates.group_id = row.group_id;
       updates.group_name = row.group_name || null;
     }
+    if (row.birth_date && DATE_RE.test(row.birth_date)) updates.birth_date = row.birth_date;
+    if (row.payment_type && PAYMENT_TYPES.has(row.payment_type)) updates.payment_type = row.payment_type;
+    const fee = Number(row.custom_fee);
+    if (row.custom_fee != null && Number.isFinite(fee) && fee >= 0) updates.custom_fee = fee;
     const { error: profErr } = await admin.from('profiles').update(updates).eq('id', created.user.id);
+    await markImport(row, { status: 'created', profile_id: created.user.id, error: null });
 
     results.push({
       email,

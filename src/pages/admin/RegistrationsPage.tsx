@@ -5,6 +5,7 @@ import { useLMSData } from '../../contexts/LMSDataContext';
 import { Profile } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
 import { AddStudentsDialog } from '../../components/admin/AddStudentsDialog';
+import { ImportStudentsPanel } from '../../components/admin/ImportStudentsPanel';
 
 const UZ_MONTHS = ['yan', 'fev', 'mar', 'apr', 'may', 'iyn', 'iyl', 'avg', 'sen', 'okt', 'noy', 'dek'];
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -158,6 +159,8 @@ export const RegistrationsPage: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {role === 'admin' && <ImportStudentsPanel onImported={() => { refreshStudentsFromDb(); }} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1 grid grid-cols-2 gap-3">
