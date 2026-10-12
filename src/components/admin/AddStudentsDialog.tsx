@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { X, Loader2, Copy, CheckCircle2, AlertTriangle, UserPlus, Users } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { createStudentAccounts } from '../../lib/studentImports';
 import { Group } from '../../types';
 
-interface Result {
+export interface CreateResult {
   email: string;
   full_name: string;
   ok: boolean;
@@ -38,6 +39,54 @@ export const parseStudentLines = (text: string): { rows: Row[]; bad: string[] } 
   return { rows, bad };
 };
 
+/** Outcome of admin-create-students: who was created, temporary passwords, errors. */
+export const CreatedAccountsList: React.FC<{ results: CreateResult[] }> = ({ results }) => {
+  const [copied, setCopied] = useState(false);
+  const copyAll = async () => {
+    const text = results
+      .filter(r => r.ok)
+      .map(r => `${r.full_name} — login: ${r.email}${r.temp_password ? `, parol: ${r.temp_password}` : ''}`)
+      .join('\n');
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch { /* clipboard blocked */ }
+  };
+  return (
+    <>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm font-semibold text-slate-800">
+          {results.filter(r => r.ok).length} ta qo'shildi{results.some(r => !r.ok) ? `, ${results.filter(r => !r.ok).length} ta xato` : ''}
+        </p>
+        <button type="button" onClick={copyAll} className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-slate-700 cursor-pointer">
+          {copied ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />} {copied ? 'Nusxalandi' : 'Loginlarni nusxalash'}
+        </button>
+      </div>
+      <p className="mt-1 text-xs text-amber-700">Vaqtinchalik parollar faqat hozir ko'rsatiladi — nusxalab o'quvchilarga yuboring.</p>
+      <ul className="mt-3 divide-y divide-slate-100 rounded-2xl border border-slate-200">
+        {results.map((r, i) => (
+          <li key={i} className="flex items-start justify-between gap-3 px-4 py-2.5 text-sm">
+            <div className="min-w-0">
+              <p className="truncate font-semibold text-slate-900">{r.full_name || '—'}</p>
+              <p className="truncate text-xs text-slate-500">{r.email}</p>
+              {r.warning && <p className="text-xs text-amber-700">{r.warning}</p>}
+            </div>
+            {r.ok ? (
+              <span className="shrink-0 text-right text-xs">
+                <span className="inline-flex items-center gap-1 font-semibold text-emerald-700"><CheckCircle2 className="w-3.5 h-3.5" /> Qo'shildi</span>
+                {r.temp_password && <span className="block font-mono text-slate-800">{r.temp_password}</span>}
+              </span>
+            ) : (
+              <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-rose-700"><AlertTriangle className="w-3.5 h-3.5" /> {r.error}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+};
+
 export const AddStudentsDialog: React.FC<{ groups: Group[]; onClose: () => void; onDone: () => void }> = ({ groups, onClose, onDone }) => {
   const [mode, setMode] = useState<'one' | 'many'>('one');
   const [one, setOne] = useState<Row>({ full_name: '', email: '', phone: '', password: '' });
@@ -46,8 +95,7 @@ export const AddStudentsDialog: React.FC<{ groups: Group[]; onClose: () => void;
   const [level, setLevel] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [results, setResults] = useState<Result[] | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [results, setResults] = useState<CreateResult[] | null>(null);
 
   const parsed = mode === 'many' ? parseStudentLines(bulk) : null;
 
@@ -61,36 +109,16 @@ export const AddStudentsDialog: React.FC<{ groups: Group[]; onClose: () => void;
     if (!supabase) return setError("Bazaga ulanib bo'lmadi");
     const group = groups.find(g => g.id === groupId);
     setSaving(true);
-    const { data, error: err } = await supabase.functions.invoke('admin-create-students', {
-      body: {
-        students: rows.map(r => ({
-          ...r,
-          level: level || undefined,
-          group_id: group?.id,
-          group_name: group?.name,
-        })),
-      },
-    });
+    const { results: res, error: err } = await createStudentAccounts(rows.map(r => ({
+      ...r,
+      level: level || undefined,
+      group_id: group?.id,
+      group_name: group?.name,
+    })));
     setSaving(false);
-    if (err) {
-      let msg = err.message;
-      try { msg = (await (err as { context?: Response }).context?.json())?.error || msg; } catch { /* keep default */ }
-      return setError(msg);
-    }
-    setResults((data as { results: Result[] }).results);
+    if (err) return setError(err);
+    setResults(res || []);
     onDone();
-  };
-
-  const copyAll = async () => {
-    const text = (results || [])
-      .filter(r => r.ok)
-      .map(r => `${r.full_name} — login: ${r.email}${r.temp_password ? `, parol: ${r.temp_password}` : ''}`)
-      .join('\n');
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch { /* clipboard blocked */ }
   };
 
   const input = 'w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200';
@@ -108,34 +136,7 @@ export const AddStudentsDialog: React.FC<{ groups: Group[]; onClose: () => void;
 
         {results ? (
           <div className="mt-5">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm font-semibold text-slate-800">
-                {results.filter(r => r.ok).length} ta qo'shildi{results.some(r => !r.ok) ? `, ${results.filter(r => !r.ok).length} ta xato` : ''}
-              </p>
-              <button type="button" onClick={copyAll} className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-slate-700 cursor-pointer">
-                {copied ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />} {copied ? 'Nusxalandi' : 'Loginlarni nusxalash'}
-              </button>
-            </div>
-            <p className="mt-1 text-xs text-amber-700">Vaqtinchalik parollar faqat hozir ko'rsatiladi — nusxalab o'quvchilarga yuboring.</p>
-            <ul className="mt-3 divide-y divide-slate-100 rounded-2xl border border-slate-200">
-              {results.map((r, i) => (
-                <li key={i} className="flex items-start justify-between gap-3 px-4 py-2.5 text-sm">
-                  <div className="min-w-0">
-                    <p className="truncate font-semibold text-slate-900">{r.full_name || '—'}</p>
-                    <p className="truncate text-xs text-slate-500">{r.email}</p>
-                    {r.warning && <p className="text-xs text-amber-700">{r.warning}</p>}
-                  </div>
-                  {r.ok ? (
-                    <span className="shrink-0 text-right text-xs">
-                      <span className="inline-flex items-center gap-1 font-semibold text-emerald-700"><CheckCircle2 className="w-3.5 h-3.5" /> Qo'shildi</span>
-                      {r.temp_password && <span className="block font-mono text-slate-800">{r.temp_password}</span>}
-                    </span>
-                  ) : (
-                    <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-rose-700"><AlertTriangle className="w-3.5 h-3.5" /> {r.error}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <CreatedAccountsList results={results} />
             <button type="button" onClick={onClose} className="mt-5 w-full rounded-full border border-slate-200 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer">Yopish</button>
           </div>
         ) : (
